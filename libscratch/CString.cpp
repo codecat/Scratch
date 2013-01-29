@@ -1,0 +1,466 @@
+/*  libscratch - Multipurpose objective C++ library.
+    Copyright (C) 2012 - 2013  Angelo Geels
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>. */
+
+#include <stdio.h> // for vsprintf
+#include <stdarg.h> // for va_list
+#include <string.h> // for strlen and strcmp
+
+#include "CString.h"
+
+extern int str_iInstances = 0;
+
+char* CString::str_szEmpty = "";
+
+void CString::CopyToBuffer(const char* szSrc)
+{
+  // Validate the source string
+  if(szSrc == NULL) {
+    return;
+  }
+
+  int iLen = strlen(szSrc);
+  if(iLen == 0) {
+    // Clean up
+    if(this->str_szBuffer != CString::str_szEmpty) {
+      delete[] this->str_szBuffer;
+    }
+
+    // Set to empty char*
+    this->str_szBuffer = CString::str_szEmpty;
+    return;
+  }
+
+  // Find the current size and the required size for the string.
+  int iBufLen = strlen(this->str_szBuffer) + 1;
+  int iReqLen = iLen + 1;
+
+  // Check if we need to make more room.
+  if(iReqLen > iBufLen) {
+    // Get rid of the previously allocated space and allocate new memory.
+    if(this->str_szBuffer != CString::str_szEmpty) {
+      delete[] this->str_szBuffer;
+    }
+    this->str_szBuffer = new char[iReqLen];
+  }
+
+  // Copy data to the buffer.
+  int i = 0;
+  for(; i<iLen; i++) {
+    this->str_szBuffer[i] = szSrc[i];
+  }
+
+  // Always end with a null terminator.
+  this->str_szBuffer[i] = '\0';
+}
+
+void CString::AppendToBuffer(const char* szSrc)
+{
+  this->AppendToBuffer(szSrc, strlen(szSrc));
+}
+
+void CString::AppendToBuffer(const char* szSrc, int iCount)
+{
+  // Validate source string
+  if(szSrc == NULL) {
+    return;
+  }
+
+  if(iCount <= 0) {
+    return;
+  }
+
+  // Keep track of our previous buffer pointer so we can use it later for appending.
+  char* szOldBuffer = this->str_szBuffer;
+
+  // Find the current size and the required size for the string.
+  int iBufLen = strlen(this->str_szBuffer);
+
+  // Get ourselves a new buffer
+  this->str_szBuffer = new char[iBufLen + iCount + 1];
+
+  // Copy the buffers
+  int iOffset = 0;
+
+  for(int i=0; i<iBufLen; i++) {
+    this->str_szBuffer[iOffset++] = szOldBuffer[i];
+  }
+
+  for(int i=0; i<iCount; i++) {
+    this->str_szBuffer[iOffset++] = szSrc[i];
+  }
+
+  // Always end with a null terminator.
+  this->str_szBuffer[iOffset] = '\0';
+
+  // Clean up
+  if(szOldBuffer != CString::str_szEmpty) {
+    delete[] szOldBuffer;
+  }
+}
+
+void CString::AppendToBuffer(const char cSrc)
+{
+  // Validate source string
+  if(cSrc == 0) {
+    return;
+  }
+
+  // Keep track of our previous buffer pointer so we can use it later for appending.
+  char* szOldBuffer = this->str_szBuffer;
+
+  // Find the current size and the required size for the string.
+  int iBufLen = strlen(this->str_szBuffer);
+
+  // Get ourselves a new buffer
+  this->str_szBuffer = new char[iBufLen + 2];
+
+  // Copy the buffer
+  int iOffset = 0;
+
+  for(int i=0; i<iBufLen; i++) {
+    this->str_szBuffer[iOffset++] = szOldBuffer[i];
+  }
+
+  // Append the new character
+  this->str_szBuffer[iOffset++] = cSrc;
+
+  // Always end with a null terminator.
+  this->str_szBuffer[iOffset] = '\0';
+
+  // Clean up
+  if(szOldBuffer != CString::str_szEmpty) {
+    delete[] szOldBuffer;
+  }
+}
+
+CString::CString()
+{
+  str_iInstances++;
+  // Create a new empty buffer
+  this->str_szBuffer = CString::str_szEmpty;
+}
+
+CString::CString(const char* szStr)
+{
+  str_iInstances++;
+  // Create a new buffer and copy data into it.
+  this->str_szBuffer = CString::str_szEmpty;
+  this->CopyToBuffer(szStr);
+}
+
+CString::CString(const CString &copy)
+{
+  str_iInstances++;
+  // Create a new buffer and copy data into it.
+  this->str_szBuffer = CString::str_szEmpty;
+  this->CopyToBuffer(copy);
+}
+
+CString::~CString()
+{
+  str_iInstances--;
+  // Clean up
+  if(this->str_szBuffer != CString::str_szEmpty) {
+    delete[] this->str_szBuffer;
+  }
+}
+
+void CString::SetF(const char* szFormat, ...)
+{
+  char* szBuffer = new char[CSTRING_FORMAT_BUFFER_SIZE];
+
+  // Get the args list and do a vsprintf to get the right format.
+  va_list vL;
+  va_start(vL, szFormat);
+  vsprintf(szBuffer, szFormat, vL);
+  va_end(vL);
+
+  // Copy the just-created buffer to the main buffer
+  this->CopyToBuffer(szBuffer);
+
+  // Clean up
+  delete[] szBuffer;
+}
+
+void CString::AppendF(const char* szFormat, ...)
+{
+  char* szBuffer = new char[CSTRING_FORMAT_BUFFER_SIZE];
+
+  // Get the args list and do a vsprintf to get the right format.
+  va_list vL;
+  va_start(vL, szFormat);
+  vsprintf(szBuffer, szFormat, vL);
+  va_end(vL);
+
+  // Copy the just-created buffer to the main buffer
+  this->AppendToBuffer(szBuffer);
+
+  // Clean up
+  delete[] szBuffer;
+}
+
+CStackArray<CString> CString::Split(const CString &strNeedle)
+{
+  CStackArray<CString> aRet;
+
+  // Keep a pointer to the current offset and a "previous offset"
+  char* szOffset = str_szBuffer;
+  char* szOffsetPrev = szOffset;
+
+  do {
+    // Find the needle from the string in the current offset pointer
+    szOffset = strstr(szOffset, strNeedle);
+
+    // If the needle is found
+    if(szOffset != NULL) {
+      // Get the length for the string
+      int iLen = szOffset - szOffsetPrev;
+
+      // And get a buffer started
+      char* szPart = new char[iLen + 1];
+
+      // Copy over the characters to the part buffer
+      int i = 0;
+      for(; i<iLen; i++) {
+        szPart[i] = *(szOffset - (iLen - i));
+      }
+      szPart[i] = '\0';
+
+      // Add it to the return array
+      aRet.Push() = szPart;
+
+      // Increase the offset pointer by the needle length
+      szOffset += strlen(strNeedle);
+
+      // Keep track of the pointer
+      szOffsetPrev = szOffset;
+    } else {
+      // Get the length for the string
+      int iLen = strlen(szOffsetPrev);
+
+      // And get a buffer started
+      char* szPart = new char[iLen + 1];
+
+      // Copy over the characters to the part buffer
+      int i = 0;
+      for(; i<iLen; i++) {
+        szPart[i] = szOffsetPrev[i];
+      }
+      szPart[i] = '\0';
+
+      // Add it to the return vector
+      aRet.Push() = szPart;
+    }
+  } while(szOffset != NULL);
+
+  return aRet;
+}
+
+CString CString::Trim()
+{
+  // Keep a pointer to the current offset
+  char* szOffset = this->str_szBuffer;
+
+  // While there's a space, keep incrementing the offset
+  while(*szOffset == ' ') {
+    // This way, we'll trim all the spaces on the left
+    szOffset++;
+  }
+
+  // Loop from right to left in the string
+  for(int i=strlen(szOffset)-1; i>=0; i--) {
+    // When we find something other than a space
+    if(szOffset[i] != ' ') {
+      // Put a null terminator to trim the right part
+      szOffset[i + 1] = '\0';
+
+      // Stop reading
+      break;
+    }
+  }
+
+  // Return
+  return CString(szOffset);
+}
+
+CString CString::Replace(const CString &strNeedle, const CString &strReplace)
+{
+  CString strRet("");
+
+  // Keep a pointer to the current offset and a "previous offset"
+  char* szOffset = this->str_szBuffer;
+  char* szOffsetPrev = szOffset;
+
+  do {
+    // Find the offset of the needle
+    szOffset = strstr(szOffset, strNeedle);
+
+    // If it's found
+    if(szOffset != NULL) {
+      // Append everything before the needle of the original characters to the return value
+      strRet.AppendToBuffer(szOffsetPrev, szOffset - szOffsetPrev);
+
+      // Append the replace value
+      strRet += strReplace;
+
+      // Increase the offset pointer by the needle length
+      szOffset += strlen(strNeedle);
+
+      // Keep track of the pointer
+      szOffsetPrev = szOffset;
+    } else {
+      // Append the remaining part of the source string
+      strRet.AppendToBuffer(szOffsetPrev, strlen(szOffsetPrev));
+    }
+  } while(szOffset != NULL);
+
+  return strRet;
+}
+
+CString CString::SubString(int iStart, int iLen)
+{
+  // Get the first offset
+  CString strRet(this->str_szBuffer + iStart);
+
+  // Check for stupid developers
+  if(iLen > strlen(strRet)) {
+    return strRet;
+  }
+
+  // Then set the null terminator at the length the user wants
+  strRet[iLen] = '\0';
+
+  // Return
+  return strRet;
+}
+
+CString CString::Reverse()
+{
+  CString strRet(this->str_szBuffer);
+  strrev(strRet.str_szBuffer);
+  return strRet;
+}
+
+CString CString::ToLower()
+{
+  CString strRet(this->str_szBuffer);
+  strlwr(strRet.str_szBuffer);
+  return strRet;
+}
+
+CString CString::ToUpper()
+{
+  CString strRet(this->str_szBuffer);
+  strupr(strRet.str_szBuffer);
+  return strRet;
+}
+
+bool CString::Contains(const CString &strNeedle)
+{
+  return strstr(this->str_szBuffer, strNeedle) != NULL;
+}
+
+bool CString::StartsWith(const CString &strNeedle)
+{
+  return strstr(this->str_szBuffer, strNeedle) == this->str_szBuffer;
+}
+
+bool CString::EndsWith(const CString &strNeedle)
+{
+  // Locate the needle in the buffer
+  const char* szTemp = strstr(this->str_szBuffer, strNeedle);
+
+  // Make sure the needle is found
+  if(szTemp == NULL) {
+    return false;
+  }
+
+  // Then compare the offset with our needle
+  return !strcmp(strNeedle, szTemp);
+}
+
+CString::operator const char *()
+{
+  return this->str_szBuffer;
+}
+
+CString::operator const char *() const
+{
+  return this->str_szBuffer;
+}
+
+CString& CString::operator=(char* src)
+{
+  // Copy the right hand side to the buffer.
+  this->CopyToBuffer(src);
+  return *this;
+}
+
+CString& CString::operator=(const char* src)
+{
+  // Copy the right hand side to the buffer.
+  this->CopyToBuffer(src);
+  return *this;
+}
+
+CString& CString::operator=(const CString &strSrc)
+{
+  // If the right hand side is not the left hand side...
+  if(this != &strSrc) {
+    // Copy the right hand side to the buffer.
+    this->CopyToBuffer(strSrc);
+  }
+  return *this;
+}
+
+CString& CString::operator+=(const char* szSrc)
+{
+  // Append the right hand side to the buffer.
+  this->AppendToBuffer(szSrc);
+  return *this;
+}
+
+CString& CString::operator+=(const char cSrc)
+{
+  // Append the right hand side to the buffer.
+  this->AppendToBuffer(cSrc);
+  return *this;
+}
+
+bool CString::operator==(const char* szSrc)
+{
+  return !strcmp(this->str_szBuffer, szSrc);
+}
+
+bool CString::operator!=(const char* szSrc)
+{
+  return strcmp(this->str_szBuffer, szSrc) != 0;
+}
+
+char& CString::operator[](int iIndex)
+{
+  return this->str_szBuffer[iIndex];
+}
+
+CString operator+(CString &strLHS, const char* szRHS)
+{
+  return CString(strLHS) += szRHS;
+}
+
+CString operator+(CString &strLHS, const char cRHS)
+{
+  return CString(strLHS) += cRHS;
+}
