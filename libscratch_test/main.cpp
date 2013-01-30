@@ -23,11 +23,9 @@ static INDEX _ctTests = 0;
 static INDEX _ctFailed = 0;
 
 #define TEST(expr) {                            \
-  BOOL bSuccess = (expr);                       \
   _ctTests++;                                   \
-  ASSERT(bSuccess);                             \
   printf("  Test #%d: (%s) ", _ctTests, #expr); \
-  if(!bSuccess) {                               \
+  if(!(expr)) {                                 \
     _ctFailed++;                                \
     printf("FAILED!\n");                        \
   } else {                                      \
