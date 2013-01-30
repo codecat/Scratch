@@ -21,15 +21,19 @@
 
 static INDEX _ctFailed = 0;
 
-#define TEST(expr) ASSERT(expr);    \
+#define TEST(expr) {                \
+  BOOL bSuccess = (expr);           \
+  ASSERT(bSuccess);                 \
   printf("  Test: (%s) ", #expr);   \
-  if(!(expr)) {                     \
+  if(!bSuccess) {                   \
     _ctFailed++;                    \
     printf("FAILED!\n");            \
   } else {                          \
     printf("OK\n");                 \
-  }
+  }                                 \
+}
 
+/// String testing
 void TestString()
 {
   printf("Testing strings\n");
@@ -49,13 +53,38 @@ void TestString()
   TEST(strTest2 == "libscratch is cool");
 }
 
+/// Stack array testing
+void TestStackArray()
+{
+  printf("Testing stack arrays\n");
+
+  CStackArray<INDEX> aiNumbers;
+  TEST(aiNumbers.Count() == 0);
+
+  aiNumbers.Push() = 5;
+  aiNumbers.Push() = 10;
+  aiNumbers.Push() = 15;
+  TEST(aiNumbers.Count() == 3);
+  TEST(aiNumbers[0] == 5);
+  TEST(aiNumbers[1] == 10);
+  TEST(aiNumbers[2] + aiNumbers[0] == 20);
+
+  TEST(aiNumbers.Pop() == 15);
+  TEST(aiNumbers.Count() == 2);
+}
+
 int main()
 {
+  // perform tests
   TestString();
+  TestStackArray();
 
+  // check if all went OK
   if(_ctFailed == 0) {
+    // it did! no failures. :)
     printf("\n\nAll OK!\n");
   } else {
+    // oops, there's a bug somewhere. please report!
     printf("\n\nSome problems seem to have popped up. Please report a bug.\n");
   }
 
