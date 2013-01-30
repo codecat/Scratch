@@ -19,18 +19,20 @@
 
 #include <Scratch.h>
 
+static INDEX _ctTests = 0;
 static INDEX _ctFailed = 0;
 
-#define TEST(expr) {                \
-  BOOL bSuccess = (expr);           \
-  ASSERT(bSuccess);                 \
-  printf("  Test: (%s) ", #expr);   \
-  if(!bSuccess) {                   \
-    _ctFailed++;                    \
-    printf("FAILED!\n");            \
-  } else {                          \
-    printf("OK\n");                 \
-  }                                 \
+#define TEST(expr) {                            \
+  BOOL bSuccess = (expr);                       \
+  _ctTests++;                                   \
+  ASSERT(bSuccess);                             \
+  printf("  Test #%d: (%s) ", _ctTests, #expr); \
+  if(!bSuccess) {                               \
+    _ctFailed++;                                \
+    printf("FAILED!\n");                        \
+  } else {                                      \
+    printf("OK\n");                             \
+  }                                             \
 }
 
 /// String testing
@@ -98,13 +100,16 @@ int main()
   TestStackArray();
   TestDictionary();
 
+  // report test results
+  printf("\n\nResults: %d out of %d went OK.\n\n", _ctTests - _ctFailed, _ctTests);
+
   // check if all went OK
   if(_ctFailed == 0) {
     // it did! no failures. :)
-    printf("\n\nAll OK!\n");
+    printf("All OK!\n");
   } else {
     // oops, there's a bug somewhere. please report!
-    printf("\n\nSome problems seem to have popped up. Please report a bug.\n");
+    printf("Some problems seem to have popped up. Please report a bug.\n");
   }
 
   std::cin.get();
