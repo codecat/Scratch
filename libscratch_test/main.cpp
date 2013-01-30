@@ -124,6 +124,25 @@ void TestFilestream()
   unlink("Test.bin");
 }
 
+/// Vector tests
+void TestVectors()
+{
+  printf("Testing vectors\n");
+
+  Vector3f vTest(1, 0, 0);
+  TEST(vTest.Length() == 1.0f);
+
+  vTest *= 5.0f;
+  TEST(vTest.Length() == 5.0f);
+
+  vTest.x = 3;
+  vTest.y = 4;
+  TEST(vTest.Length() == 5.0f);
+
+  vTest.Normalize();
+  TEST(vTest.Length() == 1.0f);
+}
+
 int main()
 {
   // perform tests
@@ -131,6 +150,7 @@ int main()
   TestStackArray();
   TestDictionary();
   TestFilestream();
+  TestVectors();
 
   // report test results
   printf("\n\nResults: %d out of %d went OK.\n\n", _ctTests - _ctFailed, _ctTests);
