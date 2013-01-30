@@ -42,6 +42,8 @@ public:
   FLOAT Length(void);
   FLOAT Dot(const Vector3f &v2);
 
+  void Normalize(void);
+
   Vector3f operator +(const Vector3f &v);
   Vector3f operator -(const Vector3f &v);
   Vector3f operator *(const Vector3f &v);

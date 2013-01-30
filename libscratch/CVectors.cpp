@@ -79,6 +79,14 @@ FLOAT Vector3f::Dot(const Vector3f &v2)
   return x*v2.x + y*v2.y + z*v2.z;
 }
 
+void Vector3f::Normalize(void)
+{
+  FLOAT fLength = Length();
+  x /= fLength;
+  y /= fLength;
+  z /= fLength;
+}
+
 Vector3f Vector3f::operator +(const Vector3f &v)
 {
   return Vector3f(x+v.x, y+v.y, z+v.z);
