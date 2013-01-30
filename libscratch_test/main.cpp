@@ -73,11 +73,30 @@ void TestStackArray()
   TEST(aiNumbers.Count() == 2);
 }
 
+/// Dictionary testing
+void TestDictionary()
+{
+  printf("Testing dictionary\n");
+
+  CDictionary<CString, INDEX> diTest;
+  TEST(!diTest.HasKey("Test"));
+
+  diTest["Test"] = 100;
+  diTest["Test2"] = 200;
+  TEST(diTest.HasKey("Test"));
+  TEST(diTest["Test"] == 100);
+
+  diTest.RemoveByKey("Test");
+  TEST(diTest.Count() == 1);
+  TEST(!diTest.HasKey("Test"));
+}
+
 int main()
 {
   // perform tests
   TestString();
   TestStackArray();
+  TestDictionary();
 
   // check if all went OK
   if(_ctFailed == 0) {
