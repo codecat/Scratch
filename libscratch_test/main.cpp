@@ -14,14 +14,50 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
-#include <stdio.h> // for printf
+#include <cstdio> // for printf
 #include <iostream> // for std::cin.get
 
 #include <Scratch.h>
 
+static INDEX _ctFailed = 0;
+
+#define TEST(expr) ASSERT(expr);    \
+  printf("  Test: (%s) ", #expr);   \
+  if(!(expr)) {                     \
+    _ctFailed++;                    \
+    printf("FAILED!\n");            \
+  } else {                          \
+    printf("OK\n");                 \
+  }
+
+void TestString()
+{
+  printf("Testing strings\n");
+
+  CString strTest;
+  strTest += "Lib";
+  strTest += "Scratch";
+  strTest = strTest.ToLower();
+  TEST(strTest == "libscratch");
+
+  strTest += " is great";
+  CStackArray<CString> astrParse = strTest.Split(" ");
+  TEST(astrParse[2] == "great");
+  TEST(astrParse[2][1] == 'r');
+
+  CString strTest2 = strTest.Replace("great", "cool");
+  TEST(strTest2 == "libscratch is cool");
+}
+
 int main()
 {
-  // TODO: Make a proper test program...
+  TestString();
+
+  if(_ctFailed == 0) {
+    printf("\n\nAll OK!\n");
+  } else {
+    printf("\n\nSome problems seem to have popped up. Please report a bug.\n");
+  }
 
   std::cin.get();
   return 0;
