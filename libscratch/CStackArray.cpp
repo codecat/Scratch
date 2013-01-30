@@ -132,6 +132,31 @@ Type& CStackArray<Type>::Pop(void)
   return *tObject;
 }
 
+/// Pop a certain index from the stack
+template<class Type>
+Type& CStackArray<Type>::PopAt(INDEX iIndex)
+{
+  ASSERT(iIndex < Count());
+
+  // decrease iterator
+  sa_ctUsed--;
+
+  // get the item in the stack
+  Type* tObject = sa_pItems[iIndex];
+
+  // move pointers at the right one point to the left
+  for(INDEX i=iIndex; i<sa_ctUsed; i++) {
+    // set pointer to next one in stack
+    sa_pItems[i] = sa_pItems[i + 1];
+  }
+
+  // set last pointer to NULL (just in case)
+  sa_pItems[sa_ctUsed] = NULL;
+
+  // return the object
+  return *tObject;
+}
+
 /// Pop all objects from the stack
 template<class Type>
 void CStackArray<Type>::PopAll(void)

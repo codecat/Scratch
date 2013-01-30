@@ -42,6 +42,8 @@ public:
   void Push(Type& tObject);
   /// Pop top object from the stack
   Type& Pop(void);
+  /// Pop a certain index from the stack
+  Type& PopAt(INDEX iIndex);
 
   /// Pop all objects from the stack
   void PopAll(void);
