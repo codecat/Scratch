@@ -21,9 +21,9 @@
   #pragma once
 #endif
 
-#include <stdio.h>
-#include <math.h>
-#include <assert.h>
+#include <cstdio>
+#include <cmath>
+#include <cassert>
 
 #define NULL 0
 

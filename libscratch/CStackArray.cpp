@@ -23,7 +23,7 @@
 
 #include "CStackArray.h"
 
-#include <stdlib.h>
+#include <cstdlib>
 #include <cstring>
 
 template<class Type>
