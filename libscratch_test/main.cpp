@@ -93,12 +93,44 @@ void TestDictionary()
   TEST(!diTest.HasKey("Test"));
 }
 
+/// Test file stream
+void TestFilestream()
+{
+  printf("Testing file streams\n");
+
+  // this test will create a Test.bin file, containing an integer 5 and the text "Hello!"
+  CFileStream fsTest;
+  fsTest.Open("Test.bin", "w");
+  fsTest << INDEX(5);
+  fsTest << "Hello!";
+  fsTest.Close();
+
+  // as a follow-up, we will read the same file from a seperate file stream
+  CFileStream fsTestRead;
+  fsTestRead.Open("Test.bin", "r");
+
+  INDEX iTest = 0;
+  fsTestRead >> iTest;
+  TEST(iTest == 5);
+
+  CString strTest;
+  fsTestRead >> strTest;
+  TEST(strTest == "Hello!");
+
+  // note that closing the stream is optional (destructor does it for us), however we need to have it closed for the unlink below
+  fsTestRead.Close();
+
+  // remove the test file from the system
+  unlink("Test.bin");
+}
+
 int main()
 {
   // perform tests
   TestString();
   TestStackArray();
   TestDictionary();
+  TestFilestream();
 
   // report test results
   printf("\n\nResults: %d out of %d went OK.\n\n", _ctTests - _ctFailed, _ctTests);
