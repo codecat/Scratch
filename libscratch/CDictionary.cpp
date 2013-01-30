@@ -145,8 +145,8 @@ TValue& CDictionary<TKey, TValue>::operator[](const TKey &key)
   // get the index
   INDEX iIndex = IndexByKey(key);
 
-  // make sure the key exists
-  if(iIndex != -1) {
+  // if the key doesn't exist
+  if(iIndex == -1) {
     // make a new key
     dic_saKeys.Push() = key;
 
