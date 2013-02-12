@@ -98,7 +98,7 @@ Type& CStackArray<Type>::Push(void)
 
 /// Push existing object to the stack
 template<class Type>
-void CStackArray<Type>::Push(Type& tObject)
+void CStackArray<Type>::Push(Type tObject)
 {
   // if we need more slots
   if(sa_ctUsed >= sa_ctSlots) {
