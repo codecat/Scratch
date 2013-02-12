@@ -154,12 +154,10 @@ int main()
   printf("\n\nResults: %d out of %d went OK.\n\n", _ctTests - _ctFailed, _ctTests);
 
   // check if all went OK
+  ASSERT(_ctFailed == 0);
   if(_ctFailed == 0) {
     // it did! no failures. :)
     printf("All OK!\n");
-  } else {
-    // oops, there's a bug somewhere. please report!
-    printf("Some problems seem to have popped up. Please report a bug.\n");
   }
 
   std::cin.get();
