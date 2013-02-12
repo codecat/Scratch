@@ -38,8 +38,6 @@ public:
 
   /// Push to the stack, return a reference to the newly made object
   Type& Push(void);
-  /// Push existing object to the stack
-  void Push(Type tObject);
   /// Pop top object from the stack
   Type& Pop(void);
   /// Pop a certain index from the stack

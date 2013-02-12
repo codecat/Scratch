@@ -96,23 +96,6 @@ Type& CStackArray<Type>::Push(void)
   return *tNewObject;
 }
 
-/// Push existing object to the stack
-template<class Type>
-void CStackArray<Type>::Push(Type tObject)
-{
-  // if we need more slots
-  if(sa_ctUsed >= sa_ctSlots) {
-    // allocate some more
-    AllocateSlots(256);
-  }
-
-  // push it onto the stack
-  sa_pItems[sa_ctUsed] = &tObject;
-
-  // increase iterator
-  sa_ctUsed++;
-}
-
 /// Pop top object from the stack
 template<class Type>
 Type& CStackArray<Type>::Pop(void)
