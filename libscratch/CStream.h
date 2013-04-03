@@ -24,6 +24,8 @@
 #include "Common.h"
 #include "CString.h"
 
+SCRATCH_NAMESPACE_BEGIN;
+
 enum ENewLineMode
 {
   ENLM_CRLF,
@@ -78,5 +80,7 @@ public:
   inline CStream& operator >>(DOUBLE &d)     { d = ReadDouble(); return *this; }
   inline CStream& operator >>(CString &str)  { str = ReadString(); return *this; }
 };
+
+SCRATCH_NAMESPACE_END;
 
 #endif

@@ -16,6 +16,8 @@
 
 #include "CFileStream.h"
 
+SCRATCH_NAMESPACE_BEGIN;
+
 CFileStream::CFileStream(void)
 {
   fs_pfh = NULL;
@@ -81,3 +83,5 @@ void* CFileStream::Read(ULONG iLen)
   fread(pBuffer, 1, iLen, fs_pfh);
   return pBuffer;
 }
+
+SCRATCH_NAMESPACE_END;

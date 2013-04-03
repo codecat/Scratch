@@ -23,6 +23,8 @@
 
 #include "Common.h"
 
+SCRATCH_NAMESPACE_BEGIN;
+
 template<class Type>
 class CStackArray
 {
@@ -56,6 +58,8 @@ public:
 private:
   void AllocateSlots(INDEX ctSlots);
 };
+
+SCRATCH_NAMESPACE_END;
 
 #include "CStackArray.cpp"
 

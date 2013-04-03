@@ -23,6 +23,8 @@
 
 #include "Common.h"
 
+SCRATCH_NAMESPACE_BEGIN;
+
 class Vector3f
 {
 public:
@@ -61,5 +63,7 @@ public:
   Vector3f& operator /=(const Vector3f &v);
   Vector3f& operator /=(const FLOAT f);
 };
+
+SCRATCH_NAMESPACE_END;
 
 #endif

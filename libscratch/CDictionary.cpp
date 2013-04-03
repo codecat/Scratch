@@ -23,6 +23,8 @@
 
 #include "CDictionary.h"
 
+SCRATCH_NAMESPACE_BEGIN;
+
 template<class TKey, class TValue>
 CDictionary<TKey, TValue>::CDictionary(void)
 {
@@ -157,5 +159,7 @@ TValue& CDictionary<TKey, TValue>::operator[](const TKey &key)
   // return the value
   return dic_saValues[iIndex];
 }
+
+SCRATCH_NAMESPACE_END;
 
 #endif

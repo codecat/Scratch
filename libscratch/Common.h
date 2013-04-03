@@ -25,6 +25,9 @@
 #include <cmath>
 #include <cassert>
 
+#define SCRATCH_NAMESPACE_BEGIN namespace Scratch {
+#define SCRATCH_NAMESPACE_END }
+
 #define NULL 0
 
 #define TRUE 1

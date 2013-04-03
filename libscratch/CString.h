@@ -25,6 +25,8 @@
 
 #define CSTRING_FORMAT_BUFFER_SIZE 255
 
+SCRATCH_NAMESPACE_BEGIN;
+
 extern int str_iInstances;
 
 class CString
@@ -78,5 +80,7 @@ public:
 
 CString operator+(CString &strLHS, const char* szRHS);
 CString operator+(CString &strLHS, const char cRHS);
+
+SCRATCH_NAMESPACE_END;
 
 #endif // include once check

@@ -25,6 +25,8 @@
 #include "CStream.h"
 #include "CString.h"
 
+SCRATCH_NAMESPACE_BEGIN;
+
 class CFileStream : public CStream
 {
 public:
@@ -45,5 +47,7 @@ public:
   void* Read(ULONG iLen);
   const void* ReadToEnd(void);
 };
+
+SCRATCH_NAMESPACE_END;
 
 #endif

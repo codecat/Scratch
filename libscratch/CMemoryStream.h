@@ -24,6 +24,8 @@
 #include "Common.h"
 #include "CStream.h"
 
+SCRATCH_NAMESPACE_BEGIN;
+
 class CMemoryStream : public CStream
 {
 public:
@@ -47,5 +49,7 @@ public:
 private:
   void AllocateMoreMemory(INDEX ctBytes);
 };
+
+SCRATCH_NAMESPACE_END;
 
 #endif

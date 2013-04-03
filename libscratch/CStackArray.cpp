@@ -26,6 +26,8 @@
 #include <cstdlib>
 #include <cstring>
 
+SCRATCH_NAMESPACE_BEGIN;
+
 template<class Type>
 CStackArray<Type>::CStackArray()
 {
@@ -183,5 +185,7 @@ Type& CStackArray<Type>::operator[](int iIndex)
   ASSERT(iIndex >= 0 && iIndex < sa_ctUsed);
   return *sa_pItems[iIndex];
 }
+
+SCRATCH_NAMESPACE_END;
 
 #endif

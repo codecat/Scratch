@@ -24,6 +24,8 @@
 #include "Common.h"
 #include "CVectors.h"
 
+SCRATCH_NAMESPACE_BEGIN;
+
 class CMatrix
 {
 public:
@@ -40,5 +42,7 @@ public:
   void Rotate(const Vector3f &v);
   void Scale(const Vector3f &v);
 };
+
+SCRATCH_NAMESPACE_END;
 
 #endif

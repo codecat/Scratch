@@ -19,6 +19,8 @@
 
 #include <Scratch.h>
 
+using namespace Scratch;
+
 static INDEX _ctTests = 0;
 static INDEX _ctFailed = 0;
 

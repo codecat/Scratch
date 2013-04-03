@@ -16,6 +16,8 @@
 
 #include "CMemoryStream.h"
 
+SCRATCH_NAMESPACE_BEGIN;
+
 CMemoryStream::CMemoryStream(void)
 {
   strm_pubBuffer = NULL;
@@ -103,3 +105,5 @@ void CMemoryStream::AllocateMoreMemory(INDEX ctBytes)
     delete[] pubOldBuffer;
   }
 }
+
+SCRATCH_NAMESPACE_END;

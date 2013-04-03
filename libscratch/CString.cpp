@@ -20,6 +20,8 @@
 
 #include "CString.h"
 
+SCRATCH_NAMESPACE_BEGIN;
+
 extern int str_iInstances = 0;
 
 char* CString::str_szEmpty = "";
@@ -464,3 +466,5 @@ CString operator+(CString &strLHS, const char cRHS)
 {
   return CString(strLHS) += cRHS;
 }
+
+SCRATCH_NAMESPACE_END;

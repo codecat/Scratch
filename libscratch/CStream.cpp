@@ -16,6 +16,8 @@
 
 #include "CStream.h"
 
+SCRATCH_NAMESPACE_BEGIN;
+
 CStream::CStream(void)
 {
   strm_nlmNewLineMode = ENLM_LF;
@@ -105,3 +107,5 @@ CString CStream::ReadLine(void)
   // done, return
   return strRet;
 }
+
+SCRATCH_NAMESPACE_END;

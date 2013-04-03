@@ -16,6 +16,8 @@
 
 #include "CVectors.h"
 
+SCRATCH_NAMESPACE_BEGIN;
+
 Vector3f::Vector3f(void)
 {
   x = y = z = 0.0f;
@@ -180,3 +182,5 @@ Vector3f& Vector3f::operator /=(const FLOAT f)
 
   return *this;
 }
+
+SCRATCH_NAMESPACE_END;

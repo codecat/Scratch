@@ -16,4 +16,8 @@
 
 #include "CMatrix.h"
 
+SCRATCH_NAMESPACE_BEGIN;
 
+// TODO
+
+SCRATCH_NAMESPACE_END;

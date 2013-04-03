@@ -24,6 +24,8 @@
 #include "Common.h"
 #include "CStackArray.h"
 
+SCRATCH_NAMESPACE_BEGIN;
+
 template<class TKey, class TValue>
 class CDictionary
 {
@@ -60,6 +62,8 @@ public:
 
   TValue& operator[](const TKey &key);
 };
+
+SCRATCH_NAMESPACE_END;
 
 #include "CDictionary.cpp"
 
