@@ -45,8 +45,8 @@ public:
   CString(const CString &strCopy);
   ~CString();
 
-  void SetF(const char* strFormat, ...);
-  void AppendF(const char* strFormat, ...);
+  void SetF(const char* szFormat, ...);
+  void AppendF(const char* szFormat, ...);
 
   CStackArray<CString> Split(const CString &strNeedle);
   CString Trim();
