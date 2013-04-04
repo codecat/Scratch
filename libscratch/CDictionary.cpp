@@ -160,6 +160,14 @@ TValue& CDictionary<TKey, TValue>::operator[](const TKey &key)
   return dic_saValues[iIndex];
 }
 
+/// Return value by index
+template<class TKey, class TValue>
+TValue& CDictionary<TKey, TValue>::GetByIndex(const INDEX iIndex)
+{
+  // return the value
+  return dic_saValues[iIndex];
+}
+
 SCRATCH_NAMESPACE_END;
 
 #endif
