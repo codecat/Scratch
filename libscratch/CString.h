@@ -35,6 +35,9 @@ private:
   char* str_szBuffer;
 
   void CopyToBuffer(const char* szSrc);
+  void AppendToBuffer(const char* szSrc);
+  void AppendToBuffer(const char* szSrc, int iCount);
+  void AppendToBuffer(const char cSrc);
 
 public:
   static char* str_szEmpty;
@@ -46,9 +49,6 @@ public:
 
   void SetF(const char* szFormat, ...);
   void AppendF(const char* szFormat, ...);
-  void AppendToBuffer(const char* szSrc);
-  void AppendToBuffer(const char* szSrc, int iCount);
-  void AppendToBuffer(const char cSrc);
 
   CStackArray<CString> Split(const CString &strNeedle);
   CString Trim();
