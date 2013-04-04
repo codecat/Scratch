@@ -61,6 +61,9 @@ public:
   INDEX Count(void);
 
   TValue& operator[](const TKey &key);
+  
+  /// Get a value from the dictionary using the index
+  TValue& GetByIndex(const INDEX iIndex);
 };
 
 SCRATCH_NAMESPACE_END;
