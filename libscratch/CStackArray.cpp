@@ -54,6 +54,11 @@ template<class Type>
 CStackArray<Type>::~CStackArray()
 {
   PopAll();
+
+  // free allocated memory for data
+  if(sa_pItems != NULL) {
+    free(sa_pItems);
+  }
 }
 
 template<class Type>
