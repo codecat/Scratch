@@ -214,10 +214,8 @@ void CString::AppendF(const char* szFormat, ...)
   delete[] szBuffer;
 }
 
-CStackArray<CString> CString::Split(const CString &strNeedle)
+void CString::Split(const CString &strNeedle, CStackArray<CString> &astrResult)
 {
-  CStackArray<CString> aRet;
-
   // Keep a pointer to the current offset and a "previous offset"
   char* szOffset = str_szBuffer;
   char* szOffsetPrev = szOffset;
@@ -242,7 +240,7 @@ CStackArray<CString> CString::Split(const CString &strNeedle)
       szPart[i] = '\0';
 
       // Add it to the return array
-      aRet.Push() = szPart;
+      astrResult.Push() = szPart;
 
       // Increase the offset pointer by the needle length
       szOffset += strlen(strNeedle);
@@ -264,11 +262,9 @@ CStackArray<CString> CString::Split(const CString &strNeedle)
       szPart[i] = '\0';
 
       // Add it to the return vector
-      aRet.Push() = szPart;
+      astrResult.Push() = szPart;
     }
   } while(szOffset != NULL);
-
-  return aRet;
 }
 
 CString CString::Trim()

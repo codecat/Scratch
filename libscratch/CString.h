@@ -50,7 +50,7 @@ public:
   void SetF(const char* szFormat, ...);
   void AppendF(const char* szFormat, ...);
 
-  CStackArray<CString> Split(const CString &strNeedle);
+  void Split(const CString &strNeedle, CStackArray<CString> &astrResult);
   CString Trim();
   CString Replace(const CString &strNeedle, const CString &strReplace);
   CString SubString(int iStart, int iLen);

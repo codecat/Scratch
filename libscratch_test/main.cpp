@@ -47,7 +47,8 @@ void TestString()
   TEST(strTest == "libscratch");
 
   strTest += " is great";
-  CStackArray<CString> astrParse = strTest.Split(" ");
+  CStackArray<CString> astrParse;
+  strTest.Split(" ", astrParse);
   TEST(astrParse[2] == "great");
   TEST(astrParse[2][1] == 'r');
 
@@ -71,7 +72,7 @@ void TestStackArray()
   TEST(aiNumbers[1] == 10);
   TEST(aiNumbers[2] + aiNumbers[0] == 20);
 
-  TEST(aiNumbers.Pop() == 15);
+  TEST(*aiNumbers.Pop() == 15);
   TEST(aiNumbers.Count() == 2);
 }
 
