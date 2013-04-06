@@ -121,7 +121,7 @@ void TestFilestream()
   fsTestRead.Close();
 
   // remove the test file from the system
-  unlink("Test.bin");
+  _unlink("Test.bin");
 }
 
 /// Vector tests
