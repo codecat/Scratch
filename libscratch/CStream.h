@@ -69,14 +69,12 @@ public:
   CString ReadLine(void);
 
   inline CStream& operator <<(INDEX i)       { WriteIndex(i); return *this; }
-  inline CStream& operator <<(LONG l)        { WriteLong(l); return *this; }
   inline CStream& operator <<(FLOAT f)       { WriteFloat(f); return *this; }
   inline CStream& operator <<(DOUBLE d)      { WriteDouble(d); return *this; }
   inline CStream& operator <<(CString str)   { WriteString(str); return *this; }
   inline CStream& operator <<(CStream &strm) { WriteStream(strm); return *this; }
 
   inline CStream& operator >>(INDEX &i)      { i = ReadIndex(); return *this; }
-  inline CStream& operator >>(LONG &l)       { l = ReadLong(); return *this; }
   inline CStream& operator >>(FLOAT &f)      { f = ReadFloat(); return *this; }
   inline CStream& operator >>(DOUBLE &d)     { d = ReadDouble(); return *this; }
   inline CStream& operator >>(CString &str)  { str = ReadString(); return *this; }

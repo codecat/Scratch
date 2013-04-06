@@ -25,6 +25,11 @@
 #include <cmath>
 #include <cassert>
 
+#ifndef WIN32_LEAN_AND_MEAN
+  #define WIN32_LEAN_AND_MEAN
+#endif
+#include <Windows.h>
+
 #define SCRATCH_NAMESPACE_BEGIN namespace Scratch {
 #define SCRATCH_NAMESPACE_END }
 
@@ -33,13 +38,11 @@
 #define TRUE 1
 #define FALSE 0
 
-typedef                long INDEX;
-typedef           long long LONG;
-typedef  unsigned long long ULONG;
-typedef               float FLOAT;
-typedef              double DOUBLE;
-typedef                 int BOOL;
-typedef       unsigned char UBYTE;
+typedef          long INDEX;
+typedef         float FLOAT;
+typedef        double DOUBLE;
+typedef           int BOOL;
+typedef unsigned char UBYTE;
 
 template<class T> inline T Max(const T &v1, const T &v2) { return v1 >= v2 ? v1 : v2; }
 template<class T> inline T Min(const T &v1, const T &v2) { return v1 <= v2 ? v1 : v2; }
