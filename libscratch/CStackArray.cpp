@@ -40,20 +40,28 @@ CStackArray<Type>::CStackArray()
 template<class Type>
 CStackArray<Type>::CStackArray(const CStackArray& copy)
 {
-  sa_ctSlots = copy.sa_ctSlots;
+  sa_pItems = NULL;
+  sa_ctSlots = 0;
+  sa_ctUsed = 0;
+  AllocateSlots(copy.sa_ctSlots);
+
+  // copy meta information
   sa_ctUsed = copy.sa_ctUsed;
 
-  // allocate new memory
-  sa_pItems = (Type**)malloc(sizeof(Type*) * sa_ctSlots);
+  // copy data to other slots
+  for(INDEX i=0; i<sa_ctUsed; i++) {
+    // allocate memory for it
+    sa_pItems[i] = new Type;
 
-  // copy memory from the to-copy instance
-  memcpy(sa_pItems, copy.sa_pItems, sizeof(Type*) * sa_ctSlots);
+    // this should call the copy constructor
+    *sa_pItems[i] = *copy.sa_pItems[i];
+  }
 }
 
 template<class Type>
 CStackArray<Type>::~CStackArray()
 {
-  PopAll();
+  Clear();
 
   // free allocated memory for data
   if(sa_pItems != NULL) {
@@ -105,7 +113,7 @@ Type& CStackArray<Type>::Push(void)
 
 /// Pop top object from the stack
 template<class Type>
-Type& CStackArray<Type>::Pop(void)
+Type* CStackArray<Type>::Pop(void)
 {
   ASSERT(sa_ctUsed > 0);
 
@@ -119,12 +127,12 @@ Type& CStackArray<Type>::Pop(void)
   sa_pItems[sa_ctUsed] = NULL;
 
   // return the object
-  return *tObject;
+  return tObject;
 }
 
 /// Pop a certain index from the stack
 template<class Type>
-Type& CStackArray<Type>::PopAt(INDEX iIndex)
+Type* CStackArray<Type>::PopAt(INDEX iIndex)
 {
   ASSERT(iIndex < Count());
 
@@ -144,7 +152,7 @@ Type& CStackArray<Type>::PopAt(INDEX iIndex)
   sa_pItems[sa_ctUsed] = NULL;
 
   // return the object
-  return *tObject;
+  return tObject;
 }
 
 /// Pop all objects from the stack

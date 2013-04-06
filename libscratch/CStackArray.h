@@ -35,15 +35,15 @@ public:
 
 public:
   CStackArray(void);
-  CStackArray(const CStackArray& copy);
+  CStackArray(const CStackArray& copy); // Note: If this ever gets called, you're most likely writing bad code.
   ~CStackArray(void);
 
   /// Push to the stack, return a reference to the newly made object
   Type& Push(void);
   /// Pop top object from the stack
-  Type& Pop(void);
+  Type* Pop(void);
   /// Pop a certain index from the stack
-  Type& PopAt(INDEX iIndex);
+  Type* PopAt(INDEX iIndex);
 
   /// Pop all objects from the stack
   void PopAll(void);
