@@ -43,8 +43,8 @@ public:
   void Seek(ULONG ulPos, INDEX iOrigin);
 
   void Write(const void* p, ULONG iLen);
-  void* Read(ULONG iLen);
-  const void* ReadToEnd(void);
+  void Read(void* pDest, ULONG iLen);
+  const void ReadToEnd(void* pDest);
 
 private:
   void AllocateMoreMemory(INDEX ctBytes);

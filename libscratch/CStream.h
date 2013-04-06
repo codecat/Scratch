@@ -56,12 +56,12 @@ public:
   void WriteString(const CString &str);
   void WriteStream(CStream &strm);
 
-  virtual void* Read(ULONG iLen) = 0;
-  void* ReadToEnd(void);
-  inline INDEX  ReadIndex(void)  { return *(INDEX*)Read(sizeof(INDEX)); }
-  inline LONG   ReadLong(void)   { return *(LONG*)Read(sizeof(LONG)); }
-  inline FLOAT  ReadFloat(void)  { return *(FLOAT*)Read(sizeof(FLOAT)); }
-  inline DOUBLE ReadDouble(void) { return *(DOUBLE*)Read(sizeof(DOUBLE)); }
+  virtual void Read(void* pDest, ULONG iLen) = 0;
+  void ReadToEnd(void* pDest);
+  inline INDEX  ReadIndex(void)  { INDEX  i; Read(&i, sizeof(INDEX)); return i; }
+  inline LONG   ReadLong(void)   { LONG   l; Read(&l, sizeof(LONG)); return l; }
+  inline FLOAT  ReadFloat(void)  { FLOAT  f; Read(&f, sizeof(FLOAT)); return f; }
+  inline DOUBLE ReadDouble(void) { DOUBLE d; Read(&d, sizeof(DOUBLE)); return d; }
   CString ReadString(void);
 
   void WriteLine(const CString &str);

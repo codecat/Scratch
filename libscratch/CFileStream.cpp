@@ -77,11 +77,9 @@ void CFileStream::Write(const void* p, ULONG iLen)
   fwrite(p, 1, iLen, fs_pfh);
 }
 
-void* CFileStream::Read(ULONG iLen)
+void CFileStream::Read(void* pDest, ULONG iLen)
 {
-  void* pBuffer = malloc(iLen);
-  fread(pBuffer, 1, iLen, fs_pfh);
-  return pBuffer;
+  fread(pDest, 1, iLen, fs_pfh);
 }
 
 SCRATCH_NAMESPACE_END;

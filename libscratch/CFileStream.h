@@ -44,8 +44,8 @@ public:
   void Open(const char* szFileName, const char* szMode);
   void Close();
   void Write(const void* p, ULONG iLen);
-  void* Read(ULONG iLen);
-  const void* ReadToEnd(void);
+  void Read(void* pDest, ULONG iLen);
+  const void ReadToEnd(void* pDest);
 };
 
 SCRATCH_NAMESPACE_END;

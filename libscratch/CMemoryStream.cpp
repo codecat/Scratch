@@ -68,17 +68,13 @@ void CMemoryStream::Write(const void* p, ULONG iLen)
   strm_ulUsed = Max<ULONG>(strm_ulPosition, strm_ulUsed);
 }
 
-void* CMemoryStream::Read(ULONG iLen)
+void CMemoryStream::Read(void* pDest, ULONG iLen)
 {
-  // create a new buffer
-  void* pBuffer = malloc(iLen);
-  memcpy(pBuffer, strm_pubBuffer + strm_ulPosition, iLen);
+  // copy data to destination
+  memcpy(pDest, strm_pubBuffer + strm_ulPosition, iLen);
   
   // increase position
   strm_ulPosition += iLen;
-
-  // return pointer to buffer
-  return pBuffer;
 }
 
 void CMemoryStream::AllocateMoreMemory(INDEX ctBytes)

@@ -39,14 +39,33 @@ void CStream::WriteString(const CString &str)
 
 void CStream::WriteStream(CStream &strm)
 {
-  ULONG ulPos = strm.Location();
-  const void* pBuffer = strm.ReadToEnd();
-  Write(pBuffer, strm.Size() - ulPos);
+  // get buffer size
+  ULONG ulBufferSize = strm.Size() - strm.Location();
+  ULONG ulBytesLeft = ulBufferSize;
+
+  // allocate memory for chunks
+  ULONG ulChunkSize = 1024;
+  void* pBuffer = malloc(ulChunkSize);
+
+  // loop through chunks required to write
+  while(ulBytesLeft > 0) {
+    // check for end of stream
+    if(ulBytesLeft < ulChunkSize) {
+      ulChunkSize = ulBytesLeft;
+    }
+    // read chunk from other stream
+    strm.Read(pBuffer, ulChunkSize);
+    // write chunk into our stream
+    Write(pBuffer, ulChunkSize);
+  }
+
+  // we're done, deallocate buffer
+  free(pBuffer);
 }
 
-void* CStream::ReadToEnd(void)
+void CStream::ReadToEnd(void* pDest)
 {
-  return Read(Size() - Location());
+  Read(pDest, Size() - Location());
 }
 
 CString CStream::ReadString(void)
@@ -55,7 +74,7 @@ CString CStream::ReadString(void)
   char c;
   do {
     // read 1 character
-    c = *(char*)Read(sizeof(char));
+    Read(&c, sizeof(char));
 
     // if it's not the terminator
     if(c != '\0') {
@@ -87,7 +106,7 @@ CString CStream::ReadLine(void)
   char c;
   do {
     // read 1 character
-    c = *(char*)Read(sizeof(char));
+    Read(&c, sizeof(char));
 
     // skip \r
     if(c == '\r') {
