@@ -91,7 +91,12 @@ void CStream::WriteLine(const CString &str)
 {
   // write text
   Write((const char*)str, strlen(str));
+  // write newline
+  WriteLine();
+}
 
+void CStream::WriteLine(void)
+{
   // write newline
   switch(strm_nlmNewLineMode) {
   case ENLM_CRLF: Write("\r\n", 2); break;

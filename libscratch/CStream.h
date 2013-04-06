@@ -65,6 +65,7 @@ public:
   CString ReadString(void);
 
   void WriteLine(const CString &str);
+  void WriteLine(void);
   CString ReadLine(void);
 
   inline CStream& operator <<(INDEX i)       { WriteIndex(i); return *this; }
