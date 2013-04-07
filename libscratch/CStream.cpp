@@ -113,6 +113,12 @@ CString CStream::ReadLine(void)
     // read 1 character
     Read(&c, sizeof(char));
 
+    // if at EOF
+    if(AtEOF()) {
+      // we're done here
+      break;
+    }
+
     // skip \r
     if(c == '\r') {
       //WARNING: This can potentially cause problems on certain operating systems
