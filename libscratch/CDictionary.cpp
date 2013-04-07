@@ -160,9 +160,17 @@ TValue& CDictionary<TKey, TValue>::operator[](const TKey &key)
   return dic_saValues[iIndex];
 }
 
+/// Get a key from the dictionary using an index
+template<class TKey, class TValue>
+TKey& CDictionary<TKey, TValue>::GetKeyByIndex(const INDEX iIndex)
+{
+  // return the value
+  return dic_saKeys[iIndex];
+}
+
 /// Return value by index
 template<class TKey, class TValue>
-TValue& CDictionary<TKey, TValue>::GetByIndex(const INDEX iIndex)
+TValue& CDictionary<TKey, TValue>::GetValueByIndex(const INDEX iIndex)
 {
   // return the value
   return dic_saValues[iIndex];

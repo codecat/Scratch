@@ -62,8 +62,10 @@ public:
 
   TValue& operator[](const TKey &key);
   
-  /// Get a value from the dictionary using the index
-  TValue& GetByIndex(const INDEX iIndex);
+  /// Get a key from the dictionary using an index
+  TKey& GetKeyByIndex(const INDEX iIndex);
+  /// Get a value from the dictionary using an index
+  TValue& GetValueByIndex(const INDEX iIndex);
 };
 
 SCRATCH_NAMESPACE_END;
