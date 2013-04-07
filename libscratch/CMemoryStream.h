@@ -41,6 +41,7 @@ public:
   ULONG Size();
   ULONG Location();
   void Seek(ULONG ulPos, INDEX iOrigin);
+  BOOL AtEOF();
 
   void Write(const void* p, ULONG iLen);
   void Read(void* pDest, ULONG iLen);

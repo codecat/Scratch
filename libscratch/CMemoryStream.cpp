@@ -51,6 +51,11 @@ void CMemoryStream::Seek(ULONG ulPos, INDEX iOrigin)
   }
 }
 
+BOOL CMemoryStream::AtEOF()
+{
+  return Size() - Location() > 0;
+}
+
 void CMemoryStream::Write(const void* p, ULONG iLen)
 {
   // check if we need a larger buffer
