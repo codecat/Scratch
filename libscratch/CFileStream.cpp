@@ -47,6 +47,11 @@ void CFileStream::Seek(ULONG ulPos, INDEX iOrigin)
   fseek(fs_pfh, ulPos, iOrigin);
 }
 
+BOOL CFileStream::AtEOF()
+{
+  return feof(fs_pfh) > 0;
+}
+
 void CFileStream::Open(const char* szFileName, const char* szMode)
 {
   // must not already have a handle open

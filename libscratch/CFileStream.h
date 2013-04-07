@@ -40,6 +40,7 @@ public:
   ULONG Size();
   ULONG Location();
   void Seek(ULONG ulPos, INDEX iOrigin);
+  BOOL AtEOF();
 
   void Open(const char* szFileName, const char* szMode);
   void Close();

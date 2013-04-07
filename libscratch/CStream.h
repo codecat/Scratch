@@ -45,6 +45,7 @@ public:
   virtual ULONG Size() = 0;
   virtual ULONG Location() = 0;
   virtual void Seek(ULONG ulPos, INDEX iOrigin) = 0;
+  virtual BOOL AtEOF() = 0;
 
   virtual void Close();
 
