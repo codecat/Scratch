@@ -81,6 +81,9 @@ public:
 CString operator+(CString &strLHS, const char* szRHS);
 CString operator+(CString &strLHS, const char cRHS);
 
+CString operator+(const char* szLHS, CString &strRHS);
+CString operator+(const char cLHS, CString &strRHS);
+
 SCRATCH_NAMESPACE_END;
 
 #endif // include once check

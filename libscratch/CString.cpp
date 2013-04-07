@@ -463,4 +463,14 @@ CString operator+(CString &strLHS, const char cRHS)
   return CString(strLHS) += cRHS;
 }
 
+CString operator+(const char* szLHS, CString &strRHS)
+{
+  return CString(szLHS) += strRHS;
+}
+
+CString operator+(const char cLHS, CString &strRHS)
+{
+  return CString(strRHS) += cLHS;
+}
+
 SCRATCH_NAMESPACE_END;
