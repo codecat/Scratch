@@ -57,6 +57,9 @@ public:
   /// Remove a value from the dictionary
   void RemoveByValue(const TValue &value);
 
+  /// Clear all items
+  void Clear(void);
+
   /// Return how many objects there currently are in the dictionary
   INDEX Count(void);
 

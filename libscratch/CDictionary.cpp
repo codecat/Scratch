@@ -113,8 +113,8 @@ template<class TKey, class TValue>
 void CDictionary<TKey, TValue>::RemoveByIndex(const INDEX iIndex)
 {
   // pop the values at that index
-  dic_saKeys.PopAt(iIndex);
-  dic_saValues.PopAt(iIndex);
+  delete dic_saKeys.PopAt(iIndex);
+  delete dic_saValues.PopAt(iIndex);
 }
 
 /// Remove a value from the dictionary by key
@@ -131,6 +131,15 @@ void CDictionary<TKey, TValue>::RemoveByValue(const TValue &value)
 {
   // remove by index
   RemoveByIndex(IndexByValue(value));
+}
+
+/// Clear all items
+template<class TKey, class TValue>
+void CDictionary<TKey, TValue>::Clear(void)
+{
+  // clear keys and values
+  dic_saKeys.Clear();
+  dic_saValues.Clear();
 }
 
 /// Return how many objects there currently are in the dictionary
