@@ -241,6 +241,7 @@ void CString::Split(const CString &strNeedle, CStackArray<CString> &astrResult)
 
       // Add it to the return array
       astrResult.Push() = szPart;
+      delete szPart;
 
       // Increase the offset pointer by the needle length
       szOffset += strlen(strNeedle);
@@ -263,6 +264,7 @@ void CString::Split(const CString &strNeedle, CStackArray<CString> &astrResult)
 
       // Add it to the return vector
       astrResult.Push() = szPart;
+      delete szPart;
     }
   } while(szOffset != NULL);
 }
