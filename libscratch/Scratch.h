@@ -77,6 +77,18 @@
  */
 #include "CMemoryStream.h"
 
+/* CNetworkStream: high level network connections management
+ * ---------------------------------------------------------
+ * Basic usage:
+ *   CNetworkStream ns;
+ *   ns.Connect("127.0.0.1", 1234);
+ *   ns << INDEX(5);
+ *   INDEX iResult;
+ *   ns >> iResult;
+ *   ns.Close();
+ */
+#include "CNetworkStream.h"
+
 /* Vectors: high level vectors
  * ---------------------------
  * Basic usage:

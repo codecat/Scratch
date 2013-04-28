@@ -54,6 +54,7 @@ void TestString()
 
   CString strTest2 = strTest.Replace("great", "cool");
   TEST(strTest2 == "libscratch is cool");
+  TEST(!(strTest2.EndsWith(" ")));
 }
 
 /// Stack array testing
@@ -67,13 +68,17 @@ void TestStackArray()
   aiNumbers.Push() = 5;
   aiNumbers.Push() = 10;
   aiNumbers.Push() = 15;
-  TEST(aiNumbers.Count() == 3);
+  aiNumbers.Push() = 20;
+  aiNumbers.Push() = 25;
+  TEST(aiNumbers.Count() == 5);
   TEST(aiNumbers[0] == 5);
   TEST(aiNumbers[1] == 10);
   TEST(aiNumbers[2] + aiNumbers[0] == 20);
 
-  TEST(*aiNumbers.Pop() == 15);
-  TEST(aiNumbers.Count() == 2);
+  INDEX* iRet = aiNumbers.Pop();
+  TEST(*iRet == 25);
+  delete iRet;
+  TEST(aiNumbers.Count() == 4);
 }
 
 /// Dictionary testing
@@ -144,6 +149,22 @@ void TestVectors()
   TEST(vTest.Length() == 1.0f);
 }
 
+/// Network tests
+void TestNetwork()
+{
+  printf("Testing network streams\n");
+
+  CNetworkStream ns;
+  TEST(ns.Connect("example.com", 80));
+  ns.WriteLine("GET / HTTP/1.1");
+  ns.WriteLine();
+  CString strLine = ns.ReadLine();
+  TEST(strLine != "");
+  ns.Close();
+
+  CNetworkStream::Cleanup();
+}
+
 int main()
 {
   // perform tests
@@ -152,6 +173,7 @@ int main()
   TestDictionary();
   TestFilestream();
   TestVectors();
+  TestNetwork();
 
   // report test results
   printf("\n\nResults: %d out of %d went OK.\n\n", _ctTests - _ctFailed, _ctTests);

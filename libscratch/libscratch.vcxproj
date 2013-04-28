@@ -71,6 +71,7 @@
     <ClCompile Include="CFileStream.cpp" />
     <ClCompile Include="CMatrix.cpp" />
     <ClCompile Include="CMemoryStream.cpp" />
+    <ClCompile Include="CNetworkStream.cpp" />
     <ClCompile Include="Common.cpp" />
     <ClCompile Include="CStackArray.cpp" />
     <ClCompile Include="CStream.cpp" />
@@ -82,6 +83,7 @@
     <ClInclude Include="CFileStream.h" />
     <ClInclude Include="CMatrix.h" />
     <ClInclude Include="CMemoryStream.h" />
+    <ClInclude Include="CNetworkStream.h" />
     <ClInclude Include="Common.h" />
     <ClInclude Include="CStackArray.h" />
     <ClInclude Include="CStream.h" />
