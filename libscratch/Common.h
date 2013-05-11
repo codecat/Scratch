@@ -44,11 +44,15 @@ typedef        double DOUBLE;
 typedef           int BOOL;
 typedef unsigned char UBYTE;
 
+SCRATCH_NAMESPACE_BEGIN;
+
 template<class T> inline T Max(const T &v1, const T &v2) { return v1 >= v2 ? v1 : v2; }
 template<class T> inline T Min(const T &v1, const T &v2) { return v1 <= v2 ? v1 : v2; }
 template<class T> inline T Swap(const T &v1, const T &v2) { T& t = v1; v1 = v2; v2 = t; }
 
 template<class T> inline T Abs(const T &v) { return v < 0 ? -v : v; }
+
+SCRATCH_NAMESPACE_END;
 
 #ifdef ASSERT
 #undef ASSERT
