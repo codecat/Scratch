@@ -54,10 +54,7 @@ template<class T> inline T Abs(const T &v) { return v < 0 ? -v : v; }
 
 SCRATCH_NAMESPACE_END;
 
-#ifdef ASSERT
-#undef ASSERT
-#endif
-
+#ifndef ASSERT
 #define ASSERT(expr) {            \
   if(!(expr)) {                   \
     static UBYTE bWasHere = 0;    \
@@ -69,5 +66,6 @@ SCRATCH_NAMESPACE_END;
     }                             \
   }                               \
 }
+#endif
 
 #endif // include once check
