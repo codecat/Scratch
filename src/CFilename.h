@@ -34,6 +34,7 @@ SCRATCH_NAMESPACE_BEGIN;
 class SCRATCH_EXPORT CFilename : public CString
 {
 public:
+  CFilename();
   CFilename(const CString &str);
 
   CString Extension() const;

@@ -28,6 +28,13 @@
 
 SCRATCH_NAMESPACE_BEGIN;
 
+CFilename::CFilename()
+{
+  str_iInstances++;
+  // Create a new empty buffer
+  this->str_szBuffer = CString::str_szEmpty;
+}
+
 CFilename::CFilename(const CString &str)
 {
   str_iInstances++;
