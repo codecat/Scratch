@@ -49,7 +49,11 @@ public:
   BOOL AtEOF();
 
   BOOL Open(const char* szFileName, const char* szMode);
+
   void OpenStdout();
+  void OpenStdin();
+  void OpenStderr();
+
   void Close();
   void Write(const void* p, ULONG iLen);
   void Read(void* pDest, ULONG iLen);

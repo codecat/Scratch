@@ -89,6 +89,18 @@ void CFileStream::OpenStdout()
   fs_pfh = stdout;
 }
 
+void CFileStream::OpenStdin()
+{
+  fs_strFileName = "stdin";
+  fs_pfh = stdin;
+}
+
+void CFileStream::OpenStderr()
+{
+  fs_strFileName = "stderr";
+  fs_pfh = stderr;
+}
+
 void CFileStream::Close(void)
 {
   // close the file handle
