@@ -5,7 +5,7 @@ if(NOT WIN32)
 	SET(CMAKE_CXX_FLAGS "-std=c++0x")
 endif()
 
-add_library(Scratch SHARED
+add_library(Scratch
 	src/Assert.cpp
 	src/CContainer.cpp src/CContainer.h
 	src/CDictionary.cpp src/CDictionary.h
