@@ -173,6 +173,14 @@ CString::CString(const char* szStr)
   this->CopyToBuffer(szStr);
 }
 
+CString::CString(const char* szValue, int iStart, int iLength)
+{
+  str_iInstances++;
+  // Create a new buffer and copy data into it.
+  this->str_szBuffer = CString::str_szEmpty;
+  this->AppendToBuffer(szValue + iStart, iLength);
+}
+
 CString::CString(const CString &copy)
 {
   str_iInstances++;

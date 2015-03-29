@@ -15,6 +15,7 @@ add_library(Scratch
 	src/CStackArray.cpp src/CStackArray.h
 	src/CStream.cpp src/CStream.h
 	src/CString.cpp src/CString.h
+	src/CFilename.cpp src/CFilename.h
 	src/CVectors.cpp src/CVectors.h
 	src/Common.cpp src/Common.h
 	src/Scratch.h)

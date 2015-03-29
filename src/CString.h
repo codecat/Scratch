@@ -37,7 +37,8 @@ SCRATCH_NAMESPACE_BEGIN;
 
 class SCRATCH_EXPORT CString
 {
-private:
+  friend class CFilename;
+protected:
   char* str_szBuffer;
 
   void CopyToBuffer(const char* szSrc);
@@ -51,8 +52,9 @@ public:
 
   CString();
   CString(const char* szValue);
+  CString(const char* szValue, int iStart, int iLength);
   CString(const CString &strCopy);
-  ~CString();
+  virtual ~CString();
 
   void SetF(const char* szFormat, ...);
   void AppendF(const char* szFormat, ...);

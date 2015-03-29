@@ -41,6 +41,19 @@
  */
 #include "CString.h"
 
+/* CFilename: high level string management with filename functions
+ * ---------------------------------------------------------------
+ * Basic usage:
+ *   CFilename fnmFoo = "foo/bar/test.c";
+ *   CString strExtension = fnmFoo.Extension();
+ *   CString strPath = fnmFoo.Path();
+ *   CString strFilename = fnmFoo.Filename();
+ *   ASSERT(strExtension == "c");
+ *   ASSERT(strPath == "foo/bar/");
+ *   ASSERT(strFilename == "test.c");
+ */
+#include "CFilename.h"
+
 /* CStackArray: high level array management
  * ----------------------------------------
  * Basic usage:
