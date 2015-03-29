@@ -15,21 +15,17 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
 #ifndef SCRATCH_CSTRING_H_INCLUDED
-#define SCRATCH_CSTRING_H_INCLUDED 1
-
-#ifdef USE_PRAGMAONCE
-  #pragma once
-#endif
+#define SCRATCH_CSTRING_H_INCLUDED
 
 #include "CStackArray.h"
 
-#define CSTRING_FORMAT_BUFFER_SIZE 255
+#ifndef CSTRING_FORMAT_BUFFER_SIZE
+#define CSTRING_FORMAT_BUFFER_SIZE 1024
+#endif
 
 SCRATCH_NAMESPACE_BEGIN;
 
-extern int str_iInstances;
-
-class CString
+class SCRATCH_EXPORT CString
 {
 private:
   char* str_szBuffer;
@@ -41,6 +37,7 @@ private:
 
 public:
   static char* str_szEmpty;
+  static int str_iInstances;
 
   CString();
   CString(const char* szValue);
@@ -50,15 +47,17 @@ public:
   void SetF(const char* szFormat, ...);
   void AppendF(const char* szFormat, ...);
 
-  void Split(const CString &strNeedle, CStackArray<CString> &astrResult);
+  void Split(const CString &strNeedle, CStackArray<CString> &astrResult) const;
+  void Split(const CString &strNeedle, CStackArray<CString> &astrResult, BOOL bTrimAll) const ;
+  void Split(const CString &strNeedle, CStackArray<CString> &astrResult, BOOL bTrimAll, int iMax) const;
   CString Trim();
-  CString Replace(const CString &strNeedle, const CString &strReplace);
-  CString SubString(int iStart, int iLen);
-  CString Reverse();
-  CString ToLower();
-  CString ToUpper();
+  CString Replace(const CString &strNeedle, const CString &strReplace) const;
+  CString SubString(int iStart, int iLen) const;
+  CString ToLower() const;
+  CString ToUpper() const;
 
   bool Contains(const CString &strNeedle);
+  bool Contains(char c) const;
   bool StartsWith(const CString &strNeedle);
   bool EndsWith(const CString &strNeedle);
 
@@ -72,17 +71,19 @@ public:
   CString& operator+=(const char* szSrc);
   CString& operator+=(const char cSrc);
 
-  bool operator==(const char* szSrc);
-  bool operator!=(const char* szSrc);
+  bool operator==(const char* szSrc) const;
+  bool operator!=(const char* szSrc) const;
 
   char& operator[](int iIndex);
 };
 
-CString operator+(CString &strLHS, const char* szRHS);
-CString operator+(CString &strLHS, const char cRHS);
+CString SCRATCH_EXPORT operator+(const CString &strLHS, const char* szRHS);
+CString SCRATCH_EXPORT operator+(const CString &strLHS, const char cRHS);
 
-CString operator+(const char* szLHS, CString &strRHS);
-CString operator+(const char cLHS, CString &strRHS);
+CString SCRATCH_EXPORT operator+(const char* szLHS, CString &strRHS);
+CString SCRATCH_EXPORT operator+(const char cLHS, CString &strRHS);
+
+CString SCRATCH_EXPORT strPrintF(const char* szFormat, ...);
 
 SCRATCH_NAMESPACE_END;
 

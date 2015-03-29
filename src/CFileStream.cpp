@@ -52,7 +52,7 @@ BOOL CFileStream::AtEOF()
   return feof(fs_pfh) > 0;
 }
 
-void CFileStream::Open(const char* szFileName, const char* szMode)
+BOOL CFileStream::Open(const char* szFileName, const char* szMode)
 {
   // must not already have a handle open
   ASSERT(fs_pfh == NULL);
@@ -61,11 +61,16 @@ void CFileStream::Open(const char* szFileName, const char* szMode)
   FILE* pfh = fopen(szFileName, szMode);
 
   // it might not exist
-  ASSERT(pfh != NULL);
+  if(pfh == NULL) {
+    return FALSE;
+  }
 
   // remember info
   fs_strFileName = szFileName;
   fs_pfh = pfh;
+
+  // success
+  return TRUE;
 }
 
 void CFileStream::Close(void)

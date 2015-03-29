@@ -17,14 +17,14 @@
 #include <cstdio> // for vsprintf
 #include <cstdarg> // for va_list
 #include <cstring> // for strlen and strcmp
+#include <ctype.h>
 
 #include "CString.h"
 
 SCRATCH_NAMESPACE_BEGIN;
 
-extern int str_iInstances = 0;
-
-char* CString::str_szEmpty = "";
+int CString::str_iInstances = 0;
+char* CString::str_szEmpty = (char*)"";
 
 void CString::CopyToBuffer(const char* szSrc)
 {
@@ -214,11 +214,22 @@ void CString::AppendF(const char* szFormat, ...)
   delete[] szBuffer;
 }
 
-void CString::Split(const CString &strNeedle, CStackArray<CString> &astrResult)
+void CString::Split(const CString &strNeedle, CStackArray<CString> &astrResult) const
+{
+  Split(strNeedle, astrResult, FALSE, -1);
+}
+
+void CString::Split(const CString &strNeedle, CStackArray<CString> &astrResult, BOOL bTrimAll) const
+{
+  Split(strNeedle, astrResult, bTrimAll, -1);
+}
+
+void CString::Split(const CString &strNeedle, CStackArray<CString> &astrResult, BOOL bTrimAll, int iMax) const
 {
   // Keep a pointer to the current offset and a "previous offset"
   char* szOffset = str_szBuffer;
   char* szOffsetPrev = szOffset;
+  int iCount = 1;
 
   do {
     // Find the needle from the string in the current offset pointer
@@ -243,6 +254,9 @@ void CString::Split(const CString &strNeedle, CStackArray<CString> &astrResult)
       astrResult.Push() = szPart;
       delete szPart;
 
+      // Keep a seperate count
+      iCount++;
+
       // Increase the offset pointer by the needle length
       szOffset += strlen(strNeedle);
 
@@ -263,7 +277,11 @@ void CString::Split(const CString &strNeedle, CStackArray<CString> &astrResult)
       szPart[i] = '\0';
 
       // Add it to the return vector
-      astrResult.Push() = szPart;
+      CString &strAdd = astrResult.Push();
+      strAdd = szPart;
+      if(bTrimAll) {
+        strAdd = strAdd.Trim();
+      }
       delete szPart;
     }
   } while(szOffset != NULL);
@@ -296,7 +314,7 @@ CString CString::Trim()
   return CString(szOffset);
 }
 
-CString CString::Replace(const CString &strNeedle, const CString &strReplace)
+CString CString::Replace(const CString &strNeedle, const CString &strReplace) const
 {
   CString strRet("");
 
@@ -330,13 +348,13 @@ CString CString::Replace(const CString &strNeedle, const CString &strReplace)
   return strRet;
 }
 
-CString CString::SubString(int iStart, int iLen)
+CString CString::SubString(int iStart, int iLen) const
 {
   // Get the first offset
   CString strRet(this->str_szBuffer + iStart);
 
   // Check for stupid developers
-  if(iLen > strlen(strRet)) {
+  if((ULONG)iLen > strlen(strRet)) {
     return strRet;
   }
 
@@ -347,21 +365,32 @@ CString CString::SubString(int iStart, int iLen)
   return strRet;
 }
 
-CString CString::Reverse()
+#if !WINDOWS
+void strlwr(char* sz)
 {
-  CString strRet(this->str_szBuffer);
-  strrev(strRet.str_szBuffer);
-  return strRet;
+  int len = strlen(sz);
+  for(int i=0; i<len; i++) {
+    sz[i] = tolower(sz[i]);
+  }
 }
 
-CString CString::ToLower()
+void strupr(char* sz)
+{
+  int len = strlen(sz);
+  for(int i=0; i<len; i++) {
+    sz[i] = toupper(sz[i]);
+  }
+}
+#endif
+
+CString CString::ToLower() const
 {
   CString strRet(this->str_szBuffer);
   strlwr(strRet.str_szBuffer);
   return strRet;
 }
 
-CString CString::ToUpper()
+CString CString::ToUpper() const
 {
   CString strRet(this->str_szBuffer);
   strupr(strRet.str_szBuffer);
@@ -371,6 +400,17 @@ CString CString::ToUpper()
 bool CString::Contains(const CString &strNeedle)
 {
   return strstr(this->str_szBuffer, strNeedle) != NULL;
+}
+
+bool CString::Contains(char c) const
+{
+  int iLen = strlen(str_szBuffer);
+  for(int i=0; i<iLen; i++) {
+    if(str_szBuffer[i] == c) {
+      return true;
+    }
+  }
+  return false;
 }
 
 bool CString::StartsWith(const CString &strNeedle)
@@ -440,12 +480,12 @@ CString& CString::operator+=(const char cSrc)
   return *this;
 }
 
-bool CString::operator==(const char* szSrc)
+bool CString::operator==(const char* szSrc) const
 {
   return !strcmp(this->str_szBuffer, szSrc);
 }
 
-bool CString::operator!=(const char* szSrc)
+bool CString::operator!=(const char* szSrc) const
 {
   return strcmp(this->str_szBuffer, szSrc) != 0;
 }
@@ -455,12 +495,12 @@ char& CString::operator[](int iIndex)
   return this->str_szBuffer[iIndex];
 }
 
-CString operator+(CString &strLHS, const char* szRHS)
+CString operator+(const CString &strLHS, const char* szRHS)
 {
   return CString(strLHS) += szRHS;
 }
 
-CString operator+(CString &strLHS, const char cRHS)
+CString operator+(const CString &strLHS, const char cRHS)
 {
   return CString(strLHS) += cRHS;
 }
@@ -473,6 +513,25 @@ CString operator+(const char* szLHS, CString &strRHS)
 CString operator+(const char cLHS, CString &strRHS)
 {
   return CString(strRHS) += cLHS;
+}
+
+CString strPrintF(const char* szFormat, ...)
+{
+  char* szBuffer = new char[CSTRING_FORMAT_BUFFER_SIZE];
+
+  // Get the args list and do a vsprintf to get the right format.
+  va_list vL;
+  va_start(vL, szFormat);
+  vsprintf(szBuffer, szFormat, vL);
+  va_end(vL);
+
+  // Copy the just-created buffer to the main buffer
+  CString ret(szBuffer);
+
+  // Clean up
+  delete[] szBuffer;
+
+  return ret;
 }
 
 SCRATCH_NAMESPACE_END;

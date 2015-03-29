@@ -87,6 +87,40 @@ CString CStream::ReadString(void)
   return strRet;
 }
 
+bool CStream::Expect(const CString &str)
+{
+  int iLen = strlen(str);
+
+  char* szBuffer = new char[iLen+1];
+  szBuffer[iLen] = '\0';
+
+  Read(szBuffer, iLen);
+  bool ret = (str == szBuffer);
+
+  if(!ret) {
+    Seek(-iLen, SEEK_CUR);
+  }
+
+  delete szBuffer;
+  return ret;
+}
+
+char CStream::ReadUntil(CString &strOut, const CString &strCharacters)
+{
+  CString ret;
+  char ccc = '\0';
+  while(!AtEOF()) {
+    char cc = ReadChar();
+    if(strCharacters.Contains(cc)) {
+      ccc = cc;
+      break;
+    }
+    ret += cc;
+  }
+  strOut = ret;
+  return ccc;
+}
+
 void CStream::WriteLine(const CString &str)
 {
   // write text

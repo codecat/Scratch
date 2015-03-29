@@ -14,41 +14,52 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
-#ifndef SCRATCH_CMEMORYSTREAM_H_INCLUDED
-#define SCRATCH_CMEMORYSTREAM_H_INCLUDED 1
-
-#ifdef USE_PRAGMAONCE
-  #pragma once
-#endif
+#ifndef SCRATCH_CNETWORKSTREAM_H_INCLUDED
+#define SCRATCH_CNETWORKSTREAM_H_INCLUDED
 
 #include "Common.h"
 #include "CStream.h"
 
+#if WINDOWS
+#include <WinSock2.h>
+#else
+#include <sys/socket.h>
+#include <unistd.h>
+#include <netdb.h>
+#endif
+
 SCRATCH_NAMESPACE_BEGIN;
 
-class CMemoryStream : public CStream
+class SCRATCH_EXPORT CNetworkStream : public CStream
 {
 public:
-  UBYTE* strm_pubBuffer;
-  ULONG strm_ulPosition;
-  ULONG strm_ulSize;
-  ULONG strm_ulUsed;
+#if WINDOWS
+  WSADATA* ns_pWSAData;
+  SOCKET ns_socket;
+#else
+  int ns_socket;
+#endif
+  sockaddr_in* ns_psin;
+
+  BOOL ns_bEOF;
 
 public:
-  CMemoryStream(void);
-  ~CMemoryStream(void);
+  CNetworkStream(void);
+  ~CNetworkStream(void);
 
   ULONG Size();
   ULONG Location();
   void Seek(ULONG ulPos, INDEX iOrigin);
   BOOL AtEOF();
 
+  BOOL Connect(const char* szAddress, USHORT iPort);
+  void Close();
   void Write(const void* p, ULONG iLen);
   void Read(void* pDest, ULONG iLen);
-  const void ReadToEnd(void* pDest);
 
-private:
-  void AllocateMoreMemory(INDEX ctBytes);
+  BOOL IsConnected();
+
+  static void Cleanup(void);
 };
 
 SCRATCH_NAMESPACE_END;

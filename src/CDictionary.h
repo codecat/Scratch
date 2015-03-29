@@ -15,11 +15,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
 #ifndef SCRATCH_CDICTIONARY_H_INCLUDED
-#define SCRATCH_CDICTIONARY_H_INCLUDED 1
-
-#ifdef USE_PRAGMAONCE
-  #pragma once
-#endif
+#define SCRATCH_CDICTIONARY_H_INCLUDED
 
 #include "Common.h"
 #include "CStackArray.h"
@@ -27,14 +23,29 @@
 SCRATCH_NAMESPACE_BEGIN;
 
 template<class TKey, class TValue>
-class CDictionary
+class SCRATCH_EXPORT CDictionaryPair
+{
+public:
+  TKey* key;
+  TValue* value;
+
+  CDictionaryPair();
+  ~CDictionaryPair();
+};
+
+template<class TKey, class TValue>
+class SCRATCH_EXPORT CDictionary
 {
 private:
   CStackArray<TKey> dic_saKeys;
   CStackArray<TValue> dic_saValues;
 
 public:
+  BOOL dic_bAllowDuplicateKeys;
+
+public:
   CDictionary(void);
+  CDictionary(const CDictionary<TKey, TValue> &copy);
   ~CDictionary(void);
 
   /// Add to the dictionary
@@ -56,6 +67,13 @@ public:
   void RemoveByKey(const TKey &key);
   /// Remove a value from the dictionary
   void RemoveByValue(const TValue &value);
+
+  /// Pop a value by its index
+  CDictionaryPair<TKey, TValue> PopByIndex(const INDEX iIndex);
+  /// Pop a value from the dictionary by key
+  CDictionaryPair<TKey, TValue> PopByKey(const TKey &key);
+  /// Pop a value from the dictionary
+  CDictionaryPair<TKey, TValue> PopByValue(const TValue &value);
 
   /// Clear all items
   void Clear(void);

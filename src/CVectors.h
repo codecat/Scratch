@@ -15,17 +15,13 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
 #ifndef SCRATCH_CVECTORS_H_INCLUDED
-#define SCRATCH_CVECTORS_H_INCLUDED 1
-
-#ifdef USE_PRAGMAONCE
-  #pragma once
-#endif
+#define SCRATCH_CVECTORS_H_INCLUDED
 
 #include "Common.h"
 
 SCRATCH_NAMESPACE_BEGIN;
 
-class Vector3f
+class SCRATCH_EXPORT Vector3f
 {
 public:
   FLOAT x, y, z;

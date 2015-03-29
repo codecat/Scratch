@@ -88,11 +88,3 @@
  *   ns.Close();
  */
 #include "CNetworkStream.h"
-
-/* Vectors: high level vectors
- * ---------------------------
- * Basic usage:
- *   Vector3f vPos;
- *   vPos *= 2.0f;
- */
-#include "CVectors.h"

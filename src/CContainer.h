@@ -14,10 +14,44 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
-#include "CMatrix.h"
+#ifndef SCRATCH_CCONTAINER_H_INCLUDED
+#define SCRATCH_CCONTAINER_H_INCLUDED
+
+#include "Common.h"
 
 SCRATCH_NAMESPACE_BEGIN;
 
-// TODO
+template<class Type>
+class SCRATCH_EXPORT CContainer
+{
+public:
+  Type** con_pItems;
+  INDEX con_ctSlots;
+  INDEX con_ctUsed;
+
+public:
+  CContainer();
+  ~CContainer();
+
+  /// Add an item to the container
+  void Add(Type* pItem);
+
+  /// Find the index of the given pointer
+  INDEX Find(Type* pItem);
+
+  /// Remove a pointer from the container
+  void Remove(Type* pItem);
+  /// Remove a pointer from the container by index
+  void Remove(INDEX iIndex);
+
+  Type& operator[](INDEX iIndex);
+
+private:
+  void AllocateSlots(INDEX ctSlots);
+};
 
 SCRATCH_NAMESPACE_END;
+
+#include "CContainer.cpp"
+
+#endif // include once check

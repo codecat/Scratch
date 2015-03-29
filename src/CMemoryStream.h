@@ -14,39 +14,37 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
-#ifndef SCRATCH_CFILESTREAM_H_INCLUDED
-#define SCRATCH_CFILESTREAM_H_INCLUDED 1
-
-#ifdef USE_PRAGMAONCE
-  #pragma once
-#endif
+#ifndef SCRATCH_CMEMORYSTREAM_H_INCLUDED
+#define SCRATCH_CMEMORYSTREAM_H_INCLUDED
 
 #include "Common.h"
 #include "CStream.h"
-#include "CString.h"
 
 SCRATCH_NAMESPACE_BEGIN;
 
-class CFileStream : public CStream
+class SCRATCH_EXPORT CMemoryStream : public CStream
 {
 public:
-  CString fs_strFileName;
-  FILE* fs_pfh;
+  UBYTE* strm_pubBuffer;
+  ULONG strm_ulPosition;
+  ULONG strm_ulSize;
+  ULONG strm_ulUsed;
 
 public:
-  CFileStream(void);
-  ~CFileStream(void);
+  CMemoryStream(void);
+  ~CMemoryStream(void);
 
   ULONG Size();
   ULONG Location();
   void Seek(ULONG ulPos, INDEX iOrigin);
   BOOL AtEOF();
 
-  void Open(const char* szFileName, const char* szMode);
-  void Close();
   void Write(const void* p, ULONG iLen);
   void Read(void* pDest, ULONG iLen);
   const void ReadToEnd(void* pDest);
+
+private:
+  void AllocateMoreMemory(INDEX ctBytes);
 };
 
 SCRATCH_NAMESPACE_END;

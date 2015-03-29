@@ -15,19 +15,37 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
 #ifndef SCRATCH_CDICTIONARY_CPP_INCLUDED
-#define SCRATCH_CDICTIONARY_CPP_INCLUDED 1
-
-#ifdef USE_PRAGMAONCE
-  #pragma once
-#endif
+#define SCRATCH_CDICTIONARY_CPP_INCLUDED
 
 #include "CDictionary.h"
 
 SCRATCH_NAMESPACE_BEGIN;
 
 template<class TKey, class TValue>
+CDictionaryPair<TKey, TValue>::CDictionaryPair()
+{
+  key = 0;
+  value = 0;
+}
+
+template<class TKey, class TValue>
+CDictionaryPair<TKey, TValue>::~CDictionaryPair()
+{
+}
+
+template<class TKey, class TValue>
 CDictionary<TKey, TValue>::CDictionary(void)
 {
+  dic_bAllowDuplicateKeys = FALSE;
+}
+
+template<class TKey, class TValue>
+CDictionary<TKey, TValue>::CDictionary(const CDictionary<TKey, TValue> &copy)
+{
+  // copy the one to the other.. might not be the best coding practice, but hey, it's a copy constructor.
+  dic_saKeys = CStackArray<TKey>(copy.dic_saKeys);
+  dic_saValues = CStackArray<TValue>(copy.dic_saValues);
+  dic_bAllowDuplicateKeys = copy.dic_bAllowDuplicateKeys;
 }
 
 template<class TKey, class TValue>
@@ -40,7 +58,7 @@ template<class TKey, class TValue>
 void CDictionary<TKey, TValue>::Add(const TKey &key, const TValue &value)
 {
   // if the key has already been added
-  if(HasKey(key)) {
+  if(!dic_bAllowDuplicateKeys && HasKey(key)) {
     ASSERT(FALSE);
     return;
   }
@@ -131,6 +149,30 @@ void CDictionary<TKey, TValue>::RemoveByValue(const TValue &value)
 {
   // remove by index
   RemoveByIndex(IndexByValue(value));
+}
+
+/// Pop a value by its index
+template<class TKey, class TValue>
+CDictionaryPair<TKey, TValue> CDictionary<TKey, TValue>::PopByIndex(const INDEX iIndex)
+{
+  CDictionaryPair<TKey, TValue> ret;
+  ret.key = dic_saKeys.PopAt(iIndex);
+  ret.value = dic_saValues.PopAt(iIndex);
+  return ret;
+}
+
+/// Pop a value from the dictionary by key
+template<class TKey, class TValue>
+CDictionaryPair<TKey, TValue> CDictionary<TKey, TValue>::PopByKey(const TKey &key)
+{
+  return PopByIndex(IndexByKey(key));
+}
+
+/// Pop a value from the dictionary
+template<class TKey, class TValue>
+CDictionaryPair<TKey, TValue> CDictionary<TKey, TValue>::PopByValue(const TValue &value)
+{
+  return PopByIndex(IndexByValue(value));
 }
 
 /// Clear all items

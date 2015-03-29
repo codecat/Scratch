@@ -15,25 +15,21 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
 #ifndef SCRATCH_CSTREAM_H_INCLUDED
-#define SCRATCH_CSTREAM_H_INCLUDED 1
-
-#ifdef USE_PRAGMAONCE
-  #pragma once
-#endif
+#define SCRATCH_CSTREAM_H_INCLUDED
 
 #include "Common.h"
 #include "CString.h"
 
 SCRATCH_NAMESPACE_BEGIN;
 
-enum ENewLineMode
+enum SCRATCH_EXPORT ENewLineMode
 {
   ENLM_CRLF,
   ENLM_LF,
   ENLM_CR,
 };
 
-class CStream
+class SCRATCH_EXPORT CStream
 {
 public:
   ENewLineMode strm_nlmNewLineMode;
@@ -64,6 +60,12 @@ public:
   inline FLOAT  ReadFloat(void)  { FLOAT  f; Read(&f, sizeof(FLOAT)); return f; }
   inline DOUBLE ReadDouble(void) { DOUBLE d; Read(&d, sizeof(DOUBLE)); return d; }
   CString ReadString(void);
+
+  inline char ReadChar(void) { char c; Read(&c, 1); return c; }
+  inline char PeekChar(void) { char c; Read(&c, 1); Seek(-1, 1/*SEEK_CUR*/); return c; }
+
+  bool Expect(const CString &str);
+  char ReadUntil(CString &strOut, const CString &strCharacters);
 
   void WriteLine(const CString &str);
   void WriteLine(void);

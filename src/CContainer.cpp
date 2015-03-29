@@ -14,47 +14,58 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
-#ifndef SCRATCH_CNETWORKSTREAM_H_INCLUDED
-#define SCRATCH_CNETWORKSTREAM_H_INCLUDED 1
+#ifndef SCRATCH_CCONTAINER_CPP_INCLUDED
+#define SCRATCH_CCONTAINER_CPP_INCLUDED
 
-#ifdef USE_PRAGMAONCE
-  #pragma once
-#endif
-
-#include "Common.h"
-#include "CStream.h"
-
-#include <WinSock2.h>
+#include "CContainer.h"
 
 SCRATCH_NAMESPACE_BEGIN;
 
-class CNetworkStream : public CStream
+template<class Type>
+CContainer<Type>::CContainer()
 {
-public:
-  WSADATA* ns_pWSAData;
-  SOCKET ns_socket;
-  sockaddr_in* ns_psin;
 
-  BOOL ns_bEOF;
+}
 
-public:
-  CNetworkStream(void);
-  ~CNetworkStream(void);
+template<class Type>
+CContainer<Type>::~CContainer()
+{
 
-  ULONG Size();
-  ULONG Location();
-  void Seek(ULONG ulPos, INDEX iOrigin);
-  BOOL AtEOF();
+}
 
-  BOOL Connect(const char* szAddress, USHORT iPort);
-  void Close();
-  void Write(const void* p, ULONG iLen);
-  void Read(void* pDest, ULONG iLen);
+/// Add an item to the container
+template<class Type>
+void CContainer<Type>::Add(Type* pItem)
+{
 
-  BOOL IsConnected();
+}
 
-  static void Cleanup(void);
-};
+/// Find the index of the given pointer
+template<class Type>
+INDEX CContainer<Type>::Find(Type* pItem)
+{
+
+}
+
+/// Remove a pointer from the container
+template<class Type>
+void CContainer<Type>::Remove(Type* pItem)
+{
+
+}
+
+/// Remove a pointer from the container by index
+template<class Type>
+void CContainer<Type>::Remove(INDEX iIndex)
+{
+
+}
+
+template<class Type>
+void CContainer<Type>::AllocateSlots(INDEX ctSlots)
+{
+
+}
 
 SCRATCH_NAMESPACE_END;
 
