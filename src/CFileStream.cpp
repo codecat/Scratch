@@ -83,6 +83,12 @@ BOOL CFileStream::Open(const char* szFileName, const char* szMode)
   return TRUE;
 }
 
+void CFileStream::OpenStdout()
+{
+  fs_strFileName = "stdout";
+  fs_pfh = stdout;
+}
+
 void CFileStream::Close(void)
 {
   // close the file handle
