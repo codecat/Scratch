@@ -60,7 +60,7 @@ CNetworkStream::CNetworkStream(void)
 
 CNetworkStream::~CNetworkStream(void)
 {
-  if(ns_socket != NULL) {
+  if(ns_socket != 0) {
 #if WINDOWS
     closesocket(ns_socket);
 #else
@@ -120,7 +120,7 @@ void CNetworkStream::Close()
 #else
   close(ns_socket);
 #endif
-  ns_socket = NULL;
+  ns_socket = 0;
 }
 
 void CNetworkStream::Write(const void* p, ULONG iLen)
