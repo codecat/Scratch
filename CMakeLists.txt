@@ -5,20 +5,22 @@ if(NOT WIN32)
 	SET(CMAKE_CXX_FLAGS "-std=c++0x")
 endif()
 
+set(presrc "src/Scratch")
+
 add_library(Scratch
-	src/Assert.cpp
-	src/CContainer.cpp src/CContainer.h
-	src/CDictionary.cpp src/CDictionary.h
-	src/CFileStream.cpp src/CFileStream.h
-	src/CMemoryStream.cpp src/CMemoryStream.h
-	src/CNetworkStream.cpp src/CNetworkStream.h
-	src/CStackArray.cpp src/CStackArray.h
-	src/CStream.cpp src/CStream.h
-	src/CString.cpp src/CString.h
-	src/CFilename.cpp src/CFilename.h
-	src/CVectors.cpp src/CVectors.h
-	src/Common.cpp src/Common.h
-	src/Scratch.h)
+	${presrc}/Assert.cpp
+	${presrc}/CContainer.cpp ${presrc}/CContainer.h
+	${presrc}/CDictionary.cpp ${presrc}/CDictionary.h
+	${presrc}/CFileStream.cpp ${presrc}/CFileStream.h
+	${presrc}/CMemoryStream.cpp ${presrc}/CMemoryStream.h
+	${presrc}/CNetworkStream.cpp ${presrc}/CNetworkStream.h
+	${presrc}/CStackArray.cpp ${presrc}/CStackArray.h
+	${presrc}/CStream.cpp ${presrc}/CStream.h
+	${presrc}/CString.cpp ${presrc}/CString.h
+	${presrc}/CFilename.cpp ${presrc}/CFilename.h
+	${presrc}/CVectors.cpp ${presrc}/CVectors.h
+	${presrc}/Common.cpp ${presrc}/Common.h
+	${presrc}/Scratch.h)
 
 if(APPLE)
 	set_target_properties(Scratch PROPERTIES MACOSX_RPATH 1)
