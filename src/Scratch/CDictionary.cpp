@@ -78,6 +78,17 @@ void CDictionary<TKey, TValue>::Add(const TKey &key, const TValue &value)
   dic_saValues.Push() = value;
 }
 
+/// Push to the dictionary
+template<class TKey, class TValue>
+CDictionaryPair<TKey, TValue> CDictionary<TKey, TValue>::Push(const TKey &key)
+{
+  CDictionaryPair<TKey, TValue> ret;
+  ret.key = &(dic_saKeys.Push());
+  (*ret.key) = key;
+  ret.value = &(dic_saValues.Push());
+  return ret;
+}
+
 /// Get the index of the given key
 template<class TKey, class TValue>
 INDEX CDictionary<TKey, TValue>::IndexByKey(const TKey &key)

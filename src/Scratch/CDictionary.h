@@ -60,6 +60,8 @@ public:
 
   /// Add to the dictionary
   void Add(const TKey &key, const TValue &value);
+  /// Push to the dictionary
+  CDictionaryPair<TKey, TValue> Push(const TKey &key);
 
   /// Get the index of the given key
   INDEX IndexByKey(const TKey &key);
