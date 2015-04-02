@@ -131,7 +131,7 @@ char CStream::ReadUntil(CString &strOut, const CString &strCharacters)
   return ccc;
 }
 
-void CStream::Write(const CString &str)
+void CStream::WriteText(const CString &str)
 {
   // write text
   Write((const char*)str, strlen(str));
@@ -140,7 +140,7 @@ void CStream::Write(const CString &str)
 void CStream::WriteLine(const CString &str)
 {
   // write text
-  Write(str);
+  WriteText(str);
   // write newline
   WriteLine();
 }

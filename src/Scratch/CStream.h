@@ -77,7 +77,7 @@ public:
   bool Expect(const CString &str);
   char ReadUntil(CString &strOut, const CString &strCharacters);
 
-  void Write(const CString &str);
+  void WriteText(const CString &str);
   void WriteLine(const CString &str);
   void WriteLine(void);
   CString ReadLine(void);
