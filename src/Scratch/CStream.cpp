@@ -131,10 +131,16 @@ char CStream::ReadUntil(CString &strOut, const CString &strCharacters)
   return ccc;
 }
 
-void CStream::WriteLine(const CString &str)
+void CStream::Write(const CString &str)
 {
   // write text
   Write((const char*)str, strlen(str));
+}
+
+void CStream::WriteLine(const CString &str)
+{
+  // write text
+  Write(str);
   // write newline
   WriteLine();
 }
