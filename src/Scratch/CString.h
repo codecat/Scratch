@@ -62,11 +62,13 @@ public:
   void Split(const CString &strNeedle, CStackArray<CString> &astrResult) const;
   void Split(const CString &strNeedle, CStackArray<CString> &astrResult, BOOL bTrimAll) const ;
   void Split(const CString &strNeedle, CStackArray<CString> &astrResult, BOOL bTrimAll, int iMax) const;
-  CString Trim();
+  CString Trim() const;
   CString Replace(const CString &strNeedle, const CString &strReplace) const;
   CString SubString(int iStart, int iLen) const;
   CString ToLower() const;
   CString ToUpper() const;
+
+  void Fill(char c, int ct);
 
   bool Contains(const CString &strNeedle);
   bool Contains(char c) const;
@@ -83,6 +85,8 @@ public:
   CString& operator+=(const char* szSrc);
   CString& operator+=(const char cSrc);
 
+  CString& operator*=(int ctRepeat);
+
   bool operator==(const char* szSrc) const;
   bool operator!=(const char* szSrc) const;
 
@@ -94,6 +98,9 @@ CString SCRATCH_EXPORT operator+(const CString &strLHS, const char cRHS);
 
 CString SCRATCH_EXPORT operator+(const char* szLHS, CString &strRHS);
 CString SCRATCH_EXPORT operator+(const char cLHS, CString &strRHS);
+
+CString SCRATCH_EXPORT operator*(const CString &strLHS, int ctRepeat);
+CString SCRATCH_EXPORT operator*(int ctRepeat, const CString &strRHS);
 
 CString SCRATCH_EXPORT strPrintF(const char* szFormat, ...);
 

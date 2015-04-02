@@ -305,7 +305,7 @@ void CString::Split(const CString &strNeedle, CStackArray<CString> &astrResult, 
   } while(szOffset != NULL);
 }
 
-CString CString::Trim()
+CString CString::Trim() const
 {
   // Keep a pointer to the current offset
   char* szOffset = this->str_szBuffer;
@@ -415,6 +415,14 @@ CString CString::ToUpper() const
   return strRet;
 }
 
+void CString::Fill(char c, int ct)
+{
+  char* szBuffer = new char[ct + 1];
+  memset(szBuffer, c, ct);
+  szBuffer[ct] = '\0';
+  CopyToBuffer(szBuffer);
+}
+
 bool CString::Contains(const CString &strNeedle)
 {
   return strstr(this->str_szBuffer, strNeedle) != NULL;
@@ -498,6 +506,14 @@ CString& CString::operator+=(const char cSrc)
   return *this;
 }
 
+CString& CString::operator*=(int ctRepeat)
+{
+  for(int i=0; i<ctRepeat; i++) {
+    this->AppendToBuffer(str_szBuffer);
+  }
+  return *this;
+}
+
 bool CString::operator==(const char* szSrc) const
 {
   return !strcmp(this->str_szBuffer, szSrc);
@@ -531,6 +547,16 @@ CString operator+(const char* szLHS, CString &strRHS)
 CString operator+(const char cLHS, CString &strRHS)
 {
   return CString(strRHS) += cLHS;
+}
+
+CString operator*(const CString &strLHS, int ctRepeat)
+{
+  return CString(strLHS) *= ctRepeat;
+}
+
+CString operator*(int ctRepeat, const CString &strRHS)
+{
+  return CString(strRHS) *= ctRepeat;
 }
 
 CString strPrintF(const char* szFormat, ...)
