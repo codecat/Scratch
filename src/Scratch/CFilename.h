@@ -35,11 +35,15 @@ class SCRATCH_EXPORT CFilename : public CString
 {
 public:
   CFilename();
+  CFilename(const CFilename &copy);
+  CFilename(const char* szStr);
   CFilename(const CString &str);
 
   CString Extension() const;
   CString Path() const;
   CString Filename() const;
+
+  void FromHome(const CString &strPath);
 };
 
 SCRATCH_NAMESPACE_END;

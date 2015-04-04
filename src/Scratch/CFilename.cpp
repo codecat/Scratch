@@ -26,6 +26,10 @@
 
 #include "CFilename.h"
 
+#if WINDOWS
+#include <ShlObj.h>
+#endif
+
 SCRATCH_NAMESPACE_BEGIN;
 
 CFilename::CFilename()
@@ -33,6 +37,22 @@ CFilename::CFilename()
   str_iInstances++;
   // Create a new empty buffer
   this->str_szBuffer = CString::str_szEmpty;
+}
+
+CFilename::CFilename(const CFilename &copy)
+{
+  str_iInstances++;
+  // Create a new buffer and copy data into it.
+  this->str_szBuffer = CString::str_szEmpty;
+  this->CopyToBuffer(copy);
+}
+
+CFilename::CFilename(const char* szStr)
+{
+  str_iInstances++;
+  // Create a new buffer and copy data into it.
+  this->str_szBuffer = CString::str_szEmpty;
+  this->CopyToBuffer(szStr);
 }
 
 CFilename::CFilename(const CString &str)
@@ -56,6 +76,19 @@ CString CFilename::Path() const
 CString CFilename::Filename() const
 {
   return CString(strrchr(str_szBuffer, '/') + 1);
+}
+
+void CFilename::FromHome(const CString &strPath)
+{
+#if WINDOWS
+  char szPath[MAX_PATH];
+  if(SUCCEEDED(SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, szPath))) {
+    this->CopyToBuffer(szPath);
+    this->AppendToBuffer("\\" + strPath);
+  }
+#else
+  this->CopyToBuffer("~/" + strPath);
+#endif
 }
 
 SCRATCH_NAMESPACE_END;
