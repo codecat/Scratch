@@ -50,9 +50,6 @@ public:
   CDictionaryPair();
   CDictionaryPair(CDictionaryPair<TKey, TValue> &copy);
   ~CDictionaryPair();
-
-  // Mark these values to be deleted on pair destructor
-  void Clear();
 };
 
 template<class TKey, class TValue>
