@@ -32,3 +32,12 @@ set_target_properties(Scratch PROPERTIES LIBRARY_OUTPUT_DIRECTORY "${CMAKE_SOURC
 if(WIN32)
 	add_definitions("/wd4996")
 endif()
+
+set(presrc_tests "src/ScratchTests")
+
+add_executable(ScratchTests
+	${presrc_tests}/main.cpp)
+
+target_link_libraries(ScratchTests Scratch)
+
+include_directories(src/Scratch)
