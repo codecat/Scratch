@@ -33,14 +33,26 @@
 SCRATCH_NAMESPACE_BEGIN;
 
 template<class TKey, class TValue>
+class CDictionary;
+
+template<class TKey, class TValue>
 class SCRATCH_EXPORT CDictionaryPair
 {
+  friend class CDictionary<TKey, TValue>;
 public:
   TKey* key;
   TValue* value;
 
+protected:
+  BOOL m_bClear;
+
+public:
   CDictionaryPair();
+  CDictionaryPair(CDictionaryPair<TKey, TValue> &copy);
   ~CDictionaryPair();
+
+  // Mark these values to be deleted on pair destructor
+  void Clear();
 };
 
 template<class TKey, class TValue>
