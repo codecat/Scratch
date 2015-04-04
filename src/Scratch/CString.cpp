@@ -508,8 +508,9 @@ CString& CString::operator+=(const char cSrc)
 
 CString& CString::operator*=(int ctRepeat)
 {
-  for(int i=0; i<ctRepeat; i++) {
-    this->AppendToBuffer(str_szBuffer);
+  CString strOriginal = *this;
+  for(int i=1; i<ctRepeat; i++) {
+    this->AppendToBuffer(strOriginal);
   }
   return *this;
 }
