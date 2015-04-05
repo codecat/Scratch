@@ -64,9 +64,16 @@ public:
   void Split(const CString &strNeedle, CStackArray<CString> &astrResult, BOOL bTrimAll, int iMax) const;
   CString Trim() const;
   CString Replace(const CString &strNeedle, const CString &strReplace) const;
+  CString SubString(int iStart) const;
   CString SubString(int iStart, int iLen) const;
   CString ToLower() const;
   CString ToUpper() const;
+
+  int IndexOf(char c) const;
+  int IndexOf(const CString &strNeedle) const;
+
+  int IndexOfLast(char c) const;
+  int IndexOfLast(const CString &strNeedle) const;
 
   void Fill(char c, int ct);
 

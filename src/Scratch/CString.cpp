@@ -366,6 +366,11 @@ CString CString::Replace(const CString &strNeedle, const CString &strReplace) co
   return strRet;
 }
 
+CString CString::SubString(int iStart) const
+{
+  return CString(this->str_szBuffer + iStart);
+}
+
 CString CString::SubString(int iStart, int iLen) const
 {
   // Get the first offset
@@ -413,6 +418,66 @@ CString CString::ToUpper() const
   CString strRet(this->str_szBuffer);
   strupr(strRet.str_szBuffer);
   return strRet;
+}
+
+int CString::IndexOf(char c) const
+{
+  const char* sz = strchr(this->str_szBuffer, c);
+  if(sz != NULL) {
+    return sz - this->str_szBuffer;
+  }
+  return -1;
+}
+
+int CString::IndexOf(const CString &strNeedle) const
+{
+  const char* sz = strstr(this->str_szBuffer, strNeedle);
+  if(sz != NULL) {
+    return sz - this->str_szBuffer;
+  }
+  return -1;
+}
+
+int CString::IndexOfLast(char c) const
+{
+  const char* sz = strrchr(this->str_szBuffer, c);
+  if(sz != NULL) {
+    return sz - this->str_szBuffer;
+  }
+  return -1;
+}
+
+// strrstr taken from: http://stuff.mit.edu/afs/sipb/user/cordelia/Diplomacy/mapit/strrstr.c
+static char* strrstr(const char* s1, const char* s2)
+{
+  const char *sc2, *psc1, *ps1;
+
+  if(*s2 == '\0') {
+    return (char*)s1;
+  }
+
+  ps1 = s1 + strlen(s1);
+
+  while(ps1 != s1) {
+    --ps1;
+    for(psc1 = ps1, sc2 = s2; ; ) {
+      if(*(psc1++) != *(sc2++)) {
+        break;
+      } else if(*sc2 == '\0') {
+        return (char*)ps1;
+      }
+    }
+  }
+  return NULL;
+}
+
+int CString::IndexOfLast(const CString &strNeedle) const
+{
+  const char* sz = strrstr(this->str_szBuffer, strNeedle);
+  if(sz != NULL) {
+    return sz - this->str_szBuffer;
+  }
+  return -1;
 }
 
 void CString::Fill(char c, int ct)
