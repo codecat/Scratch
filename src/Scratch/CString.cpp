@@ -198,6 +198,11 @@ CString::~CString()
   }
 }
 
+int CString::Length() const
+{
+  return strlen(this->str_szBuffer);
+}
+
 void CString::SetF(const char* szFormat, ...)
 {
   char* szBuffer = new char[CSTRING_FORMAT_BUFFER_SIZE];

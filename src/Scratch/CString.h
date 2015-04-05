@@ -56,6 +56,8 @@ public:
   CString(const CString &strCopy);
   virtual ~CString();
 
+  int Length() const;
+
   void SetF(const char* szFormat, ...);
   void AppendF(const char* szFormat, ...);
 
