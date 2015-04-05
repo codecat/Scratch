@@ -110,7 +110,7 @@ int CMemoryStream::Read(void* pDest, ULONG iLen)
   ULONG ulRealLength = strm_ulPosition - ulStart;
 
   // copy data to destination
-  memcpy(pDest, strm_pubBuffer + strm_ulPosition, ulRealLength);
+  memcpy(pDest, strm_pubBuffer + ulStart, ulRealLength);
 
   return ulRealLength;
 }
