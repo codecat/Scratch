@@ -64,10 +64,9 @@ CDictionary<TKey, TValue>::CDictionary(void)
 
 template<class TKey, class TValue>
 CDictionary<TKey, TValue>::CDictionary(const CDictionary<TKey, TValue> &copy)
+  : dic_saKeys(copy.dic_saKeys),
+    dic_saValues(copy.dic_saValues)
 {
-  // copy the one to the other.. might not be the best coding practice, but hey, it's a copy constructor.
-  dic_saKeys = CStackArray<TKey>(copy.dic_saKeys);
-  dic_saValues = CStackArray<TValue>(copy.dic_saValues);
   dic_bAllowDuplicateKeys = copy.dic_bAllowDuplicateKeys;
 }
 

@@ -42,7 +42,7 @@ public:
 
 public:
   CStackArray(void);
-  CStackArray(const CStackArray& copy); // Note: If this ever gets called, you're most likely writing bad code.
+  CStackArray(const CStackArray<Type> &copy); // Note: If this ever gets called, you're most likely writing bad code.
   ~CStackArray(void);
 
   /// Push to the beginning of the stack, return a reference to the newly made object

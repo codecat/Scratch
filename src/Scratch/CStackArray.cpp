@@ -45,7 +45,7 @@ CStackArray<Type>::CStackArray()
 }
 
 template<class Type>
-CStackArray<Type>::CStackArray(const CStackArray& copy)
+CStackArray<Type>::CStackArray(const CStackArray<Type> &copy)
 {
   sa_pItems = NULL;
   sa_ctSlots = 0;
