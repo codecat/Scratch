@@ -219,13 +219,13 @@ int main()
     dic["foobar"] = 15;
     dic["barfoo"] = 20;
     TEST(dic.Count() == 4);
-    dic.PopByIndex(0);
+    dic.PopByIndex(0).Delete();
     TEST(dic.Count() == 3);
     TEST(!dic.HasKey("foo"));
-    dic.PopByKey("bar");
+    dic.PopByKey("bar").Delete();
     TEST(dic.Count() == 2);
     TEST(!dic.HasKey("bar"));
-    dic.PopByValue(15);
+    dic.PopByValue(15).Delete();
     TEST(dic.Count() == 1);
     TEST(!dic.HasKey("foobar"));
 

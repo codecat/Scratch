@@ -43,13 +43,11 @@ public:
   TKey* key;
   TValue* value;
 
-protected:
-  BOOL m_bClear;
-
 public:
   CDictionaryPair();
-  CDictionaryPair(CDictionaryPair<TKey, TValue> &copy);
   ~CDictionaryPair();
+
+  void Delete();
 };
 
 template<class TKey, class TValue>

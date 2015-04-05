@@ -36,24 +36,23 @@ CDictionaryPair<TKey, TValue>::CDictionaryPair()
 {
   key = 0;
   value = 0;
-  m_bClear = FALSE;
-}
-
-template<class TKey, class TValue>
-CDictionaryPair<TKey, TValue>::CDictionaryPair(CDictionaryPair<TKey, TValue> &copy)
-{
-  key = copy.key;
-  value = copy.value;
-  m_bClear = copy.m_bClear;
-  copy.m_bClear = FALSE;
 }
 
 template<class TKey, class TValue>
 CDictionaryPair<TKey, TValue>::~CDictionaryPair()
 {
-  if(m_bClear) {
+}
+
+template<class TKey, class TValue>
+void CDictionaryPair<TKey, TValue>::Delete()
+{
+  if(key != 0) {
     delete key;
+    key = 0;
+  }
+  if(value != 0) {
     delete value;
+    value = 0;
   }
 }
 
@@ -193,7 +192,6 @@ CDictionaryPair<TKey, TValue> CDictionary<TKey, TValue>::PopByIndex(const INDEX 
   CDictionaryPair<TKey, TValue> ret;
   ret.key = dic_saKeys.PopAt(iIndex);
   ret.value = dic_saValues.PopAt(iIndex);
-  ret.m_bClear = TRUE;
   return ret;
 }
 
