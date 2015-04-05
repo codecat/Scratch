@@ -101,7 +101,9 @@ public:
   INDEX Count(void);
 
   TValue& operator[](const TKey &key);
-  
+
+  /// Get a pair from the dictionary using an index
+  CDictionaryPair<TKey, TValue> GetPair(const INDEX iIndex);
   /// Get a key from the dictionary using an index
   TKey& GetKeyByIndex(const INDEX iIndex);
   /// Get a value from the dictionary using an index

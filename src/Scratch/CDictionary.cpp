@@ -245,6 +245,16 @@ TValue& CDictionary<TKey, TValue>::operator[](const TKey &key)
   return dic_saValues[iIndex];
 }
 
+/// Get a pair from the dictionary using an index
+template<class TKey, class TValue>
+CDictionaryPair<TKey, TValue> CDictionary<TKey, TValue>::GetPair(const INDEX iIndex)
+{
+  CDictionaryPair<TKey, TValue> pair;
+  pair.key = &dic_saKeys[iIndex];
+  pair.value = &dic_saValues[iIndex];
+  return pair;
+}
+
 /// Get a key from the dictionary using an index
 template<class TKey, class TValue>
 TKey& CDictionary<TKey, TValue>::GetKeyByIndex(const INDEX iIndex)
