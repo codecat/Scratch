@@ -41,3 +41,10 @@ add_executable(ScratchTests
 target_link_libraries(ScratchTests Scratch)
 
 include_directories(src/Scratch)
+
+enable_testing()
+add_test(CString ScratchTests CString)
+add_test(CFilename ScratchTests CFilename)
+add_test(CStackArray ScratchTests CStackArray)
+add_test(CDictionary ScratchTests CDictionary)
+add_test(CFileStream ScratchTests CFileStream)

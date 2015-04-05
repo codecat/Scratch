@@ -8,19 +8,19 @@
 #include <Scratch.h>
 using namespace Scratch;
 
-static int g_iTestNumber;
+static int g_iTestNumber = 1;
 static int g_iTestOK = 0;
 static int g_iTestFailed = 0;
-
-#define TESTS(id) \
-  g_iTestNumber = 1; \
-  printf("\n  * Tests: \"%s\"\n\n", id);
 
 #if _DEBUG
 #define TEST_BREAK() __asm { int 3 };
 #else
 #define TEST_BREAK()
 #endif
+
+#define TESTS(id) \
+  aTests.Push() = id; \
+  if(strArg == id || strArg == "All")
 
 #define TEST(expr) { \
   printf("TEST %d: (%s) - ", g_iTestNumber, #expr); \
@@ -43,9 +43,16 @@ static int g_iTestFailed = 0;
 #define TEST_UNIX(expr) TEST(expr)
 #endif
 
-int main()
+int main(int argc, char* argv[])
 {
-  TESTS("Scratch::CString")
+  CStackArray<CString> aTests;
+  CString strArg;
+
+  if(argc > 1) {
+    strArg = argv[1];
+  }
+
+  TESTS("CString")
   {
     CString strFoo;
     TEST(strFoo.str_szBuffer == CString::str_szEmpty);
@@ -111,7 +118,7 @@ int main()
     TEST(strPrintF("Hello %d %d", x, y) == "Hello 5 10");
   }
 
-  TESTS("Scratch::CFilename")
+  TESTS("CFilename")
   {
     CFilename fnmFoo;
     TEST(fnmFoo.str_szBuffer == CString::str_szEmpty);
@@ -126,7 +133,7 @@ int main()
     TEST_UNIX(fnmFoo == "~/.zshrc");
   }
 
-  TESTS("Scratch::CStackArray<int>")
+  TESTS("CStackArray")
   {
     CStackArray<int> sa;
     TEST(sa.Count() == 0);
@@ -181,7 +188,7 @@ int main()
     TEST(sa.ContainsAny([](int &i) { return i == 20; }));
   }
 
-  TESTS("Scratch::CDictionary<CString, int>")
+  TESTS("CDictionary")
   {
     CDictionary<CString, int> dic;
     TEST(dic.Count() == 0);
@@ -238,7 +245,7 @@ int main()
     TEST(dic.GetValueByIndex(1) == 10);
   }
 
-  TESTS("Scratch::CFileStream")
+  TESTS("CFileStream")
   {
     CFileStream fsWriter;
     fsWriter.Open("test.txt", "w");
@@ -268,10 +275,19 @@ int main()
     fsReader >> s;
     TEST(s == "test");
 
-    fsReader.ReadChar(); //TODO: This shouldn't be needed
+    fsReader.ReadChar();
     TEST(fsReader.AtEOF());
 
     fsReader.Close();
+  }
+
+  if(argc == 1) {
+    printf("No test name given! Existing tests:\n\n");
+    for(int i=0; i<aTests.Count(); i++) {
+      printf(" * %s\n", (const char*)aTests[i]);
+    }
+    printf("\nOr pass \"All\" to run all tests.");
+    return 1;
   }
 
   printf("\n");
