@@ -37,6 +37,18 @@ CMemoryStream::CMemoryStream(void)
   AllocateMoreMemory(1024);
 }
 
+CMemoryStream::CMemoryStream(const CMemoryStream &copy)
+{
+  strm_pubBuffer = NULL;
+  strm_ulPosition = 0;
+  strm_ulSize = 0;
+  strm_ulUsed = 0;
+  AllocateMoreMemory(copy.strm_ulSize);
+  memcpy(strm_pubBuffer, copy.strm_pubBuffer, copy.strm_ulSize);
+  strm_ulPosition = copy.strm_ulPosition;
+  strm_ulUsed = copy.strm_ulUsed;
+}
+
 CMemoryStream::~CMemoryStream(void)
 {
   delete[] strm_pubBuffer;

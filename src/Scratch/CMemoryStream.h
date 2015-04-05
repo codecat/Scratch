@@ -42,6 +42,7 @@ public:
 
 public:
   CMemoryStream(void);
+  CMemoryStream(const CMemoryStream &copy);
   ~CMemoryStream(void);
 
   ULONG Size();
