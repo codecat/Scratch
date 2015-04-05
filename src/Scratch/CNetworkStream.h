@@ -65,7 +65,7 @@ public:
   BOOL Connect(const char* szAddress, USHORT iPort);
   void Close();
   void Write(const void* p, ULONG iLen);
-  void Read(void* pDest, ULONG iLen);
+  int Read(void* pDest, ULONG iLen);
 
   BOOL IsConnected();
 

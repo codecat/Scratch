@@ -50,7 +50,7 @@ public:
   BOOL AtEOF();
 
   void Write(const void* p, ULONG iLen);
-  void Read(void* pDest, ULONG iLen);
+  int Read(void* pDest, ULONG iLen);
   const void ReadToEnd(void* pDest);
 
 private:

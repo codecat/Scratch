@@ -128,10 +128,11 @@ void CNetworkStream::Write(const void* p, ULONG iLen)
   send(ns_socket, (const char*)p, iLen, 0);
 }
 
-void CNetworkStream::Read(void* pDest, ULONG iLen)
+int CNetworkStream::Read(void* pDest, ULONG iLen)
 {
   int iRet = recv(ns_socket, (char*)pDest, iLen, 0);
   ns_bEOF = (iRet == 0) || ((ULONG)iRet < iLen);
+  return iRet;
 }
 
 BOOL CNetworkStream::IsConnected()

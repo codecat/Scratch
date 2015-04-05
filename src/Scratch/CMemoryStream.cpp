@@ -83,13 +83,24 @@ void CMemoryStream::Write(const void* p, ULONG iLen)
   strm_ulUsed = Max<ULONG>(strm_ulPosition, strm_ulUsed);
 }
 
-void CMemoryStream::Read(void* pDest, ULONG iLen)
+int CMemoryStream::Read(void* pDest, ULONG iLen)
 {
-  // copy data to destination
-  memcpy(pDest, strm_pubBuffer + strm_ulPosition, iLen);
-  
+  ULONG ulStart = strm_ulPosition;
+
   // increase position
   strm_ulPosition += iLen;
+
+  // check boundaries
+  if(strm_ulPosition > Size()) {
+    strm_ulPosition = Size();
+  }
+
+  ULONG ulRealLength = strm_ulPosition - ulStart;
+
+  // copy data to destination
+  memcpy(pDest, strm_pubBuffer + strm_ulPosition, ulRealLength);
+
+  return ulRealLength;
 }
 
 void CMemoryStream::AllocateMoreMemory(INDEX ctBytes)

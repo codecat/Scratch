@@ -63,7 +63,7 @@ public:
   void WriteString(const CString &str);
   void WriteStream(CStream &strm);
 
-  virtual void Read(void* pDest, ULONG iLen) = 0;
+  virtual int Read(void* pDest, ULONG iLen) = 0;
   void ReadToEnd(void* pDest);
   inline INDEX  ReadIndex(void)  { INDEX  i; Read(&i, sizeof(INDEX)); return i; }
   inline LONG   ReadLong(void)   { LONG   l; Read(&l, sizeof(LONG)); return l; }
