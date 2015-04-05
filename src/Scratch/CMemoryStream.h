@@ -52,7 +52,6 @@ public:
 
   void Write(const void* p, ULONG iLen);
   int Read(void* pDest, ULONG iLen);
-  const void ReadToEnd(void* pDest);
 
 private:
   void AllocateMoreMemory(INDEX ctBytes);
