@@ -131,7 +131,7 @@ void CNetworkStream::Write(const void* p, ULONG iLen)
 int CNetworkStream::Read(void* pDest, ULONG iLen)
 {
   int iRet = recv(ns_socket, (char*)pDest, iLen, 0);
-  ns_bEOF = (iRet == 0) || ((ULONG)iRet < iLen);
+  ns_bEOF = (iRet <= 0) || ((ULONG)iRet < iLen);
   return iRet;
 }
 
