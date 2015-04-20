@@ -379,7 +379,7 @@ CString CString::SubString(int iStart) const
 CString CString::SubString(int iStart, int iLen) const
 {
   // Empty strings
-  if(iLen == 0) {
+  if(iStart < 0 || iLen <= 0) {
     return "";
   }
 
