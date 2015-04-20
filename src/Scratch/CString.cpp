@@ -378,6 +378,11 @@ CString CString::SubString(int iStart) const
 
 CString CString::SubString(int iStart, int iLen) const
 {
+  // Empty strings
+  if(iLen == 0) {
+    return "";
+  }
+
   // Get the first offset
   CString strRet(this->str_szBuffer + iStart);
 
