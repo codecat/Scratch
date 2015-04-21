@@ -164,6 +164,10 @@ template<class TKey, class TValue>
 void CDictionary<TKey, TValue>::RemoveByIndex(const INDEX iIndex)
 {
   // pop the values at that index
+  if(iIndex < 0 || iIndex > Count()) {
+    ASSERT(FALSE);
+    return;
+  }
   delete dic_saKeys.PopAt(iIndex);
   delete dic_saValues.PopAt(iIndex);
 }
