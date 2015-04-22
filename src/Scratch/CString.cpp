@@ -310,6 +310,46 @@ void CString::Split(const CString &strNeedle, CStackArray<CString> &astrResult, 
   } while(szOffset != NULL);
 }
 
+void CString::CommandLineSplit(CStackArray<CString> &astrResult) const
+{
+  char* sz = str_szBuffer;
+  bool bInString = false;
+  CString strBuffer;
+
+  do {
+    char c = *sz;
+    char cn = *(sz + 1);
+
+    if(c == '\\') {
+      strBuffer += *(++sz);
+      continue;
+    }
+
+    if(bInString) {
+      if(c == '"' && (cn == ' ' || cn == '\0')) {
+        bInString = false;
+        continue;
+      }
+    } else {
+      if(c == '"' && strBuffer.Length() == 0) {
+        bInString = true;
+        continue;
+      }
+      if(c == ' ' && strBuffer.Length() != 0) {
+        astrResult.Push() = strBuffer;
+        strBuffer = "";
+        continue;
+      }
+    }
+
+    strBuffer += c;
+  } while(*(++sz) != '\0');
+
+  if(strBuffer.Length() != 0) {
+    astrResult.Push() = strBuffer;
+  }
+}
+
 CString CString::Trim() const
 {
   // Keep a pointer to the current offset
