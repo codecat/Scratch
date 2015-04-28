@@ -19,6 +19,7 @@ add_library(Scratch
 	${presrc}/CString.cpp ${presrc}/CString.h
 	${presrc}/CFilename.cpp ${presrc}/CFilename.h
 	${presrc}/CVectors.cpp ${presrc}/CVectors.h
+	${presrc}/CMutex.cpp ${presrc}/CMutex.h
 	${presrc}/Common.cpp ${presrc}/Common.h
 	${presrc}/Scratch.h)
 
@@ -48,3 +49,4 @@ add_test(CFilename ScratchTests CFilename)
 add_test(CStackArray ScratchTests CStackArray)
 add_test(CDictionary ScratchTests CDictionary)
 add_test(CFileStream ScratchTests CFileStream)
+add_test(CMutex ScratchTests CMutex)

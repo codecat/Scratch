@@ -292,6 +292,26 @@ int main(int argc, char* argv[])
     fsReader.Close();
   }
 
+  TESTS("CMutex")
+  {
+    CMutex mutex;
+
+    {
+      TEST(mutex.TryLock() == TRUE);
+      TEST(mutex.TryLock() == FALSE);
+      mutex.Unlock();
+    }
+
+    {
+      mutex.Lock();
+      mutex.Unlock();
+    }
+
+    {
+      CMutexWait wait(mutex);
+    }
+  }
+
   if(argc == 1) {
     printf("No test name given! Existing tests:\n\n");
     for(int i=0; i<aTests.Count(); i++) {

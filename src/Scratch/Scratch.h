@@ -111,3 +111,17 @@
  *   ns.Close();
  */
 #include "CNetworkStream.h"
+
+/* CMutex: high level mutex management
+ * -----------------------------------
+ * Basic usage:
+ *   CMutex mutex;
+ *   mutex.Lock();
+ *   // do some work
+ *   mutex.Unlock();
+ * Or:
+ *   CMutex mutex;
+ *   CMutexWait(mutex);
+ *   // do some work
+ */
+#include "CMutex.h"
