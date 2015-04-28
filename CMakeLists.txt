@@ -46,6 +46,7 @@ add_executable(ScratchTests
 	${presrc_tests}/main.cpp)
 
 find_package(Threads)
+message("thread libs: ${CMAKE_THREAD_LIBS_INIT}")
 target_link_libraries(ScratchTests Scratch ${CMAKE_THREAD_LIBS_INIT})
 
 include_directories(src/Scratch)
