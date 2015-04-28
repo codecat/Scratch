@@ -39,7 +39,8 @@ set(presrc_tests "src/ScratchTests")
 add_executable(ScratchTests
 	${presrc_tests}/main.cpp)
 
-target_link_libraries(ScratchTests Scratch)
+find_package(Threads)
+target_link_libraries(ScratchTests Scratch ${CMAKE_THREAD_LIBS_INIT})
 
 include_directories(src/Scratch)
 
