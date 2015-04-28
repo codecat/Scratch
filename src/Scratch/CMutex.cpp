@@ -43,22 +43,22 @@ CMutex::~CMutex()
   delete (pthread_mutex_t*)m_pMutex;
 }
 
-void CMutex::Lock()
+void CMutex::Lock() const
 {
   pthread_mutex_lock((pthread_mutex_t*)m_pMutex);
 }
 
-bool CMutex::TryLock()
+bool CMutex::TryLock() const
 {
   return pthread_mutex_trylock((pthread_mutex_t*)m_pMutex) != EBUSY;
 }
 
-void CMutex::Unlock()
+void CMutex::Unlock() const
 {
   pthread_mutex_unlock((pthread_mutex_t*)m_pMutex);
 }
 
-CMutexWait::CMutexWait(CMutex &mutex)
+CMutexWait::CMutexWait(const CMutex &mutex)
 {
   m_pMutex = &mutex;
   m_pMutex->Lock();

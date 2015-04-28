@@ -105,6 +105,8 @@ void CStackArray<Type>::AllocateSlots(INDEX ctSlots)
 template<class Type>
 Type& CStackArray<Type>::PushBegin(void)
 {
+  CMutexWait wait(sa_mutex);
+
   // PushBegin() in combination with sa_bOnlyPop will cause memory leaking if not manually Clear()'d
   ASSERT(!sa_bOnlyPop);
 
@@ -136,6 +138,8 @@ Type& CStackArray<Type>::PushBegin(void)
 template<class Type>
 Type& CStackArray<Type>::Push(void)
 {
+  CMutexWait wait(sa_mutex);
+
   // Push() in combination with sa_bOnlyPop will cause memory leaking if not manually Clear()'d
   ASSERT(!sa_bOnlyPop);
 
@@ -162,6 +166,8 @@ Type& CStackArray<Type>::Push(void)
 template<class Type>
 void CStackArray<Type>::Push(Type* pObj)
 {
+  CMutexWait wait(sa_mutex);
+
   // if we need more slots
   if(sa_ctUsed >= sa_ctSlots) {
     // allocate some more
@@ -179,6 +185,8 @@ void CStackArray<Type>::Push(Type* pObj)
 template<class Type>
 Type* CStackArray<Type>::Pop(void)
 {
+  CMutexWait wait(sa_mutex);
+
   ASSERT(sa_ctUsed > 0);
 
   // decrease iterator
@@ -198,7 +206,9 @@ Type* CStackArray<Type>::Pop(void)
 template<class Type>
 Type* CStackArray<Type>::PopAt(INDEX iIndex)
 {
-  ASSERT(iIndex < Count());
+  CMutexWait wait(sa_mutex);
+
+  ASSERT(iIndex < sa_ctUsed);
 
   // decrease iterator
   sa_ctUsed--;
@@ -223,6 +233,8 @@ Type* CStackArray<Type>::PopAt(INDEX iIndex)
 template<class Type>
 void CStackArray<Type>::PopAll(void)
 {
+  CMutexWait wait(sa_mutex);
+
   // for every object
   for(INDEX i=0; i<sa_ctUsed; i++) {
     // set remaining pointer to NULL (just to be sure)
@@ -237,6 +249,8 @@ void CStackArray<Type>::PopAll(void)
 template<class Type>
 void CStackArray<Type>::Clear(void)
 {
+  CMutexWait wait(sa_mutex);
+
   // for every object
   for(INDEX i=0; i<sa_ctUsed; i++) {
     // delete it
@@ -253,6 +267,7 @@ void CStackArray<Type>::Clear(void)
 template<class Type>
 INDEX CStackArray<Type>::Count(void)
 {
+  CMutexWait wait(sa_mutex);
   return sa_ctUsed;
 }
 
@@ -260,6 +275,8 @@ INDEX CStackArray<Type>::Count(void)
 template<class Type>
 INDEX CStackArray<Type>::Find(const Type &obj)
 {
+  CMutexWait wait(sa_mutex);
+
   // for every object
   for(INDEX i=0; i<sa_ctUsed; i++) {
     // test if it's the given one
@@ -275,6 +292,8 @@ INDEX CStackArray<Type>::Find(const Type &obj)
 template<class Type>
 INDEX CStackArray<Type>::FindPointer(const Type* pObj)
 {
+  CMutexWait wait(sa_mutex);
+
   // for every object
   for(INDEX i=0; i<sa_ctUsed; i++) {
     // test if it's the given one
@@ -291,6 +310,8 @@ template<class Type>
 template<typename Func>
 INDEX CStackArray<Type>::FindAny(Func f)
 {
+  CMutexWait wait(sa_mutex);
+
   // for every object
   for(INDEX i=0; i<sa_ctUsed; i++) {
     // test with function
@@ -326,6 +347,7 @@ BOOL CStackArray<Type>::ContainsAny(Func f)
 template<class Type>
 Type& CStackArray<Type>::operator[](INDEX iIndex)
 {
+  CMutexWait wait(sa_mutex);
   ASSERT(iIndex >= 0 && iIndex < sa_ctUsed);
   return *sa_pItems[iIndex];
 }

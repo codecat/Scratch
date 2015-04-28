@@ -184,6 +184,7 @@ CString::CString(const char* szValue, int iStart, int iLength)
 CString::CString(const CString &copy)
 {
   str_iInstances++;
+  CMutexWait wait(copy.str_mutex);
   // Create a new buffer and copy data into it.
   this->str_szBuffer = CString::str_szEmpty;
   this->CopyToBuffer(copy);
@@ -200,11 +201,14 @@ CString::~CString()
 
 int CString::Length() const
 {
+  CMutexWait wait(str_mutex);
   return strlen(this->str_szBuffer);
 }
 
 void CString::SetF(const char* szFormat, ...)
 {
+  CMutexWait wait(str_mutex);
+
   int iSize = CSTRING_FORMAT_BUFFER_SIZE;
   char* szBuffer = new char[iSize];
 
@@ -231,6 +235,8 @@ void CString::SetF(const char* szFormat, ...)
 
 void CString::AppendF(const char* szFormat, ...)
 {
+  CMutexWait wait(str_mutex);
+
   int iSize = CSTRING_FORMAT_BUFFER_SIZE;
   char* szBuffer = new char[iSize];
 
@@ -257,16 +263,14 @@ void CString::AppendF(const char* szFormat, ...)
 
 void CString::Split(const CString &strNeedle, CStackArray<CString> &astrResult) const
 {
-  Split(strNeedle, astrResult, FALSE, -1);
+  Split(strNeedle, astrResult, FALSE);
 }
 
 void CString::Split(const CString &strNeedle, CStackArray<CString> &astrResult, BOOL bTrimAll) const
 {
-  Split(strNeedle, astrResult, bTrimAll, -1);
-}
+  CMutexWait wait(str_mutex);
+  CMutexWait wait2(strNeedle.str_mutex);
 
-void CString::Split(const CString &strNeedle, CStackArray<CString> &astrResult, BOOL bTrimAll, int iMax) const
-{
   // Keep a pointer to the current offset and a "previous offset"
   char* szOffset = str_szBuffer;
   char* szOffsetPrev = szOffset;
@@ -330,6 +334,8 @@ void CString::Split(const CString &strNeedle, CStackArray<CString> &astrResult, 
 
 void CString::CommandLineSplit(CStackArray<CString> &astrResult) const
 {
+  CMutexWait wait(str_mutex);
+
   char* sz = str_szBuffer;
   bool bInString = false;
   CString strBuffer;
@@ -368,7 +374,7 @@ void CString::CommandLineSplit(CStackArray<CString> &astrResult) const
   }
 }
 
-CString CString::Trim() const
+CString CString::InternalTrim(bool bLeft, bool bRight, char c) const
 {
   // Copy ourselves into a new buffer
   char* szBuffer = new char[strlen(this->str_szBuffer) + 1];
@@ -377,21 +383,25 @@ CString CString::Trim() const
   // Keep a pointer to the current offset
   char* szOffset = szBuffer;
 
-  // While there's a space, keep incrementing the offset
-  while(*szOffset == ' ') {
-    // This way, we'll trim all the spaces on the left
-    szOffset++;
+  if(bLeft) {
+    // While there's a space, keep incrementing the offset
+    while(*szOffset == c) {
+      // This way, we'll trim all the spaces on the left
+      szOffset++;
+    }
   }
 
-  // Loop from right to left in the string
-  for(int i=strlen(szOffset)-1; i>=0; i--) {
-    // When we find something other than a space
-    if(szOffset[i] != ' ') {
-      // Put a null terminator to trim the right part
-      szOffset[i + 1] = '\0';
+  if(bRight) {
+    // Loop from right to left in the string
+    for(int i=strlen(szOffset)-1; i>=0; i--) {
+      // When we find something other than a space
+      if(szOffset[i] != c) {
+        // Put a null terminator to trim the right part
+        szOffset[i + 1] = '\0';
 
-      // Stop reading
-      break;
+        // Stop reading
+        break;
+      }
     }
   }
 
@@ -399,139 +409,50 @@ CString CString::Trim() const
   CString ret(szOffset);
   delete[] szBuffer;
   return ret;
+}
+
+CString CString::Trim() const
+{
+  CMutexWait wait(str_mutex);
+  return InternalTrim(true, true);
 }
 
 CString CString::Trim(char c) const
 {
-  // Copy ourselves into a new buffer
-  char* szBuffer = new char[strlen(this->str_szBuffer) + 1];
-  strcpy(szBuffer, this->str_szBuffer);
-
-  // Keep a pointer to the current offset
-  char* szOffset = szBuffer;
-
-  // While there's a space, keep incrementing the offset
-  while(*szOffset == c) {
-    // This way, we'll trim all the spaces on the left
-    szOffset++;
-  }
-
-  // Loop from right to left in the string
-  for(int i=strlen(szOffset)-1; i>=0; i--) {
-    // When we find something other than a space
-    if(szOffset[i] != c) {
-      // Put a null terminator to trim the right part
-      szOffset[i + 1] = '\0';
-
-      // Stop reading
-      break;
-    }
-  }
-
-  // Return
-  CString ret(szOffset);
-  delete[] szBuffer;
-  return ret;
+  CMutexWait wait(str_mutex);
+  return InternalTrim(true, true, c);
 }
 
 CString CString::TrimLeft() const
 {
-  // Copy ourselves into a new buffer
-  char* szBuffer = new char[strlen(this->str_szBuffer) + 1];
-  strcpy(szBuffer, this->str_szBuffer);
-
-  // Keep a pointer to the current offset
-  char* szOffset = szBuffer;
-
-  // While there's a space, keep incrementing the offset
-  while(*szOffset == ' ') {
-    // This way, we'll trim all the spaces on the left
-    szOffset++;
-  }
-
-  // Return
-  CString ret(szOffset);
-  delete[] szBuffer;
-  return ret;
+  CMutexWait wait(str_mutex);
+  return InternalTrim(true, false);
 }
 
 CString CString::TrimLeft(char c) const
 {
-  // Copy ourselves into a new buffer
-  char* szBuffer = new char[strlen(this->str_szBuffer) + 1];
-  strcpy(szBuffer, this->str_szBuffer);
-
-  // Keep a pointer to the current offset
-  char* szOffset = szBuffer;
-
-  // While there's a space, keep incrementing the offset
-  while(*szOffset == c) {
-    // This way, we'll trim all the spaces on the left
-    szOffset++;
-  }
-
-  // Return
-  CString ret(szOffset);
-  delete[] szBuffer;
-  return ret;
+  CMutexWait wait(str_mutex);
+  return InternalTrim(true, false, c);
 }
 
 CString CString::TrimRight() const
 {
-  // Copy ourselves into a new buffer
-  char* szBuffer = new char[strlen(this->str_szBuffer) + 1];
-  strcpy(szBuffer, this->str_szBuffer);
-
-  // Keep a pointer to the current offset
-  char* szOffset = szBuffer;
-
-  // Loop from right to left in the string
-  for(int i=strlen(szOffset)-1; i>=0; i--) {
-    // When we find something other than a space
-    if(szOffset[i] != ' ') {
-      // Put a null terminator to trim the right part
-      szOffset[i + 1] = '\0';
-
-      // Stop reading
-      break;
-    }
-  }
-
-  // Return
-  CString ret(szOffset);
-  delete[] szBuffer;
-  return ret;
+  CMutexWait wait(str_mutex);
+  return InternalTrim(false, true);
 }
 
 CString CString::TrimRight(char c) const
 {
-  // Copy ourselves into a new buffer
-  char* szBuffer = new char[strlen(this->str_szBuffer) + 1];
-  strcpy(szBuffer, this->str_szBuffer);
-
-  // Keep a pointer to the current offset
-  char* szOffset = szBuffer;
-
-  // Loop from right to left in the string
-  for(int i=strlen(szOffset)-1; i>=0; i--) {
-    // When we find something other than a space
-    if(szOffset[i] != c) {
-      // Put a null terminator to trim the right part
-      szOffset[i + 1] = '\0';
-
-      // Stop reading
-      break;
-    }
-  }
-
-  // Return
-  CString ret(szOffset);
-  delete[] szBuffer;
-  return ret;
+  CMutexWait wait(str_mutex);
+  return InternalTrim(false, true, c);
 }
 
 CString CString::Replace(const CString &strNeedle, const CString &strReplace) const
 {
+  CMutexWait wait(str_mutex);
+  CMutexWait wait2(strNeedle.str_mutex);
+  CMutexWait wait3(strReplace.str_mutex);
+
   CString strRet("");
 
   // Keep a pointer to the current offset and a "previous offset"
@@ -566,11 +487,14 @@ CString CString::Replace(const CString &strNeedle, const CString &strReplace) co
 
 CString CString::SubString(int iStart) const
 {
+  CMutexWait wait(str_mutex);
   return CString(this->str_szBuffer + iStart);
 }
 
 CString CString::SubString(int iStart, int iLen) const
 {
+  CMutexWait wait(str_mutex);
+
   // Empty strings
   if(iStart < 0 || iLen <= 0) {
     return "";
@@ -611,6 +535,7 @@ void strupr(char* sz)
 
 CString CString::ToLower() const
 {
+  CMutexWait wait(str_mutex);
   CString strRet(this->str_szBuffer);
   strlwr(strRet.str_szBuffer);
   return strRet;
@@ -618,6 +543,7 @@ CString CString::ToLower() const
 
 CString CString::ToUpper() const
 {
+  CMutexWait wait(str_mutex);
   CString strRet(this->str_szBuffer);
   strupr(strRet.str_szBuffer);
   return strRet;
@@ -625,6 +551,7 @@ CString CString::ToUpper() const
 
 int CString::IndexOf(char c) const
 {
+  CMutexWait wait(str_mutex);
   const char* sz = strchr(this->str_szBuffer, c);
   if(sz != NULL) {
     return sz - this->str_szBuffer;
@@ -634,6 +561,7 @@ int CString::IndexOf(char c) const
 
 int CString::IndexOf(const CString &strNeedle) const
 {
+  CMutexWait wait(str_mutex);
   const char* sz = strstr(this->str_szBuffer, strNeedle);
   if(sz != NULL) {
     return sz - this->str_szBuffer;
@@ -643,6 +571,7 @@ int CString::IndexOf(const CString &strNeedle) const
 
 int CString::IndexOfLast(char c) const
 {
+  CMutexWait wait(str_mutex);
   const char* sz = strrchr(this->str_szBuffer, c);
   if(sz != NULL) {
     return sz - this->str_szBuffer;
@@ -676,6 +605,7 @@ static char* strrstr(const char* s1, const char* s2)
 
 int CString::IndexOfLast(const CString &strNeedle) const
 {
+  CMutexWait wait(str_mutex);
   const char* sz = strrstr(this->str_szBuffer, strNeedle);
   if(sz != NULL) {
     return sz - this->str_szBuffer;
@@ -685,6 +615,7 @@ int CString::IndexOfLast(const CString &strNeedle) const
 
 void CString::Fill(char c, int ct)
 {
+  CMutexWait wait(str_mutex);
   char* szBuffer = new char[ct + 1];
   memset(szBuffer, c, ct);
   szBuffer[ct] = '\0';
@@ -693,11 +624,14 @@ void CString::Fill(char c, int ct)
 
 bool CString::Contains(const CString &strNeedle)
 {
+  CMutexWait wait(str_mutex);
+  CMutexWait wait2(strNeedle.str_mutex);
   return strstr(this->str_szBuffer, strNeedle) != NULL;
 }
 
 bool CString::Contains(char c) const
 {
+  CMutexWait wait(str_mutex);
   int iLen = strlen(str_szBuffer);
   for(int i=0; i<iLen; i++) {
     if(str_szBuffer[i] == c) {
@@ -709,12 +643,17 @@ bool CString::Contains(char c) const
 
 bool CString::StartsWith(const CString &strNeedle)
 {
+  CMutexWait wait(str_mutex);
+  CMutexWait wait2(strNeedle.str_mutex);
   return strstr(this->str_szBuffer, strNeedle) == this->str_szBuffer;
 }
 
 bool CString::EndsWith(const CString &strNeedle)
 {
-  // Locate the needle in the buffer
+  CMutexWait wait(str_mutex);
+  CMutexWait wait2(strNeedle.str_mutex);
+
+  // Get the offset
   const char* szTemp = strstr(this->str_szBuffer, strNeedle);
 
   // Make sure the needle is found
@@ -738,6 +677,7 @@ CString::operator const char *() const
 
 CString& CString::operator=(char* src)
 {
+  CMutexWait wait(str_mutex);
   // Copy the right hand side to the buffer.
   this->CopyToBuffer(src);
   return *this;
@@ -745,6 +685,7 @@ CString& CString::operator=(char* src)
 
 CString& CString::operator=(const char* src)
 {
+  CMutexWait wait(str_mutex);
   // Copy the right hand side to the buffer.
   this->CopyToBuffer(src);
   return *this;
@@ -752,6 +693,8 @@ CString& CString::operator=(const char* src)
 
 CString& CString::operator=(const CString &strSrc)
 {
+  CMutexWait wait(str_mutex);
+  CMutexWait wait2(strSrc.str_mutex);
   // If the right hand side is not the left hand side...
   if(this != &strSrc) {
     // Copy the right hand side to the buffer.
@@ -762,6 +705,7 @@ CString& CString::operator=(const CString &strSrc)
 
 CString& CString::operator+=(const char* szSrc)
 {
+  CMutexWait wait(str_mutex);
   // Append the right hand side to the buffer.
   this->AppendToBuffer(szSrc);
   return *this;
@@ -769,6 +713,7 @@ CString& CString::operator+=(const char* szSrc)
 
 CString& CString::operator+=(const char cSrc)
 {
+  CMutexWait wait(str_mutex);
   // Append the right hand side to the buffer.
   this->AppendToBuffer(cSrc);
   return *this;
@@ -777,6 +722,7 @@ CString& CString::operator+=(const char cSrc)
 CString& CString::operator*=(int ctRepeat)
 {
   CString strOriginal = *this;
+  CMutexWait wait(str_mutex);
   for(int i=1; i<ctRepeat; i++) {
     this->AppendToBuffer(strOriginal);
   }
@@ -785,16 +731,19 @@ CString& CString::operator*=(int ctRepeat)
 
 bool CString::operator==(const char* szSrc) const
 {
+  CMutexWait wait(str_mutex);
   return !strcmp(this->str_szBuffer, szSrc);
 }
 
 bool CString::operator!=(const char* szSrc) const
 {
+  CMutexWait wait(str_mutex);
   return strcmp(this->str_szBuffer, szSrc) != 0;
 }
 
 char& CString::operator[](int iIndex)
 {
+  CMutexWait wait(str_mutex);
   return this->str_szBuffer[iIndex];
 }
 

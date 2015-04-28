@@ -27,7 +27,7 @@
 #ifndef SCRATCH_CSTACKARRAY_H_INCLUDED
 #define SCRATCH_CSTACKARRAY_H_INCLUDED
 
-#include "Common.h"
+#include "CMutex.h"
 
 SCRATCH_NAMESPACE_BEGIN;
 
@@ -39,6 +39,7 @@ public:
   INDEX sa_ctSlots;
   INDEX sa_ctUsed;
   BOOL sa_bOnlyPop;
+  CMutex sa_mutex;
 
 public:
   CStackArray(void);

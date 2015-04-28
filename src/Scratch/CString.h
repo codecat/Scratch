@@ -28,6 +28,7 @@
 #define SCRATCH_CSTRING_H_INCLUDED
 
 #include "CStackArray.h"
+#include "CMutex.h"
 
 #ifndef CSTRING_FORMAT_BUFFER_SIZE
 #define CSTRING_FORMAT_BUFFER_SIZE 1024
@@ -40,6 +41,7 @@ class SCRATCH_EXPORT CString
   friend class CFilename;
 protected:
   char* str_szBuffer;
+  CMutex str_mutex;
 
   void CopyToBuffer(const char* szSrc);
   void AppendToBuffer(const char* szSrc);
@@ -62,9 +64,11 @@ public:
   void AppendF(const char* szFormat, ...);
 
   void Split(const CString &strNeedle, CStackArray<CString> &astrResult) const;
-  void Split(const CString &strNeedle, CStackArray<CString> &astrResult, BOOL bTrimAll) const ;
-  void Split(const CString &strNeedle, CStackArray<CString> &astrResult, BOOL bTrimAll, int iMax) const;
+  void Split(const CString &strNeedle, CStackArray<CString> &astrResult, BOOL bTrimAll) const;
   void CommandLineSplit(CStackArray<CString> &astrResult) const;
+private:
+  CString InternalTrim(bool bLeft, bool bRight, char c = ' ') const;
+public:
   CString Trim() const;
   CString Trim(char c) const;
   CString TrimLeft() const;

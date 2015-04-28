@@ -109,6 +109,7 @@ int main(int argc, char* argv[])
 
     TEST(strFoo.StartsWith("Baaa"));
     TEST(strFoo.EndsWith("aaaB"));
+    TEST(!strFoo.EndsWith("Xaaa"));
 
     TEST((const char*)strFoo == strFoo.str_szBuffer);
 

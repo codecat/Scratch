@@ -40,18 +40,18 @@ public:
   CMutex();
   ~CMutex();
 
-  void Lock();
-  bool TryLock();
-  void Unlock();
+  void Lock() const;
+  bool TryLock() const;
+  void Unlock() const;
 };
 
 class SCRATCH_EXPORT CMutexWait
 {
 public:
-  CMutex* m_pMutex;
+  const CMutex* m_pMutex;
 
 public:
-  CMutexWait(CMutex &mutex);
+  CMutexWait(const CMutex &mutex);
   ~CMutexWait();
 };
 
