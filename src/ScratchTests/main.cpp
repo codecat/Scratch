@@ -12,10 +12,14 @@ static int g_iTestNumber = 1;
 static int g_iTestOK = 0;
 static int g_iTestFailed = 0;
 
-#if _DEBUG
-#define TEST_BREAK() __asm { int 3 };
+#if DEBUG
+  #if WINDOWS
+    #define TEST_BREAK() __asm { int 3 };
+  #else
+    #define TEST_BREAK() __asm__("int $0x03");
+  #endif
 #else
-#define TEST_BREAK()
+  #define TEST_BREAK()
 #endif
 
 #define TESTS(id) \
