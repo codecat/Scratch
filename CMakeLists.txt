@@ -7,6 +7,12 @@ endif()
 
 set(presrc "src/Scratch")
 
+if(CMAKE_BUILD_TYPE)
+	if(${CMAKE_BUILD_TYPE} STREQUAL Debug)
+		add_definitions(-DDEBUG)
+	endif()
+endif()
+
 add_library(Scratch
 	${presrc}/Assert.cpp
 	${presrc}/CContainer.cpp ${presrc}/CContainer.h
