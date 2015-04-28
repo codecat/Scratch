@@ -82,6 +82,13 @@ int main(int argc, char* argv[])
 
     strFoo = "     Foo  ";
     TEST(strFoo.Trim() == "Foo");
+    TEST(strFoo.TrimLeft() == "Foo  ");
+    TEST(strFoo.TrimRight() == "     Foo");
+
+    strFoo = "..Foo!!";
+    TEST(strFoo.Trim('!') == "..Foo");
+    TEST(strFoo.TrimLeft('.') == "Foo!!");
+    TEST(strFoo.TrimRight('!') == "..Foo");
 
     strFoo = "a a b b a";
     TEST(strFoo.Replace("b", "a") == "a a a a a");

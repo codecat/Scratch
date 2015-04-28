@@ -66,6 +66,11 @@ public:
   void Split(const CString &strNeedle, CStackArray<CString> &astrResult, BOOL bTrimAll, int iMax) const;
   void CommandLineSplit(CStackArray<CString> &astrResult) const;
   CString Trim() const;
+  CString Trim(char c) const;
+  CString TrimLeft() const;
+  CString TrimLeft(char c) const;
+  CString TrimRight() const;
+  CString TrimRight(char c) const;
   CString Replace(const CString &strNeedle, const CString &strReplace) const;
   CString SubString(int iStart) const;
   CString SubString(int iStart, int iLen) const;

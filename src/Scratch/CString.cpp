@@ -370,8 +370,12 @@ void CString::CommandLineSplit(CStackArray<CString> &astrResult) const
 
 CString CString::Trim() const
 {
+  // Copy ourselves into a new buffer
+  char* szBuffer = new char[strlen(this->str_szBuffer) + 1];
+  strcpy(szBuffer, this->str_szBuffer);
+
   // Keep a pointer to the current offset
-  char* szOffset = this->str_szBuffer;
+  char* szOffset = szBuffer;
 
   // While there's a space, keep incrementing the offset
   while(*szOffset == ' ') {
@@ -392,7 +396,138 @@ CString CString::Trim() const
   }
 
   // Return
-  return CString(szOffset);
+  CString ret(szOffset);
+  delete[] szBuffer;
+  return ret;
+}
+
+CString CString::Trim(char c) const
+{
+  // Copy ourselves into a new buffer
+  char* szBuffer = new char[strlen(this->str_szBuffer) + 1];
+  strcpy(szBuffer, this->str_szBuffer);
+
+  // Keep a pointer to the current offset
+  char* szOffset = szBuffer;
+
+  // While there's a space, keep incrementing the offset
+  while(*szOffset == c) {
+    // This way, we'll trim all the spaces on the left
+    szOffset++;
+  }
+
+  // Loop from right to left in the string
+  for(int i=strlen(szOffset)-1; i>=0; i--) {
+    // When we find something other than a space
+    if(szOffset[i] != c) {
+      // Put a null terminator to trim the right part
+      szOffset[i + 1] = '\0';
+
+      // Stop reading
+      break;
+    }
+  }
+
+  // Return
+  CString ret(szOffset);
+  delete[] szBuffer;
+  return ret;
+}
+
+CString CString::TrimLeft() const
+{
+  // Copy ourselves into a new buffer
+  char* szBuffer = new char[strlen(this->str_szBuffer) + 1];
+  strcpy(szBuffer, this->str_szBuffer);
+
+  // Keep a pointer to the current offset
+  char* szOffset = szBuffer;
+
+  // While there's a space, keep incrementing the offset
+  while(*szOffset == ' ') {
+    // This way, we'll trim all the spaces on the left
+    szOffset++;
+  }
+
+  // Return
+  CString ret(szOffset);
+  delete[] szBuffer;
+  return ret;
+}
+
+CString CString::TrimLeft(char c) const
+{
+  // Copy ourselves into a new buffer
+  char* szBuffer = new char[strlen(this->str_szBuffer) + 1];
+  strcpy(szBuffer, this->str_szBuffer);
+
+  // Keep a pointer to the current offset
+  char* szOffset = szBuffer;
+
+  // While there's a space, keep incrementing the offset
+  while(*szOffset == c) {
+    // This way, we'll trim all the spaces on the left
+    szOffset++;
+  }
+
+  // Return
+  CString ret(szOffset);
+  delete[] szBuffer;
+  return ret;
+}
+
+CString CString::TrimRight() const
+{
+  // Copy ourselves into a new buffer
+  char* szBuffer = new char[strlen(this->str_szBuffer) + 1];
+  strcpy(szBuffer, this->str_szBuffer);
+
+  // Keep a pointer to the current offset
+  char* szOffset = szBuffer;
+
+  // Loop from right to left in the string
+  for(int i=strlen(szOffset)-1; i>=0; i--) {
+    // When we find something other than a space
+    if(szOffset[i] != ' ') {
+      // Put a null terminator to trim the right part
+      szOffset[i + 1] = '\0';
+
+      // Stop reading
+      break;
+    }
+  }
+
+  // Return
+  CString ret(szOffset);
+  delete[] szBuffer;
+  return ret;
+}
+
+CString CString::TrimRight(char c) const
+{
+  // Copy ourselves into a new buffer
+  char* szBuffer = new char[strlen(this->str_szBuffer) + 1];
+  strcpy(szBuffer, this->str_szBuffer);
+
+  // Keep a pointer to the current offset
+  char* szOffset = szBuffer;
+
+  // Loop from right to left in the string
+  for(int i=strlen(szOffset)-1; i>=0; i--) {
+    // When we find something other than a space
+    if(szOffset[i] != c) {
+      // Put a null terminator to trim the right part
+      szOffset[i + 1] = '\0';
+
+      // Stop reading
+      break;
+    }
+  }
+
+  // Return
+  CString ret(szOffset);
+  delete[] szBuffer;
+  return ret;
 }
 
 CString CString::Replace(const CString &strNeedle, const CString &strReplace) const
