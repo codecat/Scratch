@@ -205,12 +205,21 @@ int CString::Length() const
 
 void CString::SetF(const char* szFormat, ...)
 {
-  char* szBuffer = new char[CSTRING_FORMAT_BUFFER_SIZE];
+  int iSize = CSTRING_FORMAT_BUFFER_SIZE;
+  char* szBuffer = new char[iSize];
 
   // Get the args list and do a vsprintf to get the right format.
   va_list vL;
   va_start(vL, szFormat);
-  vsprintf(szBuffer, szFormat, vL);
+
+  // Make sure we don't overflow the buffer by checking against result length
+  int iPrintSize = vsnprintf(szBuffer, iSize, szFormat, vL);
+  if(iSize <= iPrintSize) {
+    // Fail delete buffer and try again
+    delete[] szBuffer;
+    szBuffer = new char[iPrintSize + 1]; // +1 for \0
+    vsnprintf(szBuffer, iPrintSize + 1, szFormat, vL);
+  }
   va_end(vL);
 
   // Copy the just-created buffer to the main buffer
@@ -222,12 +231,21 @@ void CString::SetF(const char* szFormat, ...)
 
 void CString::AppendF(const char* szFormat, ...)
 {
-  char* szBuffer = new char[CSTRING_FORMAT_BUFFER_SIZE];
+  int iSize = CSTRING_FORMAT_BUFFER_SIZE;
+  char* szBuffer = new char[iSize];
 
   // Get the args list and do a vsprintf to get the right format.
   va_list vL;
   va_start(vL, szFormat);
-  vsprintf(szBuffer, szFormat, vL);
+
+  // Make sure we don't overflow the buffer by checking against result length
+  int iPrintSize = vsnprintf(szBuffer, iSize, szFormat, vL);
+  if(iSize <= iPrintSize) {
+    // Fail delete buffer and try again
+    delete[] szBuffer;
+    szBuffer = new char[iPrintSize + 1]; // +1 for \0
+    vsnprintf(szBuffer, iPrintSize + 1, szFormat, vL);
+  }
   va_end(vL);
 
   // Copy the just-created buffer to the main buffer
@@ -677,12 +695,21 @@ CString operator*(int ctRepeat, const CString &strRHS)
 
 CString strPrintF(const char* szFormat, ...)
 {
-  char* szBuffer = new char[CSTRING_FORMAT_BUFFER_SIZE];
+  int iSize = CSTRING_FORMAT_BUFFER_SIZE;
+  char* szBuffer = new char[iSize];
 
   // Get the args list and do a vsprintf to get the right format.
   va_list vL;
   va_start(vL, szFormat);
-  vsprintf(szBuffer, szFormat, vL);
+
+  // Make sure we don't overflow the buffer by checking against result length
+  int iPrintSize = vsnprintf(szBuffer, iSize, szFormat, vL);
+  if(iSize <= iPrintSize) {
+    // Fail delete buffer and try again
+    delete[] szBuffer;
+    szBuffer = new char[iPrintSize + 1]; // +1 for \0
+    vsnprintf(szBuffer, iPrintSize + 1, szFormat, vL);
+  }
   va_end(vL);
 
   // Copy the just-created buffer to the main buffer
