@@ -17,6 +17,7 @@ add_library(Scratch
 	${presrc}/Assert.cpp
 	${presrc}/CContainer.cpp ${presrc}/CContainer.h
 	${presrc}/CDictionary.cpp ${presrc}/CDictionary.h
+	${presrc}/CException.cpp ${presrc}/CException.h
 	${presrc}/CFileStream.cpp ${presrc}/CFileStream.h
 	${presrc}/CMemoryStream.cpp ${presrc}/CMemoryStream.h
 	${presrc}/CNetworkStream.cpp ${presrc}/CNetworkStream.h
@@ -58,3 +59,4 @@ add_test(CStackArray ScratchTests CStackArray)
 add_test(CDictionary ScratchTests CDictionary)
 add_test(CFileStream ScratchTests CFileStream)
 add_test(CMutex ScratchTests CMutex)
+add_test(CException ScratchTests CException)

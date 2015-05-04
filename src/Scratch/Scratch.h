@@ -125,3 +125,14 @@
  *   // do some work
  */
 #include "CMutex.h"
+
+/* CException: high level exception management
+ * -------------------------------------------
+ * Basic usage:
+ *   try {
+ *     throw CException("Found %d items", 20);
+ *   } catch(CException &ex) {
+ *     // do something with ex.Message
+ *   }
+ */
+#include "CException.h"

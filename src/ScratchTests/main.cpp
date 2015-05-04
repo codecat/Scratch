@@ -313,6 +313,15 @@ int main(int argc, char* argv[])
     }
   }
 
+  TESTS("CException")
+  {
+    try {
+      throw CException("%d", 123);
+    } catch(CException &ex) {
+      TEST(ex.Message == "123");
+    }
+  }
+
   if(argc == 1) {
     printf("No test name given! Existing tests:\n\n");
     for(int i=0; i<aTests.Count(); i++) {
