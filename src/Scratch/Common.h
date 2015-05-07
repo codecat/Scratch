@@ -60,7 +60,7 @@
 #define TRUE 1
 #define FALSE 0
 
-typedef           long INDEX;
+typedef            int INDEX;
 typedef          float FLOAT;
 typedef         double DOUBLE;
 typedef            int BOOL;
