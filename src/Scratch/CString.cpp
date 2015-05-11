@@ -297,7 +297,7 @@ void CString::Split(const CString &strNeedle, CStackArray<CString> &astrResult, 
 
       // Add it to the return array
       astrResult.Push() = szPart;
-      delete szPart;
+      delete[] szPart;
 
       // Keep a seperate count
       iCount++;
@@ -327,7 +327,7 @@ void CString::Split(const CString &strNeedle, CStackArray<CString> &astrResult, 
       if(bTrimAll) {
         strAdd = strAdd.Trim();
       }
-      delete szPart;
+      delete[] szPart;
     }
   } while(szOffset != NULL);
 }

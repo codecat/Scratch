@@ -111,7 +111,7 @@ bool CStream::Expect(const CString &str)
     Seek(-iLen, SEEK_CUR);
   }
 
-  delete szBuffer;
+  delete[] szBuffer;
   return ret;
 }
 
