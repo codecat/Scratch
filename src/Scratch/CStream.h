@@ -65,14 +65,14 @@ public:
 
   virtual int Read(void* pDest, ULONG iLen) = 0;
   void ReadToEnd(void* pDest);
-  inline INDEX  ReadIndex(void)  { INDEX  i; Read(&i, sizeof(INDEX)); return i; }
-  inline LONG   ReadLong(void)   { LONG   l; Read(&l, sizeof(LONG)); return l; }
-  inline FLOAT  ReadFloat(void)  { FLOAT  f; Read(&f, sizeof(FLOAT)); return f; }
-  inline DOUBLE ReadDouble(void) { DOUBLE d; Read(&d, sizeof(DOUBLE)); return d; }
+  inline INDEX  ReadIndex(void)  { INDEX  i = 0; Read(&i, sizeof(INDEX)); return i; }
+  inline LONG   ReadLong(void)   { LONG   l = 0; Read(&l, sizeof(LONG)); return l; }
+  inline FLOAT  ReadFloat(void)  { FLOAT  f = 0; Read(&f, sizeof(FLOAT)); return f; }
+  inline DOUBLE ReadDouble(void) { DOUBLE d = 0; Read(&d, sizeof(DOUBLE)); return d; }
   CString ReadString(void);
 
-  inline char ReadChar(void) { char c; Read(&c, 1); return c; }
-  inline char PeekChar(void) { char c; Read(&c, 1); Seek(-1, 1/*SEEK_CUR*/); return c; }
+  inline char ReadChar(void) { char c = '\0'; Read(&c, 1); return c; }
+  inline char PeekChar(void) { char c = '\0'; Read(&c, 1); Seek(-1, 1/*SEEK_CUR*/); return c; }
 
   bool Expect(const CString &str);
   char ReadUntil(CString &strOut, const CString &strCharacters);
