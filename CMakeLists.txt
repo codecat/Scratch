@@ -5,7 +5,7 @@ if(NOT WIN32)
 	SET(CMAKE_CXX_FLAGS "-std=c++0x")
 endif()
 
-set(presrc "src/Scratch")
+set(presrc "Scratch")
 
 if(CMAKE_BUILD_TYPE)
 	if(${CMAKE_BUILD_TYPE} STREQUAL Debug)
@@ -41,7 +41,7 @@ if(WIN32)
 	add_definitions("/wd4996")
 endif()
 
-set(presrc_tests "src/ScratchTests")
+set(presrc_tests "ScratchTests")
 
 add_executable(ScratchTests
 	${presrc_tests}/main.cpp)
@@ -50,7 +50,7 @@ find_package(Threads)
 message("thread libs: ${CMAKE_THREAD_LIBS_INIT}")
 target_link_libraries(ScratchTests Scratch ${CMAKE_THREAD_LIBS_INIT})
 
-include_directories(src/Scratch)
+include_directories(Scratch)
 
 enable_testing()
 add_test(CString ScratchTests CString)
