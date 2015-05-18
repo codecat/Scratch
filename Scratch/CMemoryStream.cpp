@@ -82,7 +82,7 @@ void CMemoryStream::Write(const void* p, ULONG iLen)
 {
   // check if we need a larger buffer
   if(strm_ulPosition + iLen >= strm_ulSize) {
-    AllocateMoreMemory(Max<INDEX>(iLen, 1024));
+    AllocateMoreMemory(Max<ULONG>(iLen, 1024));
   }
 
   // copy over memory
@@ -115,7 +115,7 @@ int CMemoryStream::Read(void* pDest, ULONG iLen)
   return ulRealLength;
 }
 
-void CMemoryStream::AllocateMoreMemory(INDEX ctBytes)
+void CMemoryStream::AllocateMoreMemory(ULONG ctBytes)
 {
   ASSERT(ctBytes > 0);
 

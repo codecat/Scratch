@@ -54,7 +54,7 @@ public:
   int Read(void* pDest, ULONG iLen);
 
 private:
-  void AllocateMoreMemory(INDEX ctBytes);
+  void AllocateMoreMemory(ULONG ctBytes);
 };
 
 SCRATCH_NAMESPACE_END;

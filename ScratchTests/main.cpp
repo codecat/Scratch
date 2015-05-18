@@ -293,6 +293,17 @@ int main(int argc, char* argv[])
     fsReader.Close();
   }
 
+  TESTS("CMemoryStream")
+  {
+    unsigned char* pubBuffer = new unsigned char[0xFFFFFFFF];
+
+    CMemoryStream ms;
+    ms.Write(pubBuffer, 0xFFFFFFFF);
+    TEST(ms.Size() == 0xFFFFFFFF);
+
+    delete[] pubBuffer;
+  }
+
   TESTS("CMutex")
   {
     CMutex mutex;
