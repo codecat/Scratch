@@ -32,7 +32,7 @@
 
 SCRATCH_NAMESPACE_BEGIN;
 
-class SCRATCH_EXPORT CMemoryStream : public CStream
+class SCRATCH_EXPORT MemoryStream : public Stream
 {
 public:
   UBYTE* strm_pubBuffer;
@@ -41,9 +41,9 @@ public:
   ULONG strm_ulUsed;
 
 public:
-  CMemoryStream(void);
-  CMemoryStream(const CMemoryStream &copy);
-  ~CMemoryStream(void);
+	MemoryStream(void);
+	MemoryStream(const MemoryStream &copy);
+	~MemoryStream(void);
 
   ULONG Size();
   ULONG Location();

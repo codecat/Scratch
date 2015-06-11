@@ -33,42 +33,42 @@
 SCRATCH_NAMESPACE_BEGIN;
 
 template<class TKey, class TValue>
-class CDictionary;
+class Dictionary;
 
 template<class TKey, class TValue>
-class SCRATCH_EXPORT CDictionaryPair
+class SCRATCH_EXPORT DictionaryPair
 {
-  friend class CDictionary<TKey, TValue>;
+	friend class Dictionary<TKey, TValue>;
 public:
   TKey* key;
   TValue* value;
 
 public:
-  CDictionaryPair();
-  ~CDictionaryPair();
+	DictionaryPair();
+	~DictionaryPair();
 
   void Delete();
 };
 
 template<class TKey, class TValue>
-class SCRATCH_EXPORT CDictionary
+class SCRATCH_EXPORT Dictionary
 {
 private:
-  CStackArray<TKey> dic_saKeys;
-  CStackArray<TValue> dic_saValues;
+  StackArray<TKey> dic_saKeys;
+  StackArray<TValue> dic_saValues;
 
 public:
   BOOL dic_bAllowDuplicateKeys;
 
 public:
-  CDictionary(void);
-  CDictionary(const CDictionary<TKey, TValue> &copy);
-  ~CDictionary(void);
+	Dictionary(void);
+	Dictionary(const Dictionary<TKey, TValue> &copy);
+	~Dictionary(void);
 
   /// Add to the dictionary
   void Add(const TKey &key, const TValue &value);
   /// Push to the dictionary
-  CDictionaryPair<TKey, TValue> Push(const TKey &key);
+	DictionaryPair<TKey, TValue> Push(const TKey &key);
 
   /// Get the index of the given key
   INDEX IndexByKey(const TKey &key);
@@ -88,11 +88,11 @@ public:
   void RemoveByValue(const TValue &value);
 
   /// Pop a value by its index
-  CDictionaryPair<TKey, TValue> PopByIndex(const INDEX iIndex);
+	DictionaryPair<TKey, TValue> PopByIndex(const INDEX iIndex);
   /// Pop a value from the dictionary by key
-  CDictionaryPair<TKey, TValue> PopByKey(const TKey &key);
+	DictionaryPair<TKey, TValue> PopByKey(const TKey &key);
   /// Pop a value from the dictionary
-  CDictionaryPair<TKey, TValue> PopByValue(const TValue &value);
+	DictionaryPair<TKey, TValue> PopByValue(const TValue &value);
 
   /// Clear all items
   void Clear(void);
@@ -103,7 +103,7 @@ public:
   TValue& operator[](const TKey &key);
 
   /// Get a pair from the dictionary using an index
-  CDictionaryPair<TKey, TValue> GetPair(const INDEX iIndex);
+	DictionaryPair<TKey, TValue> GetPair(const INDEX iIndex);
   /// Get a key from the dictionary using an index
   TKey& GetKeyByIndex(const INDEX iIndex);
   /// Get a value from the dictionary using an index

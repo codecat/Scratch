@@ -33,15 +33,15 @@
 
 SCRATCH_NAMESPACE_BEGIN;
 
-class SCRATCH_EXPORT CFileStream : public CStream
+class SCRATCH_EXPORT FileStream : public Stream
 {
 public:
-  CString fs_strFileName;
+  String fs_strFileName;
   FILE* fs_pfh;
 
 public:
-  CFileStream(void);
-  ~CFileStream(void);
+	FileStream(void);
+	~FileStream(void);
 
   ULONG Size();
   ULONG Location();

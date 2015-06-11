@@ -32,19 +32,19 @@
 SCRATCH_NAMESPACE_BEGIN;
 
 template<class TKey, class TValue>
-CDictionaryPair<TKey, TValue>::CDictionaryPair()
+DictionaryPair<TKey, TValue>::DictionaryPair()
 {
   key = 0;
   value = 0;
 }
 
 template<class TKey, class TValue>
-CDictionaryPair<TKey, TValue>::~CDictionaryPair()
+DictionaryPair<TKey, TValue>::~DictionaryPair()
 {
 }
 
 template<class TKey, class TValue>
-void CDictionaryPair<TKey, TValue>::Delete()
+void DictionaryPair<TKey, TValue>::Delete()
 {
   if(key != 0) {
     delete key;
@@ -57,13 +57,13 @@ void CDictionaryPair<TKey, TValue>::Delete()
 }
 
 template<class TKey, class TValue>
-CDictionary<TKey, TValue>::CDictionary(void)
+Dictionary<TKey, TValue>::Dictionary(void)
 {
   dic_bAllowDuplicateKeys = FALSE;
 }
 
 template<class TKey, class TValue>
-CDictionary<TKey, TValue>::CDictionary(const CDictionary<TKey, TValue> &copy)
+Dictionary<TKey, TValue>::Dictionary(const Dictionary<TKey, TValue> &copy)
   : dic_saKeys(copy.dic_saKeys),
     dic_saValues(copy.dic_saValues)
 {
@@ -71,13 +71,13 @@ CDictionary<TKey, TValue>::CDictionary(const CDictionary<TKey, TValue> &copy)
 }
 
 template<class TKey, class TValue>
-CDictionary<TKey, TValue>::~CDictionary(void)
+Dictionary<TKey, TValue>::~Dictionary(void)
 {
 }
 
 /// Add to the dictionary
 template<class TKey, class TValue>
-void CDictionary<TKey, TValue>::Add(const TKey &key, const TValue &value)
+void Dictionary<TKey, TValue>::Add(const TKey &key, const TValue &value)
 {
   // if the key has already been added
   if(!dic_bAllowDuplicateKeys && HasKey(key)) {
@@ -92,9 +92,9 @@ void CDictionary<TKey, TValue>::Add(const TKey &key, const TValue &value)
 
 /// Push to the dictionary
 template<class TKey, class TValue>
-CDictionaryPair<TKey, TValue> CDictionary<TKey, TValue>::Push(const TKey &key)
+DictionaryPair<TKey, TValue> Dictionary<TKey, TValue>::Push(const TKey &key)
 {
-  CDictionaryPair<TKey, TValue> ret;
+  DictionaryPair<TKey, TValue> ret;
   ret.key = &(dic_saKeys.Push());
   (*ret.key) = key;
   ret.value = &(dic_saValues.Push());
@@ -103,7 +103,7 @@ CDictionaryPair<TKey, TValue> CDictionary<TKey, TValue>::Push(const TKey &key)
 
 /// Get the index of the given key
 template<class TKey, class TValue>
-INDEX CDictionary<TKey, TValue>::IndexByKey(const TKey &key)
+INDEX Dictionary<TKey, TValue>::IndexByKey(const TKey &key)
 {
   int ctElements = Count();
 
@@ -125,7 +125,7 @@ INDEX CDictionary<TKey, TValue>::IndexByKey(const TKey &key)
 
 /// Get the index of the given value
 template<class TKey, class TValue>
-INDEX CDictionary<TKey, TValue>::IndexByValue(const TValue &value)
+INDEX Dictionary<TKey, TValue>::IndexByValue(const TValue &value)
 {
   int ctElements = Count();
 
@@ -147,21 +147,21 @@ INDEX CDictionary<TKey, TValue>::IndexByValue(const TValue &value)
 
 /// Does this dictionary have the given key?
 template<class TKey, class TValue>
-BOOL CDictionary<TKey, TValue>::HasKey(const TKey &key)
+BOOL Dictionary<TKey, TValue>::HasKey(const TKey &key)
 {
   return IndexByKey(key) != -1;
 }
 
 /// Does this dictionary have the given value?
 template<class TKey, class TValue>
-BOOL CDictionary<TKey, TValue>::HasValue(const TValue &value)
+BOOL Dictionary<TKey, TValue>::HasValue(const TValue &value)
 {
   return IndexByValue(value) != -1;
 }
 
 /// Remove a value by its index
 template<class TKey, class TValue>
-void CDictionary<TKey, TValue>::RemoveByIndex(const INDEX iIndex)
+void Dictionary<TKey, TValue>::RemoveByIndex(const INDEX iIndex)
 {
   // check if someone passed an invalid range
   if(iIndex < 0 || iIndex >= Count()) {
@@ -175,7 +175,7 @@ void CDictionary<TKey, TValue>::RemoveByIndex(const INDEX iIndex)
 
 /// Remove a value from the dictionary by key
 template<class TKey, class TValue>
-void CDictionary<TKey, TValue>::RemoveByKey(const TKey &key)
+void Dictionary<TKey, TValue>::RemoveByKey(const TKey &key)
 {
   // remove by index
   RemoveByIndex(IndexByKey(key));
@@ -183,7 +183,7 @@ void CDictionary<TKey, TValue>::RemoveByKey(const TKey &key)
 
 /// Remove a value from the dictionary
 template<class TKey, class TValue>
-void CDictionary<TKey, TValue>::RemoveByValue(const TValue &value)
+void Dictionary<TKey, TValue>::RemoveByValue(const TValue &value)
 {
   // remove by index
   RemoveByIndex(IndexByValue(value));
@@ -191,9 +191,9 @@ void CDictionary<TKey, TValue>::RemoveByValue(const TValue &value)
 
 /// Pop a value by its index
 template<class TKey, class TValue>
-CDictionaryPair<TKey, TValue> CDictionary<TKey, TValue>::PopByIndex(const INDEX iIndex)
+DictionaryPair<TKey, TValue> Dictionary<TKey, TValue>::PopByIndex(const INDEX iIndex)
 {
-  CDictionaryPair<TKey, TValue> ret;
+  DictionaryPair<TKey, TValue> ret;
   ret.key = dic_saKeys.PopAt(iIndex);
   ret.value = dic_saValues.PopAt(iIndex);
   return ret;
@@ -201,21 +201,21 @@ CDictionaryPair<TKey, TValue> CDictionary<TKey, TValue>::PopByIndex(const INDEX 
 
 /// Pop a value from the dictionary by key
 template<class TKey, class TValue>
-CDictionaryPair<TKey, TValue> CDictionary<TKey, TValue>::PopByKey(const TKey &key)
+DictionaryPair<TKey, TValue> Dictionary<TKey, TValue>::PopByKey(const TKey &key)
 {
   return PopByIndex(IndexByKey(key));
 }
 
 /// Pop a value from the dictionary
 template<class TKey, class TValue>
-CDictionaryPair<TKey, TValue> CDictionary<TKey, TValue>::PopByValue(const TValue &value)
+DictionaryPair<TKey, TValue> Dictionary<TKey, TValue>::PopByValue(const TValue &value)
 {
   return PopByIndex(IndexByValue(value));
 }
 
 /// Clear all items
 template<class TKey, class TValue>
-void CDictionary<TKey, TValue>::Clear(void)
+void Dictionary<TKey, TValue>::Clear(void)
 {
   // clear keys and values
   dic_saKeys.Clear();
@@ -224,14 +224,14 @@ void CDictionary<TKey, TValue>::Clear(void)
 
 /// Return how many objects there currently are in the dictionary
 template<class TKey, class TValue>
-INDEX CDictionary<TKey, TValue>::Count(void)
+INDEX Dictionary<TKey, TValue>::Count(void)
 {
   // return the amount of keys (amount of values is the same)
   return dic_saKeys.Count();
 }
 
 template<class TKey, class TValue>
-TValue& CDictionary<TKey, TValue>::operator[](const TKey &key)
+TValue& Dictionary<TKey, TValue>::operator[](const TKey &key)
 {
   // get the index
   INDEX iIndex = IndexByKey(key);
@@ -251,9 +251,9 @@ TValue& CDictionary<TKey, TValue>::operator[](const TKey &key)
 
 /// Get a pair from the dictionary using an index
 template<class TKey, class TValue>
-CDictionaryPair<TKey, TValue> CDictionary<TKey, TValue>::GetPair(const INDEX iIndex)
+DictionaryPair<TKey, TValue> Dictionary<TKey, TValue>::GetPair(const INDEX iIndex)
 {
-  CDictionaryPair<TKey, TValue> pair;
+  DictionaryPair<TKey, TValue> pair;
   pair.key = &dic_saKeys[iIndex];
   pair.value = &dic_saValues[iIndex];
   return pair;
@@ -261,7 +261,7 @@ CDictionaryPair<TKey, TValue> CDictionary<TKey, TValue>::GetPair(const INDEX iIn
 
 /// Get a key from the dictionary using an index
 template<class TKey, class TValue>
-TKey& CDictionary<TKey, TValue>::GetKeyByIndex(const INDEX iIndex)
+TKey& Dictionary<TKey, TValue>::GetKeyByIndex(const INDEX iIndex)
 {
   // return the value
   return dic_saKeys[iIndex];
@@ -269,7 +269,7 @@ TKey& CDictionary<TKey, TValue>::GetKeyByIndex(const INDEX iIndex)
 
 /// Return value by index
 template<class TKey, class TValue>
-TValue& CDictionary<TKey, TValue>::GetValueByIndex(const INDEX iIndex)
+TValue& Dictionary<TKey, TValue>::GetValueByIndex(const INDEX iIndex)
 {
   // return the value
   return dic_saValues[iIndex];

@@ -26,14 +26,14 @@
 
 #include "Common.h"
 
-/* CString: high level string management
- * -------------------------------------
+/* String: high level string management
+ * ------------------------------------
  * Basic usage:
- *   CString strFoo = "Scratch"; // Scratch
- *   CString strBar = "lib" + strFoo.ToLower(); // libscratch
- *   CString strTest = strBar.Replace("libs", "S") + "!"; // Scratch!
+ *   String strFoo = "Scratch"; // Scratch
+ *   String strBar = "lib" + strFoo.ToLower(); // libscratch
+ *   String strTest = strBar.Replace("libs", "S") + "!"; // Scratch!
  *
- *   CStackArray<CString> astrParse = strTest.Split("c");
+ *   StackArray<String> astrParse = strTest.Split("c");
  *   ASSERT(astrParse.Count() == 3);
  *   ASSERT(astrParse[0] == "S");
  *   ASSERT(astrParse[1] == "rat");
@@ -41,23 +41,23 @@
  */
 #include "CString.h"
 
-/* CFilename: high level string management with filename functions
- * ---------------------------------------------------------------
+/* Filename: high level string management with filename functions
+ * --------------------------------------------------------------
  * Basic usage:
- *   CFilename fnmFoo = "foo/bar/test.c";
- *   CString strExtension = fnmFoo.Extension();
- *   CString strPath = fnmFoo.Path();
- *   CString strFilename = fnmFoo.Filename();
+ *   Filename fnmFoo = "foo/bar/test.c";
+ *   String strExtension = fnmFoo.Extension();
+ *   String strPath = fnmFoo.Path();
+ *   String strFilename = fnmFoo.Filename();
  *   ASSERT(strExtension == "c");
  *   ASSERT(strPath == "foo/bar/");
  *   ASSERT(strFilename == "test.c");
  */
 #include "CFilename.h"
 
-/* CStackArray: high level array management
- * ----------------------------------------
+/* StackArray: high level array management
+ * ---------------------------------------
  * Basic usage:
- *   CStackArray<int> aiTest;
+ *   StackArray<int> aiTest;
  *   aiTest.Push() = 5;
  *   aiTest.Push() = 10;
  *   aiTest.Push() = 123;
@@ -67,19 +67,19 @@
  */
 #include "CStackArray.h"
 
-/* CDictionary: high level table management
- * ----------------------------------------
+/* Dictionary: high level table management
+ * ---------------------------------------
  * Basic usage:
- *   CDictionary<CString, CString> dstrTest;
+ *   Dictionary<String, String> dstrTest;
  *   dstrTest.Add("Name", "libscratch");
  *   dstrTest["Author"] = "Angelo Geels";
  */
 #include "CDictionary.h"
 
-/* CFileStream: high level file stream management
- * ----------------------------------------------
+/* FileStream: high level file stream management
+ * ---------------------------------------------
  * Basic usage:
- *   CFileStream fs;
+ *   FileStream fs;
  *   fs.Open("test.bin", "r+");
  *   INDEX iTest;
  *   fs >> iTest;
@@ -88,22 +88,22 @@
  */
 #include "CFileStream.h"
 
-/* CMemoryStream: high level memory stream management
- * --------------------------------------------------
+/* MemoryStream: high level memory stream management
+ * -------------------------------------------------
  * Basic usage:
- *   CMemoryStream ms;
+ *   MemoryStream ms;
  *   ms << INDEX(5);
- *   CFileStream fs;
+ *   FileStream fs;
  *   fs.Open("test.bin", "w");
  *   fs << ms.Size();
  *   fs << ms;
  */
 #include "CMemoryStream.h"
 
-/* CNetworkStream: high level network connections management
+/* NetworkStream: high level network connections management
  * ---------------------------------------------------------
  * Basic usage:
- *   CNetworkStream ns;
+ *   NetworkStream ns;
  *   ns.Connect("127.0.0.1", 1234);
  *   ns << INDEX(5);
  *   INDEX iResult;
@@ -112,26 +112,26 @@
  */
 #include "CNetworkStream.h"
 
-/* CMutex: high level mutex management
- * -----------------------------------
+/* Mutex: high level mutex management
+ * ----------------------------------
  * Basic usage:
- *   CMutex mutex;
+ *   Mutex mutex;
  *   mutex.Lock();
  *   // do some work
  *   mutex.Unlock();
  * Or:
- *   CMutex mutex;
- *   CMutexWait(mutex);
+ *   Mutex mutex;
+ *   MutexWait(mutex);
  *   // do some work
  */
 #include "CMutex.h"
 
-/* CException: high level exception management
- * -------------------------------------------
+/* Exception: high level exception management
+ * ------------------------------------------
  * Basic usage:
  *   try {
- *     throw CException("Found %d items", 20);
- *   } catch(CException &ex) {
+ *     throw Exception("Found %d items", 20);
+ *   } catch(Exception &ex) {
  *     // do something with ex.Message
  *   }
  */

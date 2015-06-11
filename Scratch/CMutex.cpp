@@ -31,40 +31,40 @@
 
 SCRATCH_NAMESPACE_BEGIN;
 
-CMutex::CMutex()
+Mutex::Mutex()
 {
   m_pMutex = (void*)new pthread_mutex_t;
   pthread_mutex_init((pthread_mutex_t*)m_pMutex, NULL);
 }
 
-CMutex::~CMutex()
+Mutex::~Mutex()
 {
   pthread_mutex_destroy((pthread_mutex_t*)m_pMutex);
   delete (pthread_mutex_t*)m_pMutex;
 }
 
-void CMutex::Lock() const
+void Mutex::Lock() const
 {
   pthread_mutex_lock((pthread_mutex_t*)m_pMutex);
 }
 
-bool CMutex::TryLock() const
+bool Mutex::TryLock() const
 {
   return pthread_mutex_trylock((pthread_mutex_t*)m_pMutex) != EBUSY;
 }
 
-void CMutex::Unlock() const
+void Mutex::Unlock() const
 {
   pthread_mutex_unlock((pthread_mutex_t*)m_pMutex);
 }
 
-CMutexWait::CMutexWait(const CMutex &mutex)
+MutexWait::MutexWait(const Mutex &mutex)
 {
   m_pMutex = &mutex;
   m_pMutex->Lock();
 }
 
-CMutexWait::~CMutexWait()
+MutexWait::~MutexWait()
 {
   m_pMutex->Unlock();
 }

@@ -31,11 +31,11 @@
 
 SCRATCH_NAMESPACE_BEGIN;
 
-CException::CException()
+Exception::Exception()
 {
 }
 
-CException::CException(const char* format, ...)
+Exception::Exception(const char* format, ...)
 {
   int iSize = 256;
   char* szBuffer = new char[iSize];
@@ -61,7 +61,7 @@ CException::CException(const char* format, ...)
   delete[] szBuffer;
 }
 
-CException::~CException()
+Exception::~Exception()
 {
 }
 

@@ -49,23 +49,23 @@ static int g_iTestFailed = 0;
 
 int main(int argc, char* argv[])
 {
-  CStackArray<CString> aTests;
-  CString strArg;
+  StackArray<String> aTests;
+  String strArg;
 
   if(argc > 1) {
     strArg = argv[1];
   }
 
-  TESTS("CString")
+  TESTS("String")
   {
-    CString strFoo;
-    TEST(strFoo.str_szBuffer == CString::str_szEmpty);
+    String strFoo;
+    TEST(strFoo.str_szBuffer == String::str_szEmpty);
 
     strFoo = "a";
     TEST(strFoo == "a");
 
     strFoo = "";
-    TEST(strFoo.str_szBuffer == CString::str_szEmpty);
+    TEST(strFoo.str_szBuffer == String::str_szEmpty);
 
     int x = 5;
     int y = 10;
@@ -75,7 +75,7 @@ int main(int argc, char* argv[])
     strFoo.AppendF(" %d", x);
     TEST(strFoo == "5 10 5");
 
-    CStackArray<CString> aParse;
+    StackArray<String> aParse;
     strFoo.Split(" ", aParse);
     TEST(aParse.Count() == 3);
     TEST(aParse[0] == "5" && aParse[1] == "10" && aParse[2] == "5");
@@ -130,24 +130,24 @@ int main(int argc, char* argv[])
     TEST(strPrintF("Hello %d %d", x, y) == "Hello 5 10");
   }
 
-  TESTS("CFilename")
+  TESTS("Filename")
   {
-    CFilename fnmFoo;
-    TEST(fnmFoo.str_szBuffer == CString::str_szEmpty);
+    Filename fnmFoo;
+    TEST(fnmFoo.str_szBuffer == String::str_szEmpty);
 
     fnmFoo = "/var/www/test.html";
     TEST(fnmFoo.Extension() == "html");
     TEST(fnmFoo.Path() == "/var/www");
-    TEST(fnmFoo.Filename() == "test.html");
+		TEST(fnmFoo.Name() == "test.html");
 
     fnmFoo.FromHome(".zshrc");
     TEST_WINDOWS(fnmFoo.StartsWith("C:\\Users\\"));
     TEST_UNIX(fnmFoo == "~/.zshrc");
   }
 
-  TESTS("CStackArray")
+  TESTS("StackArray")
   {
-    CStackArray<int> sa;
+    StackArray<int> sa;
     TEST(sa.Count() == 0);
 
     sa.Push() = 5;
@@ -200,9 +200,9 @@ int main(int argc, char* argv[])
     TEST(sa.ContainsAny([](int &i) { return i == 20; }));
   }
 
-  TESTS("CDictionary")
+  TESTS("Dictionary")
   {
-    CDictionary<CString, int> dic;
+    Dictionary<String, int> dic;
     TEST(dic.Count() == 0);
 
     dic.Add("foo", 5);
@@ -212,7 +212,7 @@ int main(int argc, char* argv[])
     dic["bar"] = 10;
     TEST(dic["bar"] == 10);
 
-    CDictionaryPair<CString, int> pair = dic.Push("foobar");
+    DictionaryPair<String, int> pair = dic.Push("foobar");
     *pair.value = 15;
     TEST(dic["foobar"] == 15);
 
@@ -257,18 +257,18 @@ int main(int argc, char* argv[])
     TEST(dic.GetValueByIndex(1) == 10);
   }
 
-  TESTS("CFileStream")
+  TESTS("FileStream")
   {
-    CFileStream fsWriter;
+    FileStream fsWriter;
     fsWriter.Open("test.txt", "w");
     fsWriter.WriteLine("foo");
     fsWriter.WriteLine("bar");
     fsWriter << INDEX(5);
     fsWriter << FLOAT(2.5f);
-    fsWriter << CString("test");
+    fsWriter << String("test");
     fsWriter.Close();
 
-    CFileStream fsReader;
+    FileStream fsReader;
     fsReader.Open("test.txt", "r");
 
     TEST(fsReader.ReadLine() == "foo");
@@ -276,7 +276,7 @@ int main(int argc, char* argv[])
 
     INDEX i;
     FLOAT f;
-    CString s;
+    String s;
 
     fsReader >> i;
     TEST(i == 5);
@@ -293,9 +293,9 @@ int main(int argc, char* argv[])
     fsReader.Close();
   }
 
-  TESTS("CMutex")
+  TESTS("Mutex")
   {
-    CMutex mutex;
+    Mutex mutex;
 
     {
       TEST(mutex.TryLock() == TRUE);
@@ -309,15 +309,15 @@ int main(int argc, char* argv[])
     }
 
     {
-      CMutexWait wait(mutex);
+      MutexWait wait(mutex);
     }
   }
 
-  TESTS("CException")
+  TESTS("Exception")
   {
     try {
-      throw CException("%d", 123);
-    } catch(CException &ex) {
+      throw Exception("%d", 123);
+    } catch(Exception &ex) {
       TEST(ex.Message == "123");
     }
   }

@@ -79,6 +79,18 @@ template<class T> inline void Swap(T &v1, T &v2) { T t = v1; v1 = v2; v2 = t; }
 template<class T> inline T Abs(const T &v) { return v < 0 ? -v : v; }
 #endif
 
+//#ifdef SCRATCH_ALIAS_LEGACY_PREFIX
+#define CString String
+#define CFilename Filename
+#define CStackArray StackArray
+#define CDictionary Dictionary
+#define CException Exception
+#define CStream Stream
+#define CMemoryStream MemoryStream
+#define CFileStream FileStream
+#define CNetworkStream NetworkStream
+//#endif
+
 #ifndef ASSERT
 
 #ifdef _MSC_VER

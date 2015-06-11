@@ -40,7 +40,7 @@
 
 SCRATCH_NAMESPACE_BEGIN;
 
-class SCRATCH_EXPORT CNetworkStream : public CStream
+class SCRATCH_EXPORT NetworkStream : public Stream
 {
 public:
 #if WINDOWS
@@ -54,8 +54,8 @@ public:
   BOOL ns_bEOF;
 
 public:
-  CNetworkStream(void);
-  ~CNetworkStream(void);
+	NetworkStream(void);
+	~NetworkStream(void);
 
   ULONG Size();
   ULONG Location();

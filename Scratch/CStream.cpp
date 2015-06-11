@@ -28,26 +28,26 @@
 
 SCRATCH_NAMESPACE_BEGIN;
 
-CStream::CStream(void)
+Stream::Stream(void)
 {
   strm_nlmNewLineMode = ENLM_LF;
 }
 
-CStream::~CStream(void)
+Stream::~Stream(void)
 {
   Close();
 }
 
-void CStream::Close(void)
+void Stream::Close(void)
 {
 }
 
-void CStream::WriteString(const CString &str)
+void Stream::WriteString(const String &str)
 {
   Write((const char*)str, strlen(str) + 1);
 }
 
-void CStream::WriteStream(CStream &strm)
+void Stream::WriteStream(Stream &strm)
 {
   // get buffer size
   ULONG ulBufferSize = strm.Size() - strm.Location();
@@ -73,14 +73,14 @@ void CStream::WriteStream(CStream &strm)
   free(pBuffer);
 }
 
-void CStream::ReadToEnd(void* pDest)
+void Stream::ReadToEnd(void* pDest)
 {
   Read(pDest, Size() - Location());
 }
 
-CString CStream::ReadString(void)
+String Stream::ReadString(void)
 {
-  CString strRet;
+  String strRet;
   char c;
   do {
     // read 1 character
@@ -97,7 +97,7 @@ CString CStream::ReadString(void)
   return strRet;
 }
 
-bool CStream::Expect(const CString &str)
+bool Stream::Expect(const String &str)
 {
   int iLen = strlen(str);
 
@@ -115,9 +115,9 @@ bool CStream::Expect(const CString &str)
   return ret;
 }
 
-char CStream::ReadUntil(CString &strOut, const CString &strCharacters)
+char Stream::ReadUntil(String &strOut, const String &strCharacters)
 {
-  CString ret;
+  String ret;
   char ccc = '\0';
   while(!AtEOF()) {
     char cc = ReadChar();
@@ -131,13 +131,13 @@ char CStream::ReadUntil(CString &strOut, const CString &strCharacters)
   return ccc;
 }
 
-void CStream::WriteText(const CString &str)
+void Stream::WriteText(const String &str)
 {
   // write text
   Write((const char*)str, strlen(str));
 }
 
-void CStream::WriteLine(const CString &str)
+void Stream::WriteLine(const String &str)
 {
   // write text
   WriteText(str);
@@ -145,7 +145,7 @@ void CStream::WriteLine(const CString &str)
   WriteLine();
 }
 
-void CStream::WriteLine(void)
+void Stream::WriteLine(void)
 {
   // write newline
   switch(strm_nlmNewLineMode) {
@@ -155,9 +155,9 @@ void CStream::WriteLine(void)
   }
 }
 
-CString CStream::ReadLine(void)
+String Stream::ReadLine(void)
 {
-  CString strRet;
+  String strRet;
   char c;
   do {
     // read 1 character

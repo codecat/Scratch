@@ -39,14 +39,14 @@ enum SCRATCH_EXPORT ENewLineMode
   ENLM_CR,
 };
 
-class SCRATCH_EXPORT CStream
+class SCRATCH_EXPORT Stream
 {
 public:
   ENewLineMode strm_nlmNewLineMode;
 
 public:
-  CStream(void);
-  ~CStream(void);
+	Stream(void);
+	~Stream(void);
 
   virtual ULONG Size() = 0;
   virtual ULONG Location() = 0;
@@ -60,8 +60,8 @@ public:
   inline void WriteLong(const LONG &l)     { Write(&l, sizeof(LONG)); }
   inline void WriteFloat(const FLOAT &f)   { Write(&f, sizeof(FLOAT)); }
   inline void WriteDouble(const DOUBLE &d) { Write(&d, sizeof(DOUBLE)); }
-  void WriteString(const CString &str);
-  void WriteStream(CStream &strm);
+  void WriteString(const String &str);
+	void WriteStream(Stream &strm);
 
   virtual int Read(void* pDest, ULONG iLen) = 0;
   void ReadToEnd(void* pDest);
@@ -69,29 +69,29 @@ public:
   inline LONG   ReadLong(void)   { LONG   l = 0; Read(&l, sizeof(LONG)); return l; }
   inline FLOAT  ReadFloat(void)  { FLOAT  f = 0; Read(&f, sizeof(FLOAT)); return f; }
   inline DOUBLE ReadDouble(void) { DOUBLE d = 0; Read(&d, sizeof(DOUBLE)); return d; }
-  CString ReadString(void);
+  String ReadString(void);
 
   inline char ReadChar(void) { char c = '\0'; Read(&c, 1); return c; }
   inline char PeekChar(void) { char c = '\0'; Read(&c, 1); Seek(-1, 1/*SEEK_CUR*/); return c; }
 
-  bool Expect(const CString &str);
-  char ReadUntil(CString &strOut, const CString &strCharacters);
+  bool Expect(const String &str);
+  char ReadUntil(String &strOut, const String &strCharacters);
 
-  void WriteText(const CString &str);
-  void WriteLine(const CString &str);
+  void WriteText(const String &str);
+  void WriteLine(const String &str);
   void WriteLine(void);
-  CString ReadLine(void);
+  String ReadLine(void);
 
-  inline CStream& operator <<(INDEX i)       { WriteIndex(i); return *this; }
-  inline CStream& operator <<(FLOAT f)       { WriteFloat(f); return *this; }
-  inline CStream& operator <<(DOUBLE d)      { WriteDouble(d); return *this; }
-  inline CStream& operator <<(CString str)   { WriteString(str); return *this; }
-  inline CStream& operator <<(CStream &strm) { WriteStream(strm); return *this; }
+	inline Stream& operator <<(INDEX i)       { WriteIndex(i); return *this; }
+	inline Stream& operator <<(FLOAT f)       { WriteFloat(f); return *this; }
+	inline Stream& operator <<(DOUBLE d)      { WriteDouble(d); return *this; }
+	inline Stream& operator <<(String str)   { WriteString(str); return *this; }
+	inline Stream& operator <<(Stream &strm) { WriteStream(strm); return *this; }
 
-  inline CStream& operator >>(INDEX &i)      { i = ReadIndex(); return *this; }
-  inline CStream& operator >>(FLOAT &f)      { f = ReadFloat(); return *this; }
-  inline CStream& operator >>(DOUBLE &d)     { d = ReadDouble(); return *this; }
-  inline CStream& operator >>(CString &str)  { str = ReadString(); return *this; }
+	inline Stream& operator >>(INDEX &i)      { i = ReadIndex(); return *this; }
+	inline Stream& operator >>(FLOAT &f)      { f = ReadFloat(); return *this; }
+	inline Stream& operator >>(DOUBLE &d)     { d = ReadDouble(); return *this; }
+	inline Stream& operator >>(String &str)  { str = ReadString(); return *this; }
 };
 
 SCRATCH_NAMESPACE_END;

@@ -28,17 +28,17 @@
 
 SCRATCH_NAMESPACE_BEGIN;
 
-CFileStream::CFileStream(void)
+FileStream::FileStream(void)
 {
   fs_pfh = NULL;
 }
 
-CFileStream::~CFileStream(void)
+FileStream::~FileStream(void)
 {
   Close();
 }
 
-ULONG CFileStream::Size()
+ULONG FileStream::Size()
 {
   ULONG ulPos = Location();
   Seek(0, SEEK_END);
@@ -47,22 +47,22 @@ ULONG CFileStream::Size()
   return ulSize;
 }
 
-ULONG CFileStream::Location()
+ULONG FileStream::Location()
 {
   return ftell(fs_pfh);
 }
 
-void CFileStream::Seek(ULONG ulPos, INDEX iOrigin)
+void FileStream::Seek(ULONG ulPos, INDEX iOrigin)
 {
   fseek(fs_pfh, ulPos, iOrigin);
 }
 
-BOOL CFileStream::AtEOF()
+BOOL FileStream::AtEOF()
 {
   return feof(fs_pfh) > 0;
 }
 
-BOOL CFileStream::Open(const char* szFileName, const char* szMode)
+BOOL FileStream::Open(const char* szFileName, const char* szMode)
 {
   // must not already have a handle open
   ASSERT(fs_pfh == NULL);
@@ -83,25 +83,25 @@ BOOL CFileStream::Open(const char* szFileName, const char* szMode)
   return TRUE;
 }
 
-void CFileStream::OpenStdout()
+void FileStream::OpenStdout()
 {
   fs_strFileName = "stdout";
   fs_pfh = stdout;
 }
 
-void CFileStream::OpenStdin()
+void FileStream::OpenStdin()
 {
   fs_strFileName = "stdin";
   fs_pfh = stdin;
 }
 
-void CFileStream::OpenStderr()
+void FileStream::OpenStderr()
 {
   fs_strFileName = "stderr";
   fs_pfh = stderr;
 }
 
-void CFileStream::Close(void)
+void FileStream::Close(void)
 {
   // close the file handle
   if(fs_pfh != NULL) {
@@ -110,12 +110,12 @@ void CFileStream::Close(void)
   }
 }
 
-void CFileStream::Write(const void* p, ULONG iLen)
+void FileStream::Write(const void* p, ULONG iLen)
 {
   fwrite(p, 1, iLen, fs_pfh);
 }
 
-int CFileStream::Read(void* pDest, ULONG iLen)
+int FileStream::Read(void* pDest, ULONG iLen)
 {
   return fread(pDest, 1, iLen, fs_pfh);
 }

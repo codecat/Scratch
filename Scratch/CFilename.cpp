@@ -32,53 +32,53 @@
 
 SCRATCH_NAMESPACE_BEGIN;
 
-CFilename::CFilename()
+Filename::Filename()
 {
   str_iInstances++;
   // Create a new empty buffer
-  this->str_szBuffer = CString::str_szEmpty;
+  this->str_szBuffer = String::str_szEmpty;
 }
 
-CFilename::CFilename(const CFilename &copy)
+Filename::Filename(const Filename &copy)
 {
   str_iInstances++;
   // Create a new buffer and copy data into it.
-  this->str_szBuffer = CString::str_szEmpty;
+  this->str_szBuffer = String::str_szEmpty;
   this->CopyToBuffer(copy);
 }
 
-CFilename::CFilename(const char* szStr)
+Filename::Filename(const char* szStr)
 {
   str_iInstances++;
   // Create a new buffer and copy data into it.
-  this->str_szBuffer = CString::str_szEmpty;
+  this->str_szBuffer = String::str_szEmpty;
   this->CopyToBuffer(szStr);
 }
 
-CFilename::CFilename(const CString &str)
+Filename::Filename(const String &str)
 {
   str_iInstances++;
   // Create a new buffer and copy data into it.
-  this->str_szBuffer = CString::str_szEmpty;
+  this->str_szBuffer = String::str_szEmpty;
   this->CopyToBuffer(str.str_szBuffer);
 }
 
-CString CFilename::Extension() const
+String Filename::Extension() const
 {
-  return CString(strrchr(str_szBuffer, '.') + 1);
+  return String(strrchr(str_szBuffer, '.') + 1);
 }
 
-CString CFilename::Path() const
+String Filename::Path() const
 {
-  return CString(str_szBuffer, 0, strrchr(str_szBuffer, '/') - str_szBuffer);
+  return String(str_szBuffer, 0, strrchr(str_szBuffer, '/') - str_szBuffer);
 }
 
-CString CFilename::Filename() const
+String Filename::Name() const
 {
-  return CString(strrchr(str_szBuffer, '/') + 1);
+  return String(strrchr(str_szBuffer, '/') + 1);
 }
 
-void CFilename::FromHome(const CString &strPath)
+void Filename::FromHome(const String &strPath)
 {
 #if WINDOWS
   char szPath[MAX_PATH];

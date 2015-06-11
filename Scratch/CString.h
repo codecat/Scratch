@@ -36,12 +36,12 @@
 
 SCRATCH_NAMESPACE_BEGIN;
 
-class SCRATCH_EXPORT CString
+class SCRATCH_EXPORT String
 {
-  friend class CFilename;
+	friend class Filename;
 protected:
   char* str_szBuffer;
-  CMutex str_mutex;
+  Mutex str_mutex;
 
   void CopyToBuffer(const char* szSrc);
   void AppendToBuffer(const char* szSrc);
@@ -52,59 +52,59 @@ public:
   static char* str_szEmpty;
   static int str_iInstances;
 
-  CString();
-  CString(const char* szValue);
-  CString(const char* szValue, int iStart, int iLength);
-  CString(const CString &strCopy);
-  virtual ~CString();
+	String();
+	String(const char* szValue);
+	String(const char* szValue, int iStart, int iLength);
+	String(const String &strCopy);
+	virtual ~String();
 
   int Length() const;
 
   void SetF(const char* szFormat, ...);
   void AppendF(const char* szFormat, ...);
 
-  void Split(const CString &strNeedle, CStackArray<CString> &astrResult) const;
-  void Split(const CString &strNeedle, CStackArray<CString> &astrResult, BOOL bTrimAll) const;
-  void CommandLineSplit(CStackArray<CString> &astrResult) const;
+	void Split(const String &strNeedle, StackArray<String> &astrResult) const;
+	void Split(const String &strNeedle, StackArray<String> &astrResult, BOOL bTrimAll) const;
+	void CommandLineSplit(StackArray<String> &astrResult) const;
 private:
-  CString InternalTrim(bool bLeft, bool bRight, char c = ' ') const;
+	String InternalTrim(bool bLeft, bool bRight, char c = ' ') const;
 public:
-  CString Trim() const;
-  CString Trim(char c) const;
-  CString TrimLeft() const;
-  CString TrimLeft(char c) const;
-  CString TrimRight() const;
-  CString TrimRight(char c) const;
-  CString Replace(const CString &strNeedle, const CString &strReplace) const;
-  CString SubString(int iStart) const;
-  CString SubString(int iStart, int iLen) const;
-  CString ToLower() const;
-  CString ToUpper() const;
+	String Trim() const;
+	String Trim(char c) const;
+	String TrimLeft() const;
+	String TrimLeft(char c) const;
+	String TrimRight() const;
+	String TrimRight(char c) const;
+	String Replace(const String &strNeedle, const String &strReplace) const;
+	String SubString(int iStart) const;
+	String SubString(int iStart, int iLen) const;
+	String ToLower() const;
+	String ToUpper() const;
 
   int IndexOf(char c) const;
-  int IndexOf(const CString &strNeedle) const;
+	int IndexOf(const String &strNeedle) const;
 
   int IndexOfLast(char c) const;
-  int IndexOfLast(const CString &strNeedle) const;
+	int IndexOfLast(const String &strNeedle) const;
 
   void Fill(char c, int ct);
 
-  bool Contains(const CString &strNeedle);
+	bool Contains(const String &strNeedle);
   bool Contains(char c) const;
-  bool StartsWith(const CString &strNeedle);
-  bool EndsWith(const CString &strNeedle);
+	bool StartsWith(const String &strNeedle);
+	bool EndsWith(const String &strNeedle);
 
   operator const char*();
   operator const char*() const;
 
-  CString& operator=(char* szSrc);
-  CString& operator=(const char* szSrc);
-  CString& operator=(const CString &strSrc);
+	String& operator=(char* szSrc);
+	String& operator=(const char* szSrc);
+	String& operator=(const String &strSrc);
 
-  CString& operator+=(const char* szSrc);
-  CString& operator+=(const char cSrc);
+	String& operator+=(const char* szSrc);
+	String& operator+=(const char cSrc);
 
-  CString& operator*=(int ctRepeat);
+	String& operator*=(int ctRepeat);
 
   bool operator==(const char* szSrc) const;
   bool operator!=(const char* szSrc) const;
@@ -112,16 +112,16 @@ public:
   char& operator[](int iIndex);
 };
 
-CString SCRATCH_EXPORT operator+(const CString &strLHS, const char* szRHS);
-CString SCRATCH_EXPORT operator+(const CString &strLHS, const char cRHS);
+String SCRATCH_EXPORT operator+(const String &strLHS, const char* szRHS);
+String SCRATCH_EXPORT operator+(const String &strLHS, const char cRHS);
 
-CString SCRATCH_EXPORT operator+(const char* szLHS, CString &strRHS);
-CString SCRATCH_EXPORT operator+(const char cLHS, CString &strRHS);
+String SCRATCH_EXPORT operator+(const char* szLHS, String &strRHS);
+String SCRATCH_EXPORT operator+(const char cLHS, String &strRHS);
 
-CString SCRATCH_EXPORT operator*(const CString &strLHS, int ctRepeat);
-CString SCRATCH_EXPORT operator*(int ctRepeat, const CString &strRHS);
+String SCRATCH_EXPORT operator*(const String &strLHS, int ctRepeat);
+String SCRATCH_EXPORT operator*(int ctRepeat, const String &strRHS);
 
-CString SCRATCH_EXPORT strPrintF(const char* szFormat, ...);
+String SCRATCH_EXPORT strPrintF(const char* szFormat, ...);
 
 SCRATCH_NAMESPACE_END;
 

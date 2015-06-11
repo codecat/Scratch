@@ -31,28 +31,28 @@
 
 SCRATCH_NAMESPACE_BEGIN;
 
-class SCRATCH_EXPORT CMutex
+class SCRATCH_EXPORT Mutex
 {
 private:
   void* m_pMutex;
 
 public:
-  CMutex();
-  ~CMutex();
+	Mutex();
+	~Mutex();
 
   void Lock() const;
   bool TryLock() const;
   void Unlock() const;
 };
 
-class SCRATCH_EXPORT CMutexWait
+class SCRATCH_EXPORT MutexWait
 {
 public:
-  const CMutex* m_pMutex;
+	const Mutex* m_pMutex;
 
 public:
-  CMutexWait(const CMutex &mutex);
-  ~CMutexWait();
+	MutexWait(const Mutex &mutex);
+	~MutexWait();
 };
 
 SCRATCH_NAMESPACE_END;

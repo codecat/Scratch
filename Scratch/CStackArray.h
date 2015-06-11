@@ -32,19 +32,19 @@
 SCRATCH_NAMESPACE_BEGIN;
 
 template<class Type>
-class SCRATCH_EXPORT CStackArray
+class SCRATCH_EXPORT StackArray
 {
 public:
   Type** sa_pItems;
   INDEX sa_ctSlots;
   INDEX sa_ctUsed;
   BOOL sa_bOnlyPop;
-  CMutex sa_mutex;
+  Mutex sa_mutex;
 
 public:
-  CStackArray(void);
-  CStackArray(const CStackArray<Type> &copy); // Note: If this ever gets called, you're most likely writing bad code.
-  ~CStackArray(void);
+	StackArray(void);
+	StackArray(const StackArray<Type> &copy); // Note: If this ever gets called, you're most likely writing bad code.
+	~StackArray(void);
 
   /// Push to the beginning of the stack, return a reference to the newly made object
   Type& PushBegin(void);

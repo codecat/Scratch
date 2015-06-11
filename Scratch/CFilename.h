@@ -31,19 +31,19 @@
 
 SCRATCH_NAMESPACE_BEGIN;
 
-class SCRATCH_EXPORT CFilename : public CString
+class SCRATCH_EXPORT Filename : public String
 {
 public:
-  CFilename();
-  CFilename(const CFilename &copy);
-  CFilename(const char* szStr);
-  CFilename(const CString &str);
+	Filename();
+	Filename(const Filename &copy);
+	Filename(const char* szStr);
+	Filename(const String &str);
 
-  CString Extension() const;
-  CString Path() const;
-  CString Filename() const;
+  String Extension() const;
+  String Path() const;
+	String Name() const;
 
-  void FromHome(const CString &strPath);
+  void FromHome(const String &strPath);
 };
 
 SCRATCH_NAMESPACE_END;

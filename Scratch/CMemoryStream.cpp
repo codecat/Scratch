@@ -28,7 +28,7 @@
 
 SCRATCH_NAMESPACE_BEGIN;
 
-CMemoryStream::CMemoryStream(void)
+MemoryStream::MemoryStream(void)
 {
   strm_pubBuffer = NULL;
   strm_ulPosition = 0;
@@ -37,7 +37,7 @@ CMemoryStream::CMemoryStream(void)
   AllocateMoreMemory(1024);
 }
 
-CMemoryStream::CMemoryStream(const CMemoryStream &copy)
+MemoryStream::MemoryStream(const MemoryStream &copy)
 {
   strm_pubBuffer = NULL;
   strm_ulPosition = 0;
@@ -49,22 +49,22 @@ CMemoryStream::CMemoryStream(const CMemoryStream &copy)
   strm_ulUsed = copy.strm_ulUsed;
 }
 
-CMemoryStream::~CMemoryStream(void)
+MemoryStream::~MemoryStream(void)
 {
   delete[] strm_pubBuffer;
 }
 
-ULONG CMemoryStream::Size()
+ULONG MemoryStream::Size()
 {
   return strm_ulUsed;
 }
 
-ULONG CMemoryStream::Location()
+ULONG MemoryStream::Location()
 {
   return strm_ulPosition;
 }
 
-void CMemoryStream::Seek(ULONG ulPos, INDEX iOrigin)
+void MemoryStream::Seek(ULONG ulPos, INDEX iOrigin)
 {
   switch(iOrigin) {
   case SEEK_CUR: strm_ulPosition += ulPos; break;
@@ -73,12 +73,12 @@ void CMemoryStream::Seek(ULONG ulPos, INDEX iOrigin)
   }
 }
 
-BOOL CMemoryStream::AtEOF()
+BOOL MemoryStream::AtEOF()
 {
   return Size() - Location() > 0;
 }
 
-void CMemoryStream::Write(const void* p, ULONG iLen)
+void MemoryStream::Write(const void* p, ULONG iLen)
 {
   // check if we need a larger buffer
   if(strm_ulPosition + iLen >= strm_ulSize) {
@@ -95,7 +95,7 @@ void CMemoryStream::Write(const void* p, ULONG iLen)
   strm_ulUsed = Max<ULONG>(strm_ulPosition, strm_ulUsed);
 }
 
-int CMemoryStream::Read(void* pDest, ULONG iLen)
+int MemoryStream::Read(void* pDest, ULONG iLen)
 {
   ULONG ulStart = strm_ulPosition;
 
@@ -115,7 +115,7 @@ int CMemoryStream::Read(void* pDest, ULONG iLen)
   return ulRealLength;
 }
 
-void CMemoryStream::AllocateMoreMemory(ULONG ctBytes)
+void MemoryStream::AllocateMoreMemory(ULONG ctBytes)
 {
   ASSERT(ctBytes > 0);
 

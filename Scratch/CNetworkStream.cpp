@@ -36,7 +36,7 @@ SCRATCH_NAMESPACE_BEGIN;
 static BOOL _bWinsockInitialized = FALSE;
 #endif
 
-CNetworkStream::CNetworkStream(void)
+NetworkStream::NetworkStream(void)
 {
 #if WINDOWS
   ns_pWSAData = new WSADATA;
@@ -58,7 +58,7 @@ CNetworkStream::CNetworkStream(void)
 #endif
 }
 
-CNetworkStream::~CNetworkStream(void)
+NetworkStream::~NetworkStream(void)
 {
   if(ns_socket != 0) {
 #if WINDOWS
@@ -74,27 +74,27 @@ CNetworkStream::~CNetworkStream(void)
   delete ns_psin;
 }
 
-ULONG CNetworkStream::Size()
+ULONG NetworkStream::Size()
 {
   throw "Function not supported in Network Stream";
 }
 
-ULONG CNetworkStream::Location()
+ULONG NetworkStream::Location()
 {
   throw "Function not supported in Network Stream";
 }
 
-void CNetworkStream::Seek(ULONG ulPos, INDEX iOrigin)
+void NetworkStream::Seek(ULONG ulPos, INDEX iOrigin)
 {
   throw "Function not supported in Network Stream";
 }
 
-BOOL CNetworkStream::AtEOF()
+BOOL NetworkStream::AtEOF()
 {
   return ns_bEOF;
 }
 
-BOOL CNetworkStream::Connect(const char* szAddress, USHORT iPort)
+BOOL NetworkStream::Connect(const char* szAddress, USHORT iPort)
 {
   hostent* phe = gethostbyname(szAddress);
   if(phe == NULL) {
@@ -113,7 +113,7 @@ BOOL CNetworkStream::Connect(const char* szAddress, USHORT iPort)
   return FALSE;
 }
 
-void CNetworkStream::Close()
+void NetworkStream::Close()
 {
 #if WINDOWS
   closesocket(ns_socket);
@@ -123,19 +123,19 @@ void CNetworkStream::Close()
   ns_socket = 0;
 }
 
-void CNetworkStream::Write(const void* p, ULONG iLen)
+void NetworkStream::Write(const void* p, ULONG iLen)
 {
   send(ns_socket, (const char*)p, iLen, 0);
 }
 
-int CNetworkStream::Read(void* pDest, ULONG iLen)
+int NetworkStream::Read(void* pDest, ULONG iLen)
 {
   int iRet = recv(ns_socket, (char*)pDest, iLen, 0);
   ns_bEOF = (iRet <= 0) || ((ULONG)iRet < iLen);
   return iRet;
 }
 
-BOOL CNetworkStream::IsConnected()
+BOOL NetworkStream::IsConnected()
 {
 #if WINDOWS
   fd_set fds;
@@ -147,7 +147,7 @@ BOOL CNetworkStream::IsConnected()
 #endif
 }
 
-void CNetworkStream::Cleanup(void)
+void NetworkStream::Cleanup(void)
 {
 #if WINDOWS
   if(_bWinsockInitialized) {

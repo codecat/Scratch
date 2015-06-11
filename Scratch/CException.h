@@ -33,15 +33,15 @@
 
 SCRATCH_NAMESPACE_BEGIN;
 
-class SCRATCH_EXPORT CException
+class SCRATCH_EXPORT Exception
 {
 public:
-  CString Message;
+  String Message;
 
 public:
-  CException();
-  CException(const char* format, ...);
-  virtual ~CException();
+	Exception();
+	Exception(const char* format, ...);
+	virtual ~Exception();
 };
 
 SCRATCH_NAMESPACE_END;
