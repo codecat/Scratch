@@ -46,11 +46,23 @@ set(presrc_tests "ScratchTests")
 add_executable(ScratchTests
 	${presrc_tests}/main.cpp)
 
-find_package(Threads)
-message("thread libs: ${CMAKE_THREAD_LIBS_INIT}")
-target_link_libraries(ScratchTests Scratch ${CMAKE_THREAD_LIBS_INIT} stdc++)
-
-include_directories(Scratch)
+if(WIN32)
+	set(WIN_PTHREADS_INCLUDE "" CACHE PATH "Path to win32 posix threads include")
+	set(WIN_PTHREADS_LIBRARY "" CACHE FILEPATH "Path to win32 posix threads library")
+	target_link_libraries(Scratch
+		${WIN_PTHREADS_LIBRARY}
+	)
+	include_directories(Scratch
+		${WIN_PTHREADS_INCLUDE}
+	)
+	target_link_libraries(ScratchTests Scratch)
+else()
+	find_package(Threads)
+	message("thread libs: ${CMAKE_THREAD_LIBS_INIT}")
+	target_link_libraries(Scratch ${CMAKE_THREAD_LIBS_INIT})
+	include_directories(Scratch)
+	target_link_libraries(ScratchTests Scratch stdc++)
+endif()
 
 enable_testing()
 add_test(String ScratchTests String)
