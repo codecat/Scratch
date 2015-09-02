@@ -2,8 +2,16 @@
 
 // This is so that we can access private fields for
 // checking their values in tests.
+
+#ifndef _MSC_VER
+// Visual Studio: fatal error C1189: #error :  The C++ Standard Library forbids macroizing keywords. Enable warning C4005 to find the forbidden macro.
+#define TEST_PRIVATE(expr) TEST(expr)
+
 #define protected public
 #define private public
+#else
+#define TEST_PRIVATE(expr)
+#endif
 
 #include <Scratch.h>
 using namespace Scratch;
@@ -42,30 +50,52 @@ static int g_iTestFailed = 0;
 #if WINDOWS
 #define TEST_WINDOWS(expr) TEST(expr)
 #define TEST_UNIX(expr)
+#define MAIN int wmain(int argc, wchar_t* argv[])
 #else
 #define TEST_WINDOWS(expr)
 #define TEST_UNIX(expr) TEST(expr)
+#define MAIN int main(int argc, char* argv[])
 #endif
 
-int main(int argc, char* argv[])
+MAIN
 {
   StackArray<String> aTests;
   String strArg;
 
+  char buffer[1024];
   if(argc > 1) {
+#if WINDOWS
+    int writen = wcstombs(buffer, argv[1], sizeof(buffer));
+    if (writen == 1024) {
+      printf("Invalid test name given");
+      return -1;
+    }
+
+    strArg = buffer;
+#else
     strArg = argv[1];
+#endif
+  } else {
+    printf("No test name given! Existing tests:\n\n");
+    for (int i = 0; i<aTests.Count(); i++) {
+      printf(" * %s\n", (const char*)aTests[i]);
+    }
+    printf("\nOr pass \"All\" to run all tests.\nEnter a test to run: ");
+  
+    scanf("%[^\n]", buffer);
+    strArg = buffer;
   }
 
   TESTS("String")
   {
     String strFoo;
-    TEST(strFoo.str_szBuffer == String::str_szEmpty);
+    TEST_PRIVATE(strFoo.str_szBuffer == String::str_szEmpty);
 
     strFoo = "a";
     TEST(strFoo == "a");
 
     strFoo = "";
-    TEST(strFoo.str_szBuffer == String::str_szEmpty);
+    TEST_PRIVATE(strFoo.str_szBuffer == String::str_szEmpty);
 
     int x = 5;
     int y = 10;
@@ -111,7 +141,7 @@ int main(int argc, char* argv[])
     TEST(strFoo.EndsWith("aaaB"));
     TEST(!strFoo.EndsWith("Xaaa"));
 
-    TEST((const char*)strFoo == strFoo.str_szBuffer);
+    TEST_PRIVATE((const char*)strFoo == strFoo.str_szBuffer);
 
     strFoo = "x";
     strFoo += "x";
@@ -133,12 +163,13 @@ int main(int argc, char* argv[])
   TESTS("Filename")
   {
     Filename fnmFoo;
-    TEST(fnmFoo.str_szBuffer == String::str_szEmpty);
+
+    TEST_PRIVATE(fnmFoo.str_szBuffer == String::str_szEmpty);
 
     fnmFoo = "/var/www/test.html";
     TEST(fnmFoo.Extension() == "html");
     TEST(fnmFoo.Path() == "/var/www");
-		TEST(fnmFoo.Name() == "test.html");
+        TEST(fnmFoo.Name() == "test.html");
 
     fnmFoo.FromHome(".zshrc");
     TEST_WINDOWS(fnmFoo.StartsWith("C:\\Users\\"));
@@ -320,15 +351,6 @@ int main(int argc, char* argv[])
     } catch(Exception &ex) {
       TEST(ex.Message == "123");
     }
-  }
-
-  if(argc == 1) {
-    printf("No test name given! Existing tests:\n\n");
-    for(int i=0; i<aTests.Count(); i++) {
-      printf(" * %s\n", (const char*)aTests[i]);
-    }
-    printf("\nOr pass \"All\" to run all tests.");
-    return 1;
   }
 
   printf("\n");
