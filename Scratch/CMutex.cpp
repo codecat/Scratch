@@ -24,43 +24,82 @@
     OTHER DEALINGS IN THE SOFTWARE.
 */
 
+#ifndef _MSC_VER
 #include <pthread.h>
+#endif
+
 #include <errno.h>
 
 #include "CMutex.h"
 
 SCRATCH_NAMESPACE_BEGIN;
 
-Mutex::Mutex()
+Mutex::Mutex() : m_bIsLocked(false)
 {
+#ifndef _MSC_VER
   m_pMutex = (void*)new pthread_mutex_t;
   pthread_mutex_init((pthread_mutex_t*)m_pMutex, NULL);
+#else
+  m_pMutex = CreateMutex(0, false, 0);
+#endif
 }
 
 Mutex::~Mutex()
 {
+  ASSERT(!m_bIsLocked);
+
+#ifndef _MSC_VER
   pthread_mutex_destroy((pthread_mutex_t*)m_pMutex);
   delete (pthread_mutex_t*)m_pMutex;
+#else
+  CloseHandle(m_pMutex);
+#endif
 }
 
-void Mutex::Lock() const
+void Mutex::Lock()
 {
+#ifndef _MSC_VER
   pthread_mutex_lock((pthread_mutex_t*)m_pMutex);
+#else
+  WaitForSingleObject(m_pMutex, INFINITE);
+#endif
+
+  m_bIsLocked = true;
 }
 
-bool Mutex::TryLock() const
+bool Mutex::TryLock()
 {
-  return pthread_mutex_trylock((pthread_mutex_t*)m_pMutex) != EBUSY;
+  bool worked;
+#ifndef _MSC_VER
+  worked = pthread_mutex_trylock((pthread_mutex_t*)m_pMutex) != EBUSY;
+#else
+  worked = WaitForSingleObject(m_pMutex, 1) == WAIT_OBJECT_0;
+  if (m_bIsLocked) return false;
+#endif
+
+  if (worked) {
+	  m_bIsLocked = true;
+  }
+
+  return worked;
 }
 
-void Mutex::Unlock() const
+void Mutex::Unlock()
 {
+  ASSERT(m_bIsLocked);
+
+#ifndef _MSC_VER
   pthread_mutex_unlock((pthread_mutex_t*)m_pMutex);
+#else
+  ReleaseMutex(m_pMutex);
+#endif
+
+  m_bIsLocked = false;
 }
 
 MutexWait::MutexWait(const Mutex &mutex)
 {
-  m_pMutex = &mutex;
+  m_pMutex = &const_cast<Mutex&>(mutex);
   m_pMutex->Lock();
 }
 

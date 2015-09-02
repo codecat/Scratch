@@ -34,21 +34,22 @@ SCRATCH_NAMESPACE_BEGIN;
 class SCRATCH_EXPORT Mutex
 {
 private:
-  void* m_pMutex;
+	void* m_pMutex;
+	bool m_bIsLocked;
 
 public:
 	Mutex();
 	~Mutex();
 
-  void Lock() const;
-  bool TryLock() const;
-  void Unlock() const;
+  void Lock();
+  bool TryLock();
+  void Unlock();
 };
 
 class SCRATCH_EXPORT MutexWait
 {
 public:
-	const Mutex* m_pMutex;
+	Mutex* m_pMutex;
 
 public:
 	MutexWait(const Mutex &mutex);
