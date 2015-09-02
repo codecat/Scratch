@@ -70,6 +70,7 @@ void Mutex::Lock()
 bool Mutex::TryLock()
 {
   bool worked;
+
 #ifndef _MSC_VER
   worked = pthread_mutex_trylock((pthread_mutex_t*)m_pMutex) != EBUSY;
 #else
@@ -78,7 +79,7 @@ bool Mutex::TryLock()
 #endif
 
   if (worked) {
-	  m_bIsLocked = true;
+    m_bIsLocked = true;
   }
 
   return worked;

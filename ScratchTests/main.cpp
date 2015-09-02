@@ -62,35 +62,34 @@ int wmain(int argc, wchar_t* argv[])
 
   char buffer[1024];
   if(argc > 1) {
-	int writen = wcstombs(buffer, argv[1], sizeof(buffer));
-	if (writen == 1024) {
+    int writen = wcstombs(buffer, argv[1], sizeof(buffer));
+    if (writen == 1024) {
       printf("Invalid test name given");
       return -1;
-	}
+    }
 
-	strArg = buffer;
+    strArg = buffer;
   } else {
-	  printf("No test name given! Existing tests:\n\n");
-	  for (int i = 0; i<aTests.Count(); i++) {
-		  printf(" * %s\n", (const char*)aTests[i]);
-	  }
-	  printf("\nOr pass \"All\" to run all tests.\nEnter a test to run: ");
-
-	  scanf("%[^\n]", buffer);
-
-	  strArg = buffer;
+    printf("No test name given! Existing tests:\n\n");
+    for (int i = 0; i<aTests.Count(); i++) {
+      printf(" * %s\n", (const char*)aTests[i]);
+    }
+    printf("\nOr pass \"All\" to run all tests.\nEnter a test to run: ");
+  
+    scanf("%[^\n]", buffer);
+    strArg = buffer;
   }
 
   TESTS("String")
   {
     String strFoo;
-	TEST_PRIVATE(strFoo.str_szBuffer == String::str_szEmpty);
+    TEST_PRIVATE(strFoo.str_szBuffer == String::str_szEmpty);
 
     strFoo = "a";
     TEST(strFoo == "a");
 
-	strFoo = "";
-	TEST_PRIVATE(strFoo.str_szBuffer == String::str_szEmpty);
+    strFoo = "";
+    TEST_PRIVATE(strFoo.str_szBuffer == String::str_szEmpty);
 
     int x = 5;
     int y = 10;
@@ -136,7 +135,7 @@ int wmain(int argc, wchar_t* argv[])
     TEST(strFoo.EndsWith("aaaB"));
     TEST(!strFoo.EndsWith("Xaaa"));
 
-	TEST_PRIVATE((const char*)strFoo == strFoo.str_szBuffer);
+    TEST_PRIVATE((const char*)strFoo == strFoo.str_szBuffer);
 
     strFoo = "x";
     strFoo += "x";
@@ -159,12 +158,12 @@ int wmain(int argc, wchar_t* argv[])
   {
     Filename fnmFoo;
 
-	TEST_PRIVATE(fnmFoo.str_szBuffer == String::str_szEmpty);
+    TEST_PRIVATE(fnmFoo.str_szBuffer == String::str_szEmpty);
 
     fnmFoo = "/var/www/test.html";
     TEST(fnmFoo.Extension() == "html");
     TEST(fnmFoo.Path() == "/var/www");
-		TEST(fnmFoo.Name() == "test.html");
+        TEST(fnmFoo.Name() == "test.html");
 
     fnmFoo.FromHome(".zshrc");
     TEST_WINDOWS(fnmFoo.StartsWith("C:\\Users\\"));
