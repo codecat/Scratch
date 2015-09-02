@@ -50,18 +50,21 @@ static int g_iTestFailed = 0;
 #if WINDOWS
 #define TEST_WINDOWS(expr) TEST(expr)
 #define TEST_UNIX(expr)
+#define MAIN int wmain(int argc, wchar_t* argv[])
 #else
 #define TEST_WINDOWS(expr)
 #define TEST_UNIX(expr) TEST(expr)
+#define MAIN int main(int argc, char* argv[])
 #endif
 
-int wmain(int argc, wchar_t* argv[])
+MAIN
 {
   StackArray<String> aTests;
   String strArg;
 
   char buffer[1024];
   if(argc > 1) {
+#if WINDOWS
     int writen = wcstombs(buffer, argv[1], sizeof(buffer));
     if (writen == 1024) {
       printf("Invalid test name given");
@@ -69,6 +72,9 @@ int wmain(int argc, wchar_t* argv[])
     }
 
     strArg = buffer;
+#else
+    strArg = argv[1];
+#endif
   } else {
     printf("No test name given! Existing tests:\n\n");
     for (int i = 0; i<aTests.Count(); i++) {
