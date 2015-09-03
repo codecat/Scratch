@@ -44,6 +44,7 @@ public:
 public:
 	StackArray(void);
 	StackArray(const StackArray<Type> &copy); // Note: If this ever gets called, you're most likely writing bad code.
+	StackArray<Type> &operator=(const StackArray<Type> &copy);
 	~StackArray(void);
 
   /// Push to the beginning of the stack, return a reference to the newly made object

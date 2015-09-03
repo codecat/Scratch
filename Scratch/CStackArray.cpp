@@ -47,6 +47,12 @@ StackArray<Type>::StackArray()
 template<class Type>
 StackArray<Type>::StackArray(const StackArray<Type> &copy)
 {
+  operator=(copy);
+}
+
+template<class Type>
+StackArray<Type> &StackArray<Type>::operator=(const StackArray<Type> &copy)
+{
   sa_pItems = NULL;
   sa_ctSlots = 0;
   sa_ctUsed = 0;
@@ -65,6 +71,8 @@ StackArray<Type>::StackArray(const StackArray<Type> &copy)
     // this should call the copy constructor
     *sa_pItems[i] = *copy.sa_pItems[i];
   }
+
+  return *this;
 }
 
 template<class Type>

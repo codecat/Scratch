@@ -34,7 +34,7 @@
 
 SCRATCH_NAMESPACE_BEGIN;
 
-Mutex::Mutex() : m_bIsLocked(false)
+Mutex::Mutex()
 {
 #ifndef _MSC_VER
   m_pMutex = (void*)new pthread_mutex_t;
@@ -46,6 +46,11 @@ Mutex::Mutex() : m_bIsLocked(false)
 }
 
 Mutex::Mutex(const Mutex &copy)
+{
+  operator=(copy);
+}
+
+Mutex &Mutex::operator=(const Mutex &copy)
 {
   ASSERT(!copy.m_bIsLocked);
 #ifndef _MSC_VER
