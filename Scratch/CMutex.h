@@ -39,6 +39,7 @@ private:
 
 public:
   Mutex();
+  Mutex(const Mutex &copy); // copy constructor actually does the same as regular constructor.
   ~Mutex();
 
   void Lock();
