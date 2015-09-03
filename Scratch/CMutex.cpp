@@ -42,6 +42,7 @@ Mutex::Mutex() : m_bIsLocked(false)
 #else
   m_pMutex = CreateMutex(0, false, 0);
 #endif
+  m_bIsLocked = false;
 }
 
 Mutex::Mutex(const Mutex &copy)
@@ -53,6 +54,7 @@ Mutex::Mutex(const Mutex &copy)
 #else
   m_pMutex = CreateMutex(0, false, 0);
 #endif
+  m_bIsLocked = false;
 }
 
 Mutex::~Mutex()
