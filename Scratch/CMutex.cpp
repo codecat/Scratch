@@ -60,6 +60,7 @@ Mutex &Mutex::operator=(const Mutex &copy)
   m_pMutex = CreateMutex(0, false, 0);
 #endif
   m_bIsLocked = false;
+  return *this;
 }
 
 Mutex::~Mutex()
