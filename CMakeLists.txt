@@ -47,14 +47,6 @@ add_executable(ScratchTests
 	${presrc_tests}/main.cpp)
 
 if(WIN32)
-	set(WIN_PTHREADS_INCLUDE "" CACHE PATH "Path to win32 posix threads include")
-	set(WIN_PTHREADS_LIBRARY "" CACHE FILEPATH "Path to win32 posix threads library")
-	target_link_libraries(Scratch
-		${WIN_PTHREADS_LIBRARY}
-	)
-	include_directories(Scratch
-		${WIN_PTHREADS_INCLUDE}
-	)
 	target_link_libraries(ScratchTests Scratch)
 else()
 	find_package(Threads)
