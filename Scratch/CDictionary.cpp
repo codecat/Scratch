@@ -34,26 +34,24 @@ SCRATCH_NAMESPACE_BEGIN;
 template<class TKey, class TValue>
 DictionaryPair<TKey, TValue>::DictionaryPair()
 {
-  key = 0;
-  value = 0;
+}
+
+template<class TKey, class TValue>
+DictionaryPair<TKey, TValue>::DictionaryPair(const TKey& k)
+  : key(k)
+{
+}
+
+template<class TKey, class TValue>
+DictionaryPair<TKey, TValue>::DictionaryPair(const TKey& k, const TValue& v)
+  : key(k),
+    value(v)
+{
 }
 
 template<class TKey, class TValue>
 DictionaryPair<TKey, TValue>::~DictionaryPair()
 {
-}
-
-template<class TKey, class TValue>
-void DictionaryPair<TKey, TValue>::Delete()
-{
-  if(key != 0) {
-    delete key;
-    key = 0;
-  }
-  if(value != 0) {
-    delete value;
-    value = 0;
-  }
 }
 
 template<class TKey, class TValue>
@@ -64,8 +62,7 @@ Dictionary<TKey, TValue>::Dictionary(void)
 
 template<class TKey, class TValue>
 Dictionary<TKey, TValue>::Dictionary(const Dictionary<TKey, TValue> &copy)
-  : dic_saKeys(copy.dic_saKeys),
-    dic_saValues(copy.dic_saValues)
+  : dic_saPairs(copy.dic_saPairs)
 {
   dic_bAllowDuplicateKeys = copy.dic_bAllowDuplicateKeys;
 }
@@ -73,6 +70,7 @@ Dictionary<TKey, TValue>::Dictionary(const Dictionary<TKey, TValue> &copy)
 template<class TKey, class TValue>
 Dictionary<TKey, TValue>::~Dictionary(void)
 {
+  Clear();
 }
 
 /// Add to the dictionary
@@ -86,19 +84,16 @@ void Dictionary<TKey, TValue>::Add(const TKey &key, const TValue &value)
   }
 
   // add it
-  dic_saKeys.Push() = key;
-  dic_saValues.Push() = value;
+  dic_saPairs.Push(new DictionaryPair<TKey, TValue>(key, value));
 }
 
 /// Push to the dictionary
 template<class TKey, class TValue>
-DictionaryPair<TKey, TValue> Dictionary<TKey, TValue>::Push(const TKey &key)
+DictionaryPair<TKey, TValue> &Dictionary<TKey, TValue>::Push(const TKey &key)
 {
-  DictionaryPair<TKey, TValue> ret;
-  ret.key = &(dic_saKeys.Push());
-  (*ret.key) = key;
-  ret.value = &(dic_saValues.Push());
-  return ret;
+  auto* ret = new DictionaryPair<TKey, TValue>(key);
+  dic_saPairs.Push(ret);
+  return *ret;
 }
 
 /// Get the index of the given key
@@ -110,7 +105,7 @@ INDEX Dictionary<TKey, TValue>::IndexByKey(const TKey &key)
   // find the right index
   int iIndex = 0;
   for(; iIndex<ctElements; iIndex++) {
-    if(dic_saKeys[iIndex] == key) {
+    if(dic_saPairs[iIndex].key == key) {
       // this is the item, we found the index
       break;
     }
@@ -132,7 +127,7 @@ INDEX Dictionary<TKey, TValue>::IndexByValue(const TValue &value)
   // find the right index
   int iIndex = 0;
   for(; iIndex<ctElements; iIndex++) {
-    if(dic_saValues[iIndex] == value) {
+    if(dic_saPairs[iIndex].value == value) {
       // this is the item, we found the index
       break;
     }
@@ -169,8 +164,7 @@ void Dictionary<TKey, TValue>::RemoveByIndex(const INDEX iIndex)
     return;
   }
   // pop the values at that index
-  delete dic_saKeys.PopAt(iIndex);
-  delete dic_saValues.PopAt(iIndex);
+  delete dic_saPairs.PopAt(iIndex);
 }
 
 /// Remove a value from the dictionary by key
@@ -191,24 +185,21 @@ void Dictionary<TKey, TValue>::RemoveByValue(const TValue &value)
 
 /// Pop a value by its index
 template<class TKey, class TValue>
-DictionaryPair<TKey, TValue> Dictionary<TKey, TValue>::PopByIndex(const INDEX iIndex)
+DictionaryPair<TKey, TValue> &Dictionary<TKey, TValue>::PopByIndex(const INDEX iIndex)
 {
-  DictionaryPair<TKey, TValue> ret;
-  ret.key = dic_saKeys.PopAt(iIndex);
-  ret.value = dic_saValues.PopAt(iIndex);
-  return ret;
+  return *(dic_saPairs.PopAt(iIndex));
 }
 
 /// Pop a value from the dictionary by key
 template<class TKey, class TValue>
-DictionaryPair<TKey, TValue> Dictionary<TKey, TValue>::PopByKey(const TKey &key)
+DictionaryPair<TKey, TValue> &Dictionary<TKey, TValue>::PopByKey(const TKey &key)
 {
   return PopByIndex(IndexByKey(key));
 }
 
 /// Pop a value from the dictionary
 template<class TKey, class TValue>
-DictionaryPair<TKey, TValue> Dictionary<TKey, TValue>::PopByValue(const TValue &value)
+DictionaryPair<TKey, TValue> &Dictionary<TKey, TValue>::PopByValue(const TValue &value)
 {
   return PopByIndex(IndexByValue(value));
 }
@@ -217,17 +208,16 @@ DictionaryPair<TKey, TValue> Dictionary<TKey, TValue>::PopByValue(const TValue &
 template<class TKey, class TValue>
 void Dictionary<TKey, TValue>::Clear(void)
 {
-  // clear keys and values
-  dic_saKeys.Clear();
-  dic_saValues.Clear();
+  // clear pairs
+  dic_saPairs.Clear();
 }
 
 /// Return how many objects there currently are in the dictionary
 template<class TKey, class TValue>
 INDEX Dictionary<TKey, TValue>::Count(void)
 {
-  // return the amount of keys (amount of values is the same)
-  return dic_saKeys.Count();
+  // return the amount of pairs
+  return dic_saPairs.Count();
 }
 
 template<class TKey, class TValue>
@@ -238,33 +228,30 @@ TValue& Dictionary<TKey, TValue>::operator[](const TKey &key)
 
   // if the key doesn't exist
   if(iIndex == -1) {
-    // make a new key
-    dic_saKeys.Push() = key;
+    // make a new pair
+    auto &ret = Push(key);
 
-    // and make a new value which we'll return
-    return dic_saValues.Push();
+    // and return the (empty) value
+    return ret.value;
   }
 
   // return the value
-  return dic_saValues[iIndex];
+  return dic_saPairs[iIndex].value;
 }
 
 /// Get a pair from the dictionary using an index
 template<class TKey, class TValue>
 DictionaryPair<TKey, TValue> Dictionary<TKey, TValue>::GetPair(const INDEX iIndex)
 {
-  DictionaryPair<TKey, TValue> pair;
-  pair.key = &dic_saKeys[iIndex];
-  pair.value = &dic_saValues[iIndex];
-  return pair;
+  return dic_saPairs[iIndex];
 }
 
 /// Get a key from the dictionary using an index
 template<class TKey, class TValue>
 TKey& Dictionary<TKey, TValue>::GetKeyByIndex(const INDEX iIndex)
 {
-  // return the value
-  return dic_saKeys[iIndex];
+  // return the key
+  return dic_saPairs[iIndex].key;
 }
 
 /// Return value by index
@@ -272,7 +259,7 @@ template<class TKey, class TValue>
 TValue& Dictionary<TKey, TValue>::GetValueByIndex(const INDEX iIndex)
 {
   // return the value
-  return dic_saValues[iIndex];
+  return dic_saPairs[iIndex].value;
 }
 
 SCRATCH_NAMESPACE_END;

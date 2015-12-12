@@ -243,8 +243,8 @@ MAIN
     dic["bar"] = 10;
     TEST(dic["bar"] == 10);
 
-    DictionaryPair<String, int> pair = dic.Push("foobar");
-    *pair.value = 15;
+    DictionaryPair<String, int> &pair = dic.Push("foobar");
+    pair.value = 15;
     TEST(dic["foobar"] == 15);
 
     TEST(dic.IndexByKey("bar") == 1);
@@ -269,13 +269,13 @@ MAIN
     dic["foobar"] = 15;
     dic["barfoo"] = 20;
     TEST(dic.Count() == 4);
-    dic.PopByIndex(0).Delete();
+    delete &dic.PopByIndex(0);
     TEST(dic.Count() == 3);
     TEST(!dic.HasKey("foo"));
-    dic.PopByKey("bar").Delete();
+    delete &dic.PopByKey("bar");
     TEST(dic.Count() == 2);
     TEST(!dic.HasKey("bar"));
-    dic.PopByValue(15).Delete();
+    delete &dic.PopByValue(15);
     TEST(dic.Count() == 1);
     TEST(!dic.HasKey("foobar"));
 

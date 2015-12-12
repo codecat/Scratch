@@ -40,22 +40,32 @@ class SCRATCH_EXPORT DictionaryPair
 {
 	friend class Dictionary<TKey, TValue>;
 public:
-  TKey* key;
-  TValue* value;
+  TKey key;
+  TValue value;
 
 public:
 	DictionaryPair();
+  DictionaryPair(const TKey& k);
+  DictionaryPair(const TKey& k, const TValue& v);
 	~DictionaryPair();
 
-  void Delete();
+#ifndef SCRATCH_ALLOW_PAIR_COPY
+private:
+  /// This is most likely an unintended pair copy.. you can define
+  /// SCRATCH_ALLOW_PAIR_COPY if this was intended.
+  DictionaryPair(const DictionaryPair<TKey, TValue>& copy)
+    : key(copy.key),
+      value(copy.value)
+  {
+  }
+#endif
 };
 
 template<class TKey, class TValue>
 class SCRATCH_EXPORT Dictionary
 {
 private:
-  StackArray<TKey> dic_saKeys;
-  StackArray<TValue> dic_saValues;
+  StackArray<DictionaryPair<TKey, TValue>> dic_saPairs;
 
 public:
   BOOL dic_bAllowDuplicateKeys;
@@ -68,7 +78,7 @@ public:
   /// Add to the dictionary
   void Add(const TKey &key, const TValue &value);
   /// Push to the dictionary
-	DictionaryPair<TKey, TValue> Push(const TKey &key);
+	DictionaryPair<TKey, TValue> &Push(const TKey &key);
 
   /// Get the index of the given key
   INDEX IndexByKey(const TKey &key);
@@ -88,11 +98,11 @@ public:
   void RemoveByValue(const TValue &value);
 
   /// Pop a value by its index
-	DictionaryPair<TKey, TValue> PopByIndex(const INDEX iIndex);
+	DictionaryPair<TKey, TValue> &PopByIndex(const INDEX iIndex);
   /// Pop a value from the dictionary by key
-	DictionaryPair<TKey, TValue> PopByKey(const TKey &key);
+	DictionaryPair<TKey, TValue> &PopByKey(const TKey &key);
   /// Pop a value from the dictionary
-	DictionaryPair<TKey, TValue> PopByValue(const TValue &value);
+	DictionaryPair<TKey, TValue> &PopByValue(const TValue &value);
 
   /// Clear all items
   void Clear(void);
