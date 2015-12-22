@@ -103,6 +103,7 @@ public:
 
 	String& operator+=(const char* szSrc);
 	String& operator+=(const char cSrc);
+  String& operator+=(const String &strSrc);
 
 	String& operator*=(int ctRepeat);
 

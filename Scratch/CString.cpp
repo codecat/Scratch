@@ -719,6 +719,15 @@ String& String::operator+=(const char cSrc)
   return *this;
 }
 
+String& String::operator+=(const String &strSrc)
+{
+  MutexWait wait(str_mutex);
+  MutexWait wait2(strSrc.str_mutex);
+  // Append the right hand side to the buffer.
+  this->AppendToBuffer(strSrc.str_szBuffer);
+  return *this;
+}
+
 String& String::operator*=(int ctRepeat)
 {
   String strOriginal = *this;

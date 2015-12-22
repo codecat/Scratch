@@ -145,8 +145,9 @@ MAIN
 
     strFoo = "x";
     strFoo += "x";
+    strFoo += String("x");
 
-    TEST(strFoo == "xx");
+    TEST(strFoo == "xxx");
 
     strFoo *= 3;
     TEST(strFoo == "xxxxxx");
