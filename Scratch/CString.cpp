@@ -469,7 +469,7 @@ String String::Replace(const String &strNeedle, const String &strReplace) const
       strRet.AppendToBuffer(szOffsetPrev, szOffset - szOffsetPrev);
 
       // Append the replace value
-      strRet += strReplace;
+      strRet.AppendToBuffer(strReplace);
 
       // Increase the offset pointer by the needle length
       szOffset += strlen(strNeedle);

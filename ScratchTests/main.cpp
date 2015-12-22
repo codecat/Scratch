@@ -150,8 +150,8 @@ MAIN
     TEST(strFoo == "xxx");
 
     strFoo *= 3;
-    TEST(strFoo == "xxxxxx");
-    TEST(strFoo != "aaaaaa");
+    TEST(strFoo == "xxxxxxxxx");
+    TEST(strFoo != "aaaaaaaaa");
 
     strFoo = "x";
     TEST(strFoo + "y" == "xy");
