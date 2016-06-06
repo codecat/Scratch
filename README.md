@@ -18,9 +18,6 @@ Scratch, a header-only core library. Thread-safe by default. Currently includes 
   * `Mutex`
   * `Assert`
 
-## License
-Scratch is licensed under the permissive MIT license.
-
 ## Example usage
 
 ```C++
@@ -37,3 +34,6 @@ int main()
   return 0;
 }
 ```
+
+## License
+Scratch is licensed under the permissive MIT license.
