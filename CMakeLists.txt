@@ -40,17 +40,17 @@ endif()
 
 set(presrc_tests "ScratchTests")
 
-add_executable(ScratchTests
-	${presrc_tests}/main.cpp)
+add_executable(ScratchTests ${presrc_tests}/main.cpp)
+add_executable(ScratchTests_No_ThreadSafe ${presrc_tests}/main_no_threadsafe.cpp)
 
 if(NOT WIN32)
-	find_package(Threads)
-	target_link_libraries(ScratchTests ${CMAKE_THREAD_LIBS_INIT} stdc++)
+	target_link_libraries(ScratchTests stdc++)
 endif()
 
 include_directories(Scratch)
 
 enable_testing()
+
 add_test(String ScratchTests String)
 add_test(Filename ScratchTests Filename)
 add_test(StackArray ScratchTests StackArray)
@@ -58,3 +58,11 @@ add_test(Dictionary ScratchTests Dictionary)
 add_test(FileStream ScratchTests FileStream)
 add_test(Mutex ScratchTests Mutex)
 add_test(Exception ScratchTests Exception)
+
+add_test(String ScratchTests_No_ThreadSafe String)
+add_test(Filename ScratchTests_No_ThreadSafe Filename)
+add_test(StackArray ScratchTests_No_ThreadSafe StackArray)
+add_test(Dictionary ScratchTests_No_ThreadSafe Dictionary)
+add_test(FileStream ScratchTests_No_ThreadSafe FileStream)
+add_test(Mutex ScratchTests_No_ThreadSafe Mutex)
+add_test(Exception ScratchTests_No_ThreadSafe Exception)

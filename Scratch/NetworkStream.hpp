@@ -1,6 +1,6 @@
 /*  libscratch - Multipurpose objective C++ library.
     
-    Copyright (c) 2015 Angelo Geels <spansjh@gmail.com>
+    Copyright (c) 2013 - 2016 Angelo Geels <spansjh@gmail.com>
     
     Permission is hereby granted, free of charge, to any person
     obtaining a copy of this software and associated documentation
@@ -94,7 +94,11 @@ NetworkStream::NetworkStream(void)
 #if WINDOWS
 	if (!_bWinsockInitialized) {
 		if (WSAStartup(MAKEWORD(2, 2), ns_pWSAData) != 0) {
+#ifdef SCRATCH_NO_EXCEPTIONS
+			return;
+#else
 			throw "Couldn't initialize winsock";
+#endif
 		}
 		_bWinsockInitialized = TRUE;
 	}
@@ -119,17 +123,27 @@ NetworkStream::~NetworkStream(void)
 
 ULONG NetworkStream::Size()
 {
+#ifdef SCRATCH_NO_EXCEPTIONS
+	return 0;
+#else
 	throw "Function not supported in Network Stream";
+#endif
 }
 
 ULONG NetworkStream::Location()
 {
+#ifdef SCRATCH_NO_EXCEPTIONS
+	return 0;
+#else
 	throw "Function not supported in Network Stream";
+#endif
 }
 
 void NetworkStream::Seek(ULONG ulPos, INDEX iOrigin)
 {
+#ifndef SCRATCH_NO_EXCEPTIONS
 	throw "Function not supported in Network Stream";
+#endif
 }
 
 BOOL NetworkStream::AtEOF()

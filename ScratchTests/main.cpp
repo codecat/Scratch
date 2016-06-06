@@ -346,6 +346,7 @@ MAIN
     }
   }
 
+#ifndef SCRATCH_NO_EXCEPTIONS
   TESTS("Exception")
   {
     try {
@@ -354,6 +355,7 @@ MAIN
       TEST(ex.Message == "123");
     }
   }
+#endif
 
   printf("\n");
   printf("      OK: %d\n", g_iTestOK);

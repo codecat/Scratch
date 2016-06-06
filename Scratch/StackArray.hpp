@@ -1,6 +1,6 @@
 /*  libscratch - Multipurpose objective C++ library.
     
-    Copyright (c) 2015 Angelo Geels <spansjh@gmail.com>
+    Copyright (c) 2013 - 2016 Angelo Geels <spansjh@gmail.com>
     
     Permission is hereby granted, free of charge, to any person
     obtaining a copy of this software and associated documentation
@@ -31,7 +31,9 @@
 #include <cstring>
 #endif
 
+#ifndef SCRATCH_NO_THREADSAFE
 #include "Mutex.hpp"
+#endif
 
 SCRATCH_NAMESPACE_BEGIN;
 
@@ -43,7 +45,9 @@ public:
   INDEX sa_ctSlots;
   INDEX sa_ctUsed;
   BOOL sa_bOnlyPop;
+#ifndef SCRATCH_NO_THREADSAFE
   Mutex sa_mutex;
+#endif
 
 public:
 	StackArray(void);
@@ -173,7 +177,9 @@ void StackArray<Type>::AllocateSlots(INDEX ctSlots)
 template<class Type>
 Type& StackArray<Type>::PushBegin(void)
 {
+#ifndef SCRATCH_NO_THREADSAFE
 	MutexWait wait(sa_mutex);
+#endif
 
 	// PushBegin() in combination with sa_bOnlyPop will cause memory leaking if not manually Clear()'d
 	ASSERT(!sa_bOnlyPop);
@@ -206,7 +212,9 @@ Type& StackArray<Type>::PushBegin(void)
 template<class Type>
 Type& StackArray<Type>::Push(void)
 {
+#ifndef SCRATCH_NO_THREADSAFE
 	MutexWait wait(sa_mutex);
+#endif
 
 	// Push() in combination with sa_bOnlyPop will cause memory leaking if not manually Clear()'d
 	ASSERT(!sa_bOnlyPop);
@@ -234,7 +242,9 @@ Type& StackArray<Type>::Push(void)
 template<class Type>
 void StackArray<Type>::Push(Type* pObj)
 {
+#ifndef SCRATCH_NO_THREADSAFE
 	MutexWait wait(sa_mutex);
+#endif
 
 	// if we need more slots
 	if (sa_ctUsed >= sa_ctSlots) {
@@ -253,7 +263,9 @@ void StackArray<Type>::Push(Type* pObj)
 template<class Type>
 Type* StackArray<Type>::Pop(void)
 {
+#ifndef SCRATCH_NO_THREADSAFE
 	MutexWait wait(sa_mutex);
+#endif
 
 	ASSERT(sa_ctUsed > 0);
 
@@ -274,7 +286,9 @@ Type* StackArray<Type>::Pop(void)
 template<class Type>
 Type* StackArray<Type>::PopAt(INDEX iIndex)
 {
+#ifndef SCRATCH_NO_THREADSAFE
 	MutexWait wait(sa_mutex);
+#endif
 
 	ASSERT(iIndex < sa_ctUsed);
 
@@ -301,7 +315,9 @@ Type* StackArray<Type>::PopAt(INDEX iIndex)
 template<class Type>
 void StackArray<Type>::PopAll(void)
 {
+#ifndef SCRATCH_NO_THREADSAFE
 	MutexWait wait(sa_mutex);
+#endif
 
 	// for every object
 	for (INDEX i = 0; i < sa_ctUsed; i++) {
@@ -317,7 +333,9 @@ void StackArray<Type>::PopAll(void)
 template<class Type>
 void StackArray<Type>::Clear(void)
 {
+#ifndef SCRATCH_NO_THREADSAFE
 	MutexWait wait(sa_mutex);
+#endif
 
 	// for every object
 	for (INDEX i = 0; i < sa_ctUsed; i++) {
@@ -335,7 +353,9 @@ void StackArray<Type>::Clear(void)
 template<class Type>
 INDEX StackArray<Type>::Count(void)
 {
+#ifndef SCRATCH_NO_THREADSAFE
 	MutexWait wait(sa_mutex);
+#endif
 	return sa_ctUsed;
 }
 
@@ -343,7 +363,9 @@ INDEX StackArray<Type>::Count(void)
 template<class Type>
 INDEX StackArray<Type>::Find(const Type &obj)
 {
+#ifndef SCRATCH_NO_THREADSAFE
 	MutexWait wait(sa_mutex);
+#endif
 
 	// for every object
 	for (INDEX i = 0; i < sa_ctUsed; i++) {
@@ -360,7 +382,9 @@ INDEX StackArray<Type>::Find(const Type &obj)
 template<class Type>
 INDEX StackArray<Type>::FindPointer(const Type* pObj)
 {
+#ifndef SCRATCH_NO_THREADSAFE
 	MutexWait wait(sa_mutex);
+#endif
 
 	// for every object
 	for (INDEX i = 0; i < sa_ctUsed; i++) {
@@ -378,7 +402,9 @@ template<class Type>
 template<typename Func>
 INDEX StackArray<Type>::FindAny(Func f)
 {
+#ifndef SCRATCH_NO_THREADSAFE
 	MutexWait wait(sa_mutex);
+#endif
 
 	// for every object
 	for (INDEX i = 0; i < sa_ctUsed; i++) {
@@ -415,7 +441,9 @@ BOOL StackArray<Type>::ContainsAny(Func f)
 template<class Type>
 Type& StackArray<Type>::operator[](INDEX iIndex)
 {
+#ifndef SCRATCH_NO_THREADSAFE
 	MutexWait wait(sa_mutex);
+#endif
 	ASSERT(iIndex >= 0 && iIndex < sa_ctUsed);
 	return *sa_pItems[iIndex];
 }

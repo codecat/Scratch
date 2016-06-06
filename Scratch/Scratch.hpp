@@ -1,6 +1,6 @@
 /*  libscratch - Multipurpose objective C++ library.
     
-    Copyright (c) 2015 Angelo Geels <spansjh@gmail.com>
+    Copyright (c) 2013 - 2016 Angelo Geels <spansjh@gmail.com>
     
     Permission is hereby granted, free of charge, to any person
     obtaining a copy of this software and associated documentation
@@ -23,6 +23,24 @@
     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
     OTHER DEALINGS IN THE SOFTWARE.
 */
+
+/* Basic usage:
+ *   Include Scratch.hpp in at least 1 implementation file while SCRATCH_IMPL
+ *   is defined. For example:
+ *
+ *   #define SCRATCH_IMPL
+ *   #include <Scratch.hpp>
+ *   using namespace Scratch;
+ *
+ * Other options:
+ *   There are a few specific precompiler definitions you can use during
+ *   implementation compilation (SCRATCH_IMPL) that modify the behavior of
+ *   the library.
+ *
+ *   - SCRATCH_NO_THREADSAFE: Don't enable mutex locking in classes.
+ *   - SCRATCH_NO_EXCEPTIONS: Don't throw any exceptions, silently fail instead.
+ *   - SCRATCH_NO_ASSERT: Don't define a custom ASSERT().
+ */
 
 #include "Common.h"
 
@@ -142,4 +160,6 @@
  * Basic usage:
  *   ASSERT(iNumber == 10);
  */
+#ifndef SCRATCH_NO_ASSERT
 #include "Assert.hpp"
+#endif
