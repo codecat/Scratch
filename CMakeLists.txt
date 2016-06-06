@@ -44,7 +44,9 @@ add_executable(ScratchTests ${presrc_tests}/main.cpp)
 add_executable(ScratchTests_No_ThreadSafe ${presrc_tests}/main_no_threadsafe.cpp)
 
 if(NOT WIN32)
-	target_link_libraries(ScratchTests stdc++)
+	find_package(Threads)
+	target_link_libraries(ScratchTests ${CMAKE_THREAD_LIBS_INIT} stdc++)
+	target_link_libraries(ScratchTests_No_ThreadSafe ${CMAKE_THREAD_LIBS_INIT} stdc++)
 endif()
 
 include_directories(Scratch)
