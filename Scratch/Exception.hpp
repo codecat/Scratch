@@ -24,44 +24,67 @@
     OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef SCRATCH_CCONTAINER_H_INCLUDED
-#define SCRATCH_CCONTAINER_H_INCLUDED
+#pragma once
+
+#ifdef SCRATCH_IMPL
+
+#include <cstdio> // for vsprintf
+#include <cstdarg> // for va_list
+
+#endif
 
 #include "Common.h"
+#include "String.hpp"
 
 SCRATCH_NAMESPACE_BEGIN;
 
-template<class Type>
-class SCRATCH_EXPORT CContainer
+class SCRATCH_EXPORT Exception
 {
 public:
-  Type** con_pItems;
-  INDEX con_ctSlots;
-  INDEX con_ctUsed;
+  String Message;
 
 public:
-  CContainer();
-  ~CContainer();
-
-  /// Add an item to the container
-  void Add(Type* pItem);
-
-  /// Find the index of the given pointer
-  INDEX Find(Type* pItem);
-
-  /// Remove a pointer from the container
-  void Remove(Type* pItem);
-  /// Remove a pointer from the container by index
-  void Remove(INDEX iIndex);
-
-  Type& operator[](INDEX iIndex);
-
-private:
-  void AllocateSlots(INDEX ctSlots);
+	Exception();
+	Exception(const char* format, ...);
+	virtual ~Exception();
 };
 
+#ifdef SCRATCH_IMPL
+
+Exception::Exception()
+{
+}
+
+Exception::Exception(const char* format, ...)
+{
+	int iSize = 256;
+	char* szBuffer = new char[iSize];
+
+	// Get the args list and do a vsprintf to get the right format.
+	va_list vL;
+	va_start(vL, format);
+
+	// Make sure we don't overflow the buffer by checking against result length
+	int iPrintSize = vsnprintf(szBuffer, iSize, format, vL);
+	if (iSize <= iPrintSize) {
+		// Fail delete buffer and try again
+		delete[] szBuffer;
+		szBuffer = new char[iPrintSize + 1]; // +1 for \0
+		vsnprintf(szBuffer, iPrintSize + 1, format, vL);
+	}
+	va_end(vL);
+
+	// Copy the just-created buffer to the main buffer
+	Message = szBuffer;
+
+	// Clean up
+	delete[] szBuffer;
+}
+
+Exception::~Exception()
+{
+}
+
+#endif
+
 SCRATCH_NAMESPACE_END;
-
-#include "CContainer.cpp"
-
-#endif // include once check

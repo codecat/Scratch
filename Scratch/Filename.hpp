@@ -24,10 +24,15 @@
     OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef SCRATCH_CFILENAME_H_INCLUDED
-#define SCRATCH_CFILENAME_H_INCLUDED
+#pragma once
 
-#include "CString.h"
+#ifdef SCRATCH_IMPL
+#if WINDOWS
+#include <ShlObj.h>
+#endif
+#endif
+
+#include "String.hpp"
 
 SCRATCH_NAMESPACE_BEGIN;
 
@@ -46,6 +51,67 @@ public:
   void FromHome(const String &strPath);
 };
 
-SCRATCH_NAMESPACE_END;
+#ifdef SCRATCH_IMPL
+
+Filename::Filename()
+{
+	str_iInstances++;
+	// Create a new empty buffer
+	this->str_szBuffer = String::str_szEmpty;
+}
+
+Filename::Filename(const Filename &copy)
+{
+	str_iInstances++;
+	// Create a new buffer and copy data into it.
+	this->str_szBuffer = String::str_szEmpty;
+	this->CopyToBuffer(copy);
+}
+
+Filename::Filename(const char* szStr)
+{
+	str_iInstances++;
+	// Create a new buffer and copy data into it.
+	this->str_szBuffer = String::str_szEmpty;
+	this->CopyToBuffer(szStr);
+}
+
+Filename::Filename(const String &str)
+{
+	str_iInstances++;
+	// Create a new buffer and copy data into it.
+	this->str_szBuffer = String::str_szEmpty;
+	this->CopyToBuffer(str.str_szBuffer);
+}
+
+String Filename::Extension() const
+{
+	return String(strrchr(str_szBuffer, '.') + 1);
+}
+
+String Filename::Path() const
+{
+	return String(str_szBuffer, 0, strrchr(str_szBuffer, '/') - str_szBuffer);
+}
+
+String Filename::Name() const
+{
+	return String(strrchr(str_szBuffer, '/') + 1);
+}
+
+void Filename::FromHome(const String &strPath)
+{
+#if WINDOWS
+	char szPath[MAX_PATH];
+	if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, szPath))) {
+		this->CopyToBuffer(szPath);
+		this->AppendToBuffer("\\" + strPath);
+	}
+#else
+	this->CopyToBuffer("~/" + strPath);
+#endif
+}
 
 #endif
+
+SCRATCH_NAMESPACE_END;

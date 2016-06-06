@@ -13,7 +13,8 @@
 #define TEST_PRIVATE(expr)
 #endif
 
-#include <Scratch.h>
+#define SCRATCH_IMPL
+#include <Scratch.hpp>
 using namespace Scratch;
 
 static int g_iTestNumber = 1;

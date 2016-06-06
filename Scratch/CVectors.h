@@ -24,8 +24,7 @@
     OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef SCRATCH_CVECTORS_H_INCLUDED
-#define SCRATCH_CVECTORS_H_INCLUDED
+#pragma once
 
 #include "Common.h"
 
@@ -70,6 +69,173 @@ public:
   Vector3f& operator /=(const FLOAT f);
 };
 
-SCRATCH_NAMESPACE_END;
+#ifdef SCRATCH_IMPL
+
+Vector3f::Vector3f(void)
+{
+	x = y = z = 0.0f;
+}
+
+Vector3f::Vector3f(FLOAT f)
+{
+	x = y = z = f;
+}
+
+Vector3f::Vector3f(FLOAT fX, FLOAT fY, FLOAT fZ)
+{
+	x = fX;
+	y = fY;
+	z = fZ;
+}
+
+Vector3f::~Vector3f(void)
+{
+}
+
+void Vector3f::ClampX(const FLOAT min, const FLOAT max)
+{
+	if (x < min) {
+		x = min;
+	} else if (x > max) {
+		x = max;
+	}
+}
+
+void Vector3f::ClampY(const FLOAT min, const FLOAT max)
+{
+	if (y < min) {
+		y = min;
+	} else if (y > max) {
+		y = max;
+	}
+}
+
+void Vector3f::ClampZ(const FLOAT min, const FLOAT max)
+{
+	if (z < min) {
+		z = min;
+	} else if (z > max) {
+		z = max;
+	}
+}
+
+FLOAT Vector3f::Angle(const Vector3f &vOrigin)
+{
+	return atan2(y - vOrigin.y, x - vOrigin.x);
+}
+
+FLOAT Vector3f::Length(void)
+{
+	return sqrt(x*x + y*y + z*z);
+}
+
+FLOAT Vector3f::Dot(const Vector3f &v2)
+{
+	return x*v2.x + y*v2.y + z*v2.z;
+}
+
+void Vector3f::Normalize(void)
+{
+	FLOAT fLength = Length();
+	x /= fLength;
+	y /= fLength;
+	z /= fLength;
+}
+
+Vector3f Vector3f::operator +(const Vector3f &v)
+{
+	return Vector3f(x + v.x, y + v.y, z + v.z);
+}
+
+Vector3f Vector3f::operator -(const Vector3f &v)
+{
+	return Vector3f(x - v.x, y - v.y, z - v.z);
+}
+
+Vector3f Vector3f::operator *(const Vector3f &v)
+{
+	return Vector3f(x*v.x, y*v.y, z*v.z);
+}
+
+Vector3f Vector3f::operator *(const FLOAT f)
+{
+	return Vector3f(x*f, y*f, z*f);
+}
+
+Vector3f Vector3f::operator /(const Vector3f &v)
+{
+	return Vector3f(x / v.x, y / v.y, z / v.z);
+}
+
+Vector3f Vector3f::operator /(const FLOAT f)
+{
+	return Vector3f(x / f, y / f, z / f);
+}
+
+BOOL Vector3f::operator ==(const Vector3f &v)
+{
+	return x == v.x && y == v.y && z == v.z;
+}
+
+BOOL Vector3f::operator !=(const Vector3f &v)
+{
+	return !operator==(v);
+}
+
+Vector3f& Vector3f::operator +=(const Vector3f &v)
+{
+	x += v.x;
+	y += v.y;
+	z += v.z;
+
+	return *this;
+}
+
+Vector3f& Vector3f::operator -=(const Vector3f &v)
+{
+	x -= v.x;
+	y -= v.y;
+	z -= v.z;
+
+	return *this;
+}
+
+Vector3f& Vector3f::operator *=(const Vector3f &v)
+{
+	x *= v.x;
+	y *= v.y;
+	z *= v.z;
+
+	return *this;
+}
+
+Vector3f& Vector3f::operator *=(const FLOAT f)
+{
+	x *= f;
+	y *= f;
+	z *= f;
+
+	return *this;
+}
+
+Vector3f& Vector3f::operator /=(const Vector3f &v)
+{
+	x /= v.x;
+	y /= v.y;
+	z /= v.z;
+
+	return *this;
+}
+
+Vector3f& Vector3f::operator /=(const FLOAT f)
+{
+	x /= f;
+	y /= f;
+	z /= f;
+
+	return *this;
+}
 
 #endif
+
+SCRATCH_NAMESPACE_END;

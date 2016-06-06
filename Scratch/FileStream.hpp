@@ -24,100 +24,135 @@
     OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#include "CFileStream.h"
+#pragma once
+
+#include "Common.h"
+#include "Stream.hpp"
+#include "String.hpp"
 
 SCRATCH_NAMESPACE_BEGIN;
 
+class SCRATCH_EXPORT FileStream : public Stream
+{
+public:
+  String fs_strFileName;
+  FILE* fs_pfh;
+
+public:
+	FileStream(void);
+	~FileStream(void);
+
+  ULONG Size();
+  ULONG Location();
+  void Seek(ULONG ulPos, INDEX iOrigin);
+  BOOL AtEOF();
+
+  BOOL Open(const char* szFileName, const char* szMode);
+
+  void OpenStdout();
+  void OpenStdin();
+  void OpenStderr();
+
+  void Close();
+  void Write(const void* p, ULONG iLen);
+  int Read(void* pDest, ULONG iLen);
+  const void ReadToEnd(void* pDest);
+};
+
+#ifdef SCRATCH_IMPL
+
 FileStream::FileStream(void)
 {
-  fs_pfh = NULL;
+	fs_pfh = NULL;
 }
 
 FileStream::~FileStream(void)
 {
-  Close();
+	Close();
 }
 
 ULONG FileStream::Size()
 {
-  ULONG ulPos = Location();
-  Seek(0, SEEK_END);
-  ULONG ulSize = Location();
-  Seek(ulPos, SEEK_SET);
-  return ulSize;
+	ULONG ulPos = Location();
+	Seek(0, SEEK_END);
+	ULONG ulSize = Location();
+	Seek(ulPos, SEEK_SET);
+	return ulSize;
 }
 
 ULONG FileStream::Location()
 {
-  return ftell(fs_pfh);
+	return ftell(fs_pfh);
 }
 
 void FileStream::Seek(ULONG ulPos, INDEX iOrigin)
 {
-  fseek(fs_pfh, ulPos, iOrigin);
+	fseek(fs_pfh, ulPos, iOrigin);
 }
 
 BOOL FileStream::AtEOF()
 {
-  return feof(fs_pfh) > 0;
+	return feof(fs_pfh) > 0;
 }
 
 BOOL FileStream::Open(const char* szFileName, const char* szMode)
 {
-  // must not already have a handle open
-  ASSERT(fs_pfh == NULL);
+	// must not already have a handle open
+	ASSERT(fs_pfh == NULL);
 
-  // open file
-  FILE* pfh = fopen(szFileName, szMode);
+	// open file
+	FILE* pfh = fopen(szFileName, szMode);
 
-  // it might not exist
-  if(pfh == NULL) {
-    return FALSE;
-  }
+	// it might not exist
+	if (pfh == NULL) {
+		return FALSE;
+	}
 
-  // remember info
-  fs_strFileName = szFileName;
-  fs_pfh = pfh;
+	// remember info
+	fs_strFileName = szFileName;
+	fs_pfh = pfh;
 
-  // success
-  return TRUE;
+	// success
+	return TRUE;
 }
 
 void FileStream::OpenStdout()
 {
-  fs_strFileName = "stdout";
-  fs_pfh = stdout;
+	fs_strFileName = "stdout";
+	fs_pfh = stdout;
 }
 
 void FileStream::OpenStdin()
 {
-  fs_strFileName = "stdin";
-  fs_pfh = stdin;
+	fs_strFileName = "stdin";
+	fs_pfh = stdin;
 }
 
 void FileStream::OpenStderr()
 {
-  fs_strFileName = "stderr";
-  fs_pfh = stderr;
+	fs_strFileName = "stderr";
+	fs_pfh = stderr;
 }
 
 void FileStream::Close(void)
 {
-  // close the file handle
-  if(fs_pfh != NULL) {
-    fclose(fs_pfh);
-    fs_pfh = NULL;
-  }
+	// close the file handle
+	if (fs_pfh != NULL) {
+		fclose(fs_pfh);
+		fs_pfh = NULL;
+	}
 }
 
 void FileStream::Write(const void* p, ULONG iLen)
 {
-  fwrite(p, 1, iLen, fs_pfh);
+	fwrite(p, 1, iLen, fs_pfh);
 }
 
 int FileStream::Read(void* pDest, ULONG iLen)
 {
-  return fread(pDest, 1, iLen, fs_pfh);
+	return fread(pDest, 1, iLen, fs_pfh);
 }
+
+#endif
 
 SCRATCH_NAMESPACE_END;

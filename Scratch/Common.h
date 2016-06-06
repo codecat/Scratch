@@ -24,36 +24,31 @@
     OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef SCRATCH_COMMON_H_INCLUDED
-#define SCRATCH_COMMON_H_INCLUDED
+#pragma once
 
 #include <cstdio>
 #include <cmath>
 #include <cassert>
 
 #ifdef _MSC_VER
-#ifndef WIN32_LEAN_AND_MEAN
-  #define WIN32_LEAN_AND_MEAN
-#endif
-#include <Windows.h>
-#define WINDOWS 1
+	#include <WinSock2.h>
+	#ifndef WIN32_LEAN_AND_MEAN
+		#define WIN32_LEAN_AND_MEAN
+	#endif
+	#include <Windows.h>
+	#define WINDOWS 1
 #else
-#define WINDOWS 0
+	#define WINDOWS 0
 #endif
 
 #define SCRATCH_NAMESPACE_BEGIN namespace Scratch {
 #define SCRATCH_NAMESPACE_END }
 
-#if WINDOWS
-#define SCRATCH_EXPORT __declspec(dllexport)
-#elif defined(_GCC)
-#define SCRATCH_EXPORT __attribute__((visibility("default"))
-#else
+// Legacy define - does nothing
 #define SCRATCH_EXPORT
-#endif
 
 #ifdef NULL
-#undef NULL
+	#undef NULL
 #endif
 #define NULL 0
 
@@ -79,44 +74,6 @@ template<class T> inline void Swap(T &v1, T &v2) { T t = v1; v1 = v2; v2 = t; }
 template<class T> inline T Abs(const T &v) { return v < 0 ? -v : v; }
 #endif
 
-//#ifdef SCRATCH_ALIAS_LEGACY_PREFIX
-#define CString String
-#define CFilename Filename
-#define CStackArray StackArray
-#define CDictionary Dictionary
-#define CException Exception
-#define CStream Stream
-#define CMemoryStream MemoryStream
-#define CFileStream FileStream
-#define CNetworkStream NetworkStream
-//#endif
-
 #ifndef ASSERT
-
-#ifdef _MSC_VER
-SCRATCH_NAMESPACE_BEGIN;
-inline BOOL SCRATCH_EXPORT _scratch_assert(const char* expr, const char* filename, unsigned lineno);
-SCRATCH_NAMESPACE_END;
-// Windows
-#define ASSERT(expr) {             \
-  if(!(expr)) {                    \
-    static UBYTE bWasHere = 0;     \
-    if(!bWasHere) {                \
-      if(Scratch::_scratch_assert( \
-        #expr,                     \
-        __FILE__,                  \
-        __LINE__)) {               \
-        __asm { int 3 }            \
-      }                            \
-      bWasHere = 1;                \
-    }                              \
-  }                                \
-}
-#else
-// Other sensible operating systems
-#define ASSERT(expr) assert(expr)
+#define ASSERT assert
 #endif
-
-#endif
-
-#endif // include once check

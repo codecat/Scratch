@@ -1,6 +1,0 @@
-# Defines the following variables:
-#  SCRATCH_INCLUDE_DIRS
-#  SCRATCH_LIBRARY
-
-set(SCRATCH_INCLUDE_DIRS ${SELF_DIR})
-set(SCRATCH_LIBRARY "${CMAKE_SOURCE_DIR}/lib")

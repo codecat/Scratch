@@ -39,7 +39,7 @@
  *   ASSERT(astrParse[1] == "rat");
  *   ASSERT(astrParse[2] == "h");
  */
-#include "CString.h"
+#include "String.hpp"
 
 /* Filename: high level string management with filename functions
  * --------------------------------------------------------------
@@ -52,7 +52,7 @@
  *   ASSERT(strPath == "foo/bar/");
  *   ASSERT(strFilename == "test.c");
  */
-#include "CFilename.h"
+#include "Filename.hpp"
 
 /* StackArray: high level array management
  * ---------------------------------------
@@ -65,7 +65,7 @@
  *   ASSERT(aiTest.Pop() == 123);
  *   ASSERT(aiTest.Count() == 2);
  */
-#include "CStackArray.h"
+#include "StackArray.hpp"
 
 /* Dictionary: high level table management
  * ---------------------------------------
@@ -74,7 +74,7 @@
  *   dstrTest.Add("Name", "libscratch");
  *   dstrTest["Author"] = "Angelo Geels";
  */
-#include "CDictionary.h"
+#include "Dictionary.hpp"
 
 /* FileStream: high level file stream management
  * ---------------------------------------------
@@ -86,7 +86,7 @@
  *   fs << iTest * 2;
  *   fs.Close();
  */
-#include "CFileStream.h"
+#include "FileStream.hpp"
 
 /* MemoryStream: high level memory stream management
  * -------------------------------------------------
@@ -98,7 +98,7 @@
  *   fs << ms.Size();
  *   fs << ms;
  */
-#include "CMemoryStream.h"
+#include "MemoryStream.hpp"
 
 /* NetworkStream: high level network connections management
  * ---------------------------------------------------------
@@ -110,7 +110,7 @@
  *   ns >> iResult;
  *   ns.Close();
  */
-#include "CNetworkStream.h"
+#include "NetworkStream.hpp"
 
 /* Mutex: high level mutex management
  * ----------------------------------
@@ -124,7 +124,7 @@
  *   MutexWait(mutex);
  *   // do some work
  */
-#include "CMutex.h"
+#include "Mutex.hpp"
 
 /* Exception: high level exception management
  * ------------------------------------------
@@ -135,4 +135,11 @@
  *     // do something with ex.Message
  *   }
  */
-#include "CException.h"
+#include "Exception.hpp"
+
+/* Assert: nicer assertions
+ * ------------------------
+ * Basic usage:
+ *   ASSERT(iNumber == 10);
+ */
+#include "Assert.hpp"

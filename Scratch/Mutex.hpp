@@ -24,108 +24,143 @@
     OTHER DEALINGS IN THE SOFTWARE.
 */
 
+#pragma once
+
+#ifdef SCRATCH_IMPL
 #ifndef _MSC_VER
 #include <pthread.h>
 #endif
 
 #include <errno.h>
+#endif
 
-#include "CMutex.h"
+#include "Common.h"
 
 SCRATCH_NAMESPACE_BEGIN;
+
+class SCRATCH_EXPORT Mutex
+{
+private:
+  void* m_pMutex;
+  bool m_bIsLocked;
+
+public:
+  Mutex();
+  Mutex(const Mutex &copy); // copy constructor actually does the same as regular constructor.
+  Mutex &operator=(const Mutex &copy);
+  ~Mutex();
+
+  void Lock();
+  bool TryLock();
+  void Unlock();
+};
+
+class SCRATCH_EXPORT MutexWait
+{
+public:
+  Mutex* m_pMutex;
+
+public:
+  MutexWait(const Mutex &mutex);
+  ~MutexWait();
+};
+
+#ifdef SCRATCH_IMPL
 
 Mutex::Mutex()
 {
 #ifndef _MSC_VER
-  m_pMutex = (void*)new pthread_mutex_t;
-  pthread_mutex_init((pthread_mutex_t*)m_pMutex, NULL);
+	m_pMutex = (void*)new pthread_mutex_t;
+	pthread_mutex_init((pthread_mutex_t*)m_pMutex, NULL);
 #else
-  m_pMutex = CreateMutex(0, false, 0);
+	m_pMutex = CreateMutex(0, false, 0);
 #endif
-  m_bIsLocked = false;
+	m_bIsLocked = false;
 }
 
 Mutex::Mutex(const Mutex &copy)
 {
-  operator=(copy);
+	operator=(copy);
 }
 
 Mutex &Mutex::operator=(const Mutex &copy)
 {
-  ASSERT(!copy.m_bIsLocked);
+	ASSERT(!copy.m_bIsLocked);
 #ifndef _MSC_VER
-  m_pMutex = (void*)new pthread_mutex_t;
-  pthread_mutex_init((pthread_mutex_t*)m_pMutex, NULL);
+	m_pMutex = (void*)new pthread_mutex_t;
+	pthread_mutex_init((pthread_mutex_t*)m_pMutex, NULL);
 #else
-  m_pMutex = CreateMutex(0, false, 0);
+	m_pMutex = CreateMutex(0, false, 0);
 #endif
-  m_bIsLocked = false;
-  return *this;
+	m_bIsLocked = false;
+	return *this;
 }
 
 Mutex::~Mutex()
 {
-  ASSERT(!m_bIsLocked);
+	ASSERT(!m_bIsLocked);
 
 #ifndef _MSC_VER
-  pthread_mutex_destroy((pthread_mutex_t*)m_pMutex);
-  delete (pthread_mutex_t*)m_pMutex;
+	pthread_mutex_destroy((pthread_mutex_t*)m_pMutex);
+	delete (pthread_mutex_t*)m_pMutex;
 #else
-  CloseHandle(m_pMutex);
+	CloseHandle(m_pMutex);
 #endif
 }
 
 void Mutex::Lock()
 {
 #ifndef _MSC_VER
-  pthread_mutex_lock((pthread_mutex_t*)m_pMutex);
+	pthread_mutex_lock((pthread_mutex_t*)m_pMutex);
 #else
-  WaitForSingleObject(m_pMutex, INFINITE);
+	WaitForSingleObject(m_pMutex, INFINITE);
 #endif
 
-  m_bIsLocked = true;
+	m_bIsLocked = true;
 }
 
 bool Mutex::TryLock()
 {
-  bool worked;
+	bool worked;
 
 #ifndef _MSC_VER
-  worked = pthread_mutex_trylock((pthread_mutex_t*)m_pMutex) != EBUSY;
+	worked = pthread_mutex_trylock((pthread_mutex_t*)m_pMutex) != EBUSY;
 #else
-  worked = WaitForSingleObject(m_pMutex, 1) == WAIT_OBJECT_0;
-  if (m_bIsLocked) return false;
+	worked = WaitForSingleObject(m_pMutex, 1) == WAIT_OBJECT_0;
+	if (m_bIsLocked) return false;
 #endif
 
-  if (worked) {
-    m_bIsLocked = true;
-  }
+	if (worked) {
+		m_bIsLocked = true;
+	}
 
-  return worked;
+	return worked;
 }
 
 void Mutex::Unlock()
 {
-  ASSERT(m_bIsLocked);
+	ASSERT(m_bIsLocked);
 
 #ifndef _MSC_VER
-  pthread_mutex_unlock((pthread_mutex_t*)m_pMutex);
+	pthread_mutex_unlock((pthread_mutex_t*)m_pMutex);
 #else
-  ReleaseMutex(m_pMutex);
+	ReleaseMutex(m_pMutex);
 #endif
 
-  m_bIsLocked = false;
+	m_bIsLocked = false;
 }
 
 MutexWait::MutexWait(const Mutex &mutex)
 {
-  m_pMutex = &const_cast<Mutex&>(mutex);
-  m_pMutex->Lock();
+	m_pMutex = &const_cast<Mutex&>(mutex);
+	m_pMutex->Lock();
 }
 
 MutexWait::~MutexWait()
 {
-  m_pMutex->Unlock();
+	m_pMutex->Unlock();
 }
+
+#endif
 
 SCRATCH_NAMESPACE_END;
