@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 2.8.7)
 project(Scratch)
 
 if(NOT WIN32)
-	SET(CMAKE_CXX_FLAGS "-std=c++11")
+	SET(CMAKE_CXX_FLAGS "-std=c++0x")
 endif()
 
 set(presrc "Scratch")
