@@ -296,8 +296,8 @@ MAIN
     fsWriter.Open("test.txt", "w");
     fsWriter.WriteLine("foo");
     fsWriter.WriteLine("bar");
-    fsWriter << INDEX(5);
-    fsWriter << FLOAT(2.5f);
+		fsWriter << int32_t(5);
+		fsWriter << float(2.5f);
     fsWriter << String("test");
     fsWriter.Close();
 
@@ -307,8 +307,8 @@ MAIN
     TEST(fsReader.ReadLine() == "foo");
     TEST(fsReader.ReadLine() == "bar");
 
-    INDEX i;
-    FLOAT f;
+		int32_t i;
+		float f;
     String s;
 
     fsReader >> i;

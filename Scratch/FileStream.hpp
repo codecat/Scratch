@@ -39,73 +39,73 @@ public:
   FILE* fs_pfh;
 
 public:
-	FileStream(void);
-	~FileStream(void);
+	FileStream();
+	~FileStream();
 
-  ULONG Size();
-  ULONG Location();
-  void Seek(ULONG ulPos, INDEX iOrigin);
-  BOOL AtEOF();
+	uint32_t Size();
+	uint32_t Location();
+	void Seek(uint32_t ulPos, int32_t iOrigin);
+	bool AtEOF();
 
-  BOOL Open(const char* szFileName, const char* szMode);
+	bool Open(const char* szFileName, const char* szMode);
 
   void OpenStdout();
   void OpenStdin();
   void OpenStderr();
 
   void Close();
-  void Write(const void* p, ULONG iLen);
-  int Read(void* pDest, ULONG iLen);
+	void Write(const void* p, uint32_t iLen);
+	int Read(void* pDest, uint32_t iLen);
   const void ReadToEnd(void* pDest);
 };
 
 #ifdef SCRATCH_IMPL
 
-FileStream::FileStream(void)
+FileStream::FileStream()
 {
 	fs_pfh = NULL;
 }
 
-FileStream::~FileStream(void)
+FileStream::~FileStream()
 {
 	Close();
 }
 
-ULONG FileStream::Size()
+uint32_t FileStream::Size()
 {
-	ULONG ulPos = Location();
+	uint32_t ulPos = Location();
 	Seek(0, SEEK_END);
-	ULONG ulSize = Location();
+	uint32_t ulSize = Location();
 	Seek(ulPos, SEEK_SET);
 	return ulSize;
 }
 
-ULONG FileStream::Location()
+uint32_t FileStream::Location()
 {
 	return ftell(fs_pfh);
 }
 
-void FileStream::Seek(ULONG ulPos, INDEX iOrigin)
+void FileStream::Seek(uint32_t ulPos, int32_t iOrigin)
 {
 	fseek(fs_pfh, ulPos, iOrigin);
 }
 
-BOOL FileStream::AtEOF()
+bool FileStream::AtEOF()
 {
 	return feof(fs_pfh) > 0;
 }
 
-BOOL FileStream::Open(const char* szFileName, const char* szMode)
+bool FileStream::Open(const char* szFileName, const char* szMode)
 {
 	// must not already have a handle open
-	ASSERT(fs_pfh == NULL);
+	ASSERT(fs_pfh == nullptr);
 
 	// open file
 	FILE* pfh = fopen(szFileName, szMode);
 
 	// it might not exist
-	if (pfh == NULL) {
-		return FALSE;
+	if (pfh == nullptr) {
+		return false;
 	}
 
 	// remember info
@@ -113,7 +113,7 @@ BOOL FileStream::Open(const char* szFileName, const char* szMode)
 	fs_pfh = pfh;
 
 	// success
-	return TRUE;
+	return true;
 }
 
 void FileStream::OpenStdout()
@@ -134,21 +134,21 @@ void FileStream::OpenStderr()
 	fs_pfh = stderr;
 }
 
-void FileStream::Close(void)
+void FileStream::Close()
 {
 	// close the file handle
-	if (fs_pfh != NULL) {
+	if (fs_pfh != nullptr) {
 		fclose(fs_pfh);
-		fs_pfh = NULL;
+		fs_pfh = nullptr;
 	}
 }
 
-void FileStream::Write(const void* p, ULONG iLen)
+void FileStream::Write(const void* p, uint32_t iLen)
 {
 	fwrite(p, 1, iLen, fs_pfh);
 }
 
-int FileStream::Read(void* pDest, ULONG iLen)
+int FileStream::Read(void* pDest, uint32_t iLen)
 {
 	return fread(pDest, 1, iLen, fs_pfh);
 }

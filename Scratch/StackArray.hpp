@@ -42,58 +42,58 @@ class SCRATCH_EXPORT StackArray
 {
 public:
   Type** sa_pItems;
-  INDEX sa_ctSlots;
-  INDEX sa_ctUsed;
-  BOOL sa_bOnlyPop;
+	int32_t sa_ctSlots;
+	int32_t sa_ctUsed;
+	bool sa_bOnlyPop;
 #ifndef SCRATCH_NO_THREADSAFE
   Mutex sa_mutex;
 #endif
 
 public:
-	StackArray(void);
+	StackArray();
 	StackArray(const StackArray<Type> &copy); // Note: If this ever gets called, you're most likely writing bad code.
 	StackArray<Type> &operator=(const StackArray<Type> &copy);
-	~StackArray(void);
+	~StackArray();
 
   /// Push to the beginning of the stack, return a reference to the newly made object
-  Type& PushBegin(void);
+	Type& PushBegin();
   /// Push to the stack, return a reference to the newly made object
-  Type& Push(void);
+	Type& Push();
   /// Push a pointer to the stack
   void Push(Type* pObj);
   /// Pop top object from the stack
-  Type* Pop(void);
+	Type* Pop();
   /// Pop a certain index from the stack
-  Type* PopAt(INDEX iIndex);
+	Type* PopAt(int32_t iIndex);
 
   /// Pop all objects from the stack
-  void PopAll(void);
+	void PopAll();
   /// Clear all objects in the stack
-  void Clear(void);
+	void Clear();
 
   /// Return how many objects there currently are in the stack
-  INDEX Count(void);
+	int32_t Count();
 
   /// Find the index of the given object in the stack
-  INDEX Find(const Type &obj);
+	int32_t Find(const Type &obj);
   /// Find the index of the given pointer in the stack
-  INDEX FindPointer(const Type* pObj);
+	int32_t FindPointer(const Type* pObj);
   /// Find the index of the given condition in the stack
   template<typename Func>
-  INDEX FindAny(Func f);
+	int32_t FindAny(Func f);
 
   /// Returns whether the given object is currently in the stack
-  BOOL Contains(const Type &obj);
+	bool Contains(const Type &obj);
   /// Returns whether the given pointer is currently in the stack
-  BOOL ContainsPointer(const Type* pObj);
+	bool ContainsPointer(const Type* pObj);
   /// Returns whether the given condition is currently in the stack
   template<typename Func>
-  BOOL ContainsAny(Func f);
+	bool ContainsAny(Func f);
 
-  Type& operator[](INDEX iIndex);
+	Type& operator[](int32_t iIndex);
 
 private:
-  void AllocateSlots(INDEX ctSlots);
+	void AllocateSlots(int32_t ctSlots);
 };
 
 #ifdef SCRATCH_IMPL
@@ -101,10 +101,10 @@ private:
 template<class Type>
 StackArray<Type>::StackArray()
 {
-	sa_pItems = NULL;
+	sa_pItems = nullptr;
 	sa_ctSlots = 0;
 	sa_ctUsed = 0;
-	sa_bOnlyPop = FALSE;
+	sa_bOnlyPop = false;
 	AllocateSlots(256);
 }
 
@@ -117,7 +117,7 @@ StackArray<Type>::StackArray(const StackArray<Type> &copy)
 template<class Type>
 StackArray<Type> &StackArray<Type>::operator=(const StackArray<Type> &copy)
 {
-	sa_pItems = NULL;
+	sa_pItems = nullptr;
 	sa_ctSlots = 0;
 	sa_ctUsed = 0;
 	sa_bOnlyPop = copy.sa_bOnlyPop;
@@ -128,7 +128,7 @@ StackArray<Type> &StackArray<Type>::operator=(const StackArray<Type> &copy)
 	sa_ctUsed = copy.sa_ctUsed;
 
 	// copy data to other slots
-	for (INDEX i = 0; i < sa_ctUsed; i++) {
+	for (int32_t i = 0; i < sa_ctUsed; i++) {
 		// allocate memory for it
 		sa_pItems[i] = new Type;
 
@@ -155,7 +155,7 @@ StackArray<Type>::~StackArray()
 }
 
 template<class Type>
-void StackArray<Type>::AllocateSlots(INDEX ctSlots)
+void StackArray<Type>::AllocateSlots(int32_t ctSlots)
 {
 	// allocate some memory
 	sa_ctSlots += ctSlots;
@@ -175,7 +175,7 @@ void StackArray<Type>::AllocateSlots(INDEX ctSlots)
 
 /// Push to the beginning of the stack, return a reference to the newly made object
 template<class Type>
-Type& StackArray<Type>::PushBegin(void)
+Type& StackArray<Type>::PushBegin()
 {
 #ifndef SCRATCH_NO_THREADSAFE
 	MutexWait wait(sa_mutex);
@@ -210,7 +210,7 @@ Type& StackArray<Type>::PushBegin(void)
 
 /// Push to the stack, return a reference to the newly made object
 template<class Type>
-Type& StackArray<Type>::Push(void)
+Type& StackArray<Type>::Push()
 {
 #ifndef SCRATCH_NO_THREADSAFE
 	MutexWait wait(sa_mutex);
@@ -261,7 +261,7 @@ void StackArray<Type>::Push(Type* pObj)
 
 /// Pop top object from the stack
 template<class Type>
-Type* StackArray<Type>::Pop(void)
+Type* StackArray<Type>::Pop()
 {
 #ifndef SCRATCH_NO_THREADSAFE
 	MutexWait wait(sa_mutex);
@@ -284,7 +284,7 @@ Type* StackArray<Type>::Pop(void)
 
 /// Pop a certain index from the stack
 template<class Type>
-Type* StackArray<Type>::PopAt(INDEX iIndex)
+Type* StackArray<Type>::PopAt(int32_t iIndex)
 {
 #ifndef SCRATCH_NO_THREADSAFE
 	MutexWait wait(sa_mutex);
@@ -299,7 +299,7 @@ Type* StackArray<Type>::PopAt(INDEX iIndex)
 	Type* tObject = sa_pItems[iIndex];
 
 	// move pointers at the right one point to the left
-	for (INDEX i = iIndex; i < sa_ctUsed; i++) {
+	for (int32_t i = iIndex; i < sa_ctUsed; i++) {
 		// set pointer to next one in stack
 		sa_pItems[i] = sa_pItems[i + 1];
 	}
@@ -313,14 +313,14 @@ Type* StackArray<Type>::PopAt(INDEX iIndex)
 
 /// Pop all objects from the stack
 template<class Type>
-void StackArray<Type>::PopAll(void)
+void StackArray<Type>::PopAll()
 {
 #ifndef SCRATCH_NO_THREADSAFE
 	MutexWait wait(sa_mutex);
 #endif
 
 	// for every object
-	for (INDEX i = 0; i < sa_ctUsed; i++) {
+	for (int32_t i = 0; i < sa_ctUsed; i++) {
 		// set remaining pointer to NULL (just to be sure)
 		sa_pItems[i] = NULL;
 	}
@@ -331,14 +331,14 @@ void StackArray<Type>::PopAll(void)
 
 /// Clear all objects in the stack
 template<class Type>
-void StackArray<Type>::Clear(void)
+void StackArray<Type>::Clear()
 {
 #ifndef SCRATCH_NO_THREADSAFE
 	MutexWait wait(sa_mutex);
 #endif
 
 	// for every object
-	for (INDEX i = 0; i < sa_ctUsed; i++) {
+	for (int32_t i = 0; i < sa_ctUsed; i++) {
 		// delete it
 		delete sa_pItems[i];
 		// set remaining pointer to NULL (just to be sure)
@@ -351,7 +351,7 @@ void StackArray<Type>::Clear(void)
 
 /// Return how many objects there currently are in the stack
 template<class Type>
-INDEX StackArray<Type>::Count(void)
+int32_t StackArray<Type>::Count()
 {
 #ifndef SCRATCH_NO_THREADSAFE
 	MutexWait wait(sa_mutex);
@@ -361,14 +361,14 @@ INDEX StackArray<Type>::Count(void)
 
 /// Find the index of the given object in the stack
 template<class Type>
-INDEX StackArray<Type>::Find(const Type &obj)
+int32_t StackArray<Type>::Find(const Type &obj)
 {
 #ifndef SCRATCH_NO_THREADSAFE
 	MutexWait wait(sa_mutex);
 #endif
 
 	// for every object
-	for (INDEX i = 0; i < sa_ctUsed; i++) {
+	for (int32_t i = 0; i < sa_ctUsed; i++) {
 		// test if it's the given one
 		if (obj == *sa_pItems[i]) {
 			return i;
@@ -380,14 +380,14 @@ INDEX StackArray<Type>::Find(const Type &obj)
 
 /// Find the index of the given pointer in the stack
 template<class Type>
-INDEX StackArray<Type>::FindPointer(const Type* pObj)
+int32_t StackArray<Type>::FindPointer(const Type* pObj)
 {
 #ifndef SCRATCH_NO_THREADSAFE
 	MutexWait wait(sa_mutex);
 #endif
 
 	// for every object
-	for (INDEX i = 0; i < sa_ctUsed; i++) {
+	for (int32_t i = 0; i < sa_ctUsed; i++) {
 		// test if it's the given one
 		if (pObj == sa_pItems[i]) {
 			return i;
@@ -400,14 +400,14 @@ INDEX StackArray<Type>::FindPointer(const Type* pObj)
 /// Find the index of the given condition in the stack
 template<class Type>
 template<typename Func>
-INDEX StackArray<Type>::FindAny(Func f)
+int32_t StackArray<Type>::FindAny(Func f)
 {
 #ifndef SCRATCH_NO_THREADSAFE
 	MutexWait wait(sa_mutex);
 #endif
 
 	// for every object
-	for (INDEX i = 0; i < sa_ctUsed; i++) {
+	for (int32_t i = 0; i < sa_ctUsed; i++) {
 		// test with function
 		if (f(*sa_pItems[i])) {
 			return i;
@@ -418,14 +418,14 @@ INDEX StackArray<Type>::FindAny(Func f)
 
 /// Returns whether the given object is currently in the stack
 template<class Type>
-BOOL StackArray<Type>::Contains(const Type &obj)
+bool StackArray<Type>::Contains(const Type &obj)
 {
 	return Find(obj) != -1;
 }
 
 /// Returns whether the given pointer is currently in the stack
 template<class Type>
-BOOL StackArray<Type>::ContainsPointer(const Type* pObj)
+bool StackArray<Type>::ContainsPointer(const Type* pObj)
 {
 	return FindPointer(pObj) != -1;
 }
@@ -433,13 +433,13 @@ BOOL StackArray<Type>::ContainsPointer(const Type* pObj)
 /// Returns whether the given condition exists on any of the objects currently in the stack
 template<class Type>
 template<typename Func>
-BOOL StackArray<Type>::ContainsAny(Func f)
+bool StackArray<Type>::ContainsAny(Func f)
 {
 	return FindAny(f) != -1;
 }
 
 template<class Type>
-Type& StackArray<Type>::operator[](INDEX iIndex)
+Type& StackArray<Type>::operator[](int32_t iIndex)
 {
 #ifndef SCRATCH_NO_THREADSAFE
 	MutexWait wait(sa_mutex);

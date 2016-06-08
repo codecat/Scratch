@@ -67,12 +67,12 @@ private:
   StackArray<DictionaryPair<TKey, TValue>> dic_saPairs;
 
 public:
-  BOOL dic_bAllowDuplicateKeys;
+	bool dic_bAllowDuplicateKeys;
 
 public:
-	Dictionary(void);
+	Dictionary();
 	Dictionary(const Dictionary<TKey, TValue> &copy);
-	~Dictionary(void);
+	~Dictionary();
 
   /// Add to the dictionary
   void Add(const TKey &key, const TValue &value);
@@ -80,43 +80,43 @@ public:
 	DictionaryPair<TKey, TValue> &Push(const TKey &key);
 
   /// Get the index of the given key
-  INDEX IndexByKey(const TKey &key);
+	int32_t IndexByKey(const TKey &key);
   /// Get the index of the given value
-  INDEX IndexByValue(const TValue &value);
+	int32_t IndexByValue(const TValue &value);
 
   /// Does this dictionary have the given key?
-  BOOL HasKey(const TKey &key);
+	bool HasKey(const TKey &key);
   /// Does this dictionary have the given value?
-  BOOL HasValue(const TValue &value);
+	bool HasValue(const TValue &value);
 
   /// Remove a value by its index
-  void RemoveByIndex(const INDEX iIndex);
+	void RemoveByIndex(const int32_t iIndex);
   /// Remove a value from the dictionary by key
   void RemoveByKey(const TKey &key);
   /// Remove a value from the dictionary
   void RemoveByValue(const TValue &value);
 
   /// Pop a value by its index
-	DictionaryPair<TKey, TValue> &PopByIndex(const INDEX iIndex);
+	DictionaryPair<TKey, TValue> &PopByIndex(const int32_t iIndex);
   /// Pop a value from the dictionary by key
 	DictionaryPair<TKey, TValue> &PopByKey(const TKey &key);
   /// Pop a value from the dictionary
 	DictionaryPair<TKey, TValue> &PopByValue(const TValue &value);
 
   /// Clear all items
-  void Clear(void);
+	void Clear();
 
   /// Return how many objects there currently are in the dictionary
-  INDEX Count(void);
+	int32_t Count();
 
   TValue& operator[](const TKey &key);
 
   /// Get a pair from the dictionary using an index
-	DictionaryPair<TKey, TValue> GetPair(const INDEX iIndex);
+	DictionaryPair<TKey, TValue> GetPair(const int32_t iIndex);
   /// Get a key from the dictionary using an index
-  TKey& GetKeyByIndex(const INDEX iIndex);
+	TKey& GetKeyByIndex(const int32_t iIndex);
   /// Get a value from the dictionary using an index
-  TValue& GetValueByIndex(const INDEX iIndex);
+	TValue& GetValueByIndex(const int32_t iIndex);
 };
 
 #ifdef SCRATCH_IMPL
@@ -145,9 +145,9 @@ DictionaryPair<TKey, TValue>::~DictionaryPair()
 }
 
 template<class TKey, class TValue>
-Dictionary<TKey, TValue>::Dictionary(void)
+Dictionary<TKey, TValue>::Dictionary()
 {
-	dic_bAllowDuplicateKeys = FALSE;
+	dic_bAllowDuplicateKeys = false;
 }
 
 template<class TKey, class TValue>
@@ -158,7 +158,7 @@ Dictionary<TKey, TValue>::Dictionary(const Dictionary<TKey, TValue> &copy)
 }
 
 template<class TKey, class TValue>
-Dictionary<TKey, TValue>::~Dictionary(void)
+Dictionary<TKey, TValue>::~Dictionary()
 {
 	Clear();
 }
@@ -169,7 +169,7 @@ void Dictionary<TKey, TValue>::Add(const TKey &key, const TValue &value)
 {
 	// if the key has already been added
 	if (!dic_bAllowDuplicateKeys && HasKey(key)) {
-		ASSERT(FALSE);
+		ASSERT(false);
 		return;
 	}
 
@@ -188,12 +188,12 @@ DictionaryPair<TKey, TValue> &Dictionary<TKey, TValue>::Push(const TKey &key)
 
 /// Get the index of the given key
 template<class TKey, class TValue>
-INDEX Dictionary<TKey, TValue>::IndexByKey(const TKey &key)
+int32_t Dictionary<TKey, TValue>::IndexByKey(const TKey &key)
 {
 	int ctElements = Count();
 
 	// find the right index
-	int iIndex = 0;
+	int32_t iIndex = 0;
 	for (; iIndex < ctElements; iIndex++) {
 		if (dic_saPairs[iIndex].key == key) {
 			// this is the item, we found the index
@@ -210,12 +210,12 @@ INDEX Dictionary<TKey, TValue>::IndexByKey(const TKey &key)
 
 /// Get the index of the given value
 template<class TKey, class TValue>
-INDEX Dictionary<TKey, TValue>::IndexByValue(const TValue &value)
+int32_t Dictionary<TKey, TValue>::IndexByValue(const TValue &value)
 {
 	int ctElements = Count();
 
 	// find the right index
-	int iIndex = 0;
+	int32_t iIndex = 0;
 	for (; iIndex < ctElements; iIndex++) {
 		if (dic_saPairs[iIndex].value == value) {
 			// this is the item, we found the index
@@ -232,25 +232,25 @@ INDEX Dictionary<TKey, TValue>::IndexByValue(const TValue &value)
 
 /// Does this dictionary have the given key?
 template<class TKey, class TValue>
-BOOL Dictionary<TKey, TValue>::HasKey(const TKey &key)
+bool Dictionary<TKey, TValue>::HasKey(const TKey &key)
 {
 	return IndexByKey(key) != -1;
 }
 
 /// Does this dictionary have the given value?
 template<class TKey, class TValue>
-BOOL Dictionary<TKey, TValue>::HasValue(const TValue &value)
+bool Dictionary<TKey, TValue>::HasValue(const TValue &value)
 {
 	return IndexByValue(value) != -1;
 }
 
 /// Remove a value by its index
 template<class TKey, class TValue>
-void Dictionary<TKey, TValue>::RemoveByIndex(const INDEX iIndex)
+void Dictionary<TKey, TValue>::RemoveByIndex(const int32_t iIndex)
 {
 	// check if someone passed an invalid range
 	if (iIndex < 0 || iIndex >= Count()) {
-		ASSERT(FALSE);
+		ASSERT(false);
 		return;
 	}
 	// pop the values at that index
@@ -275,7 +275,7 @@ void Dictionary<TKey, TValue>::RemoveByValue(const TValue &value)
 
 /// Pop a value by its index
 template<class TKey, class TValue>
-DictionaryPair<TKey, TValue> &Dictionary<TKey, TValue>::PopByIndex(const INDEX iIndex)
+DictionaryPair<TKey, TValue> &Dictionary<TKey, TValue>::PopByIndex(const int32_t iIndex)
 {
 	return *(dic_saPairs.PopAt(iIndex));
 }
@@ -296,7 +296,7 @@ DictionaryPair<TKey, TValue> &Dictionary<TKey, TValue>::PopByValue(const TValue 
 
 /// Clear all items
 template<class TKey, class TValue>
-void Dictionary<TKey, TValue>::Clear(void)
+void Dictionary<TKey, TValue>::Clear()
 {
 	// clear pairs
 	dic_saPairs.Clear();
@@ -304,7 +304,7 @@ void Dictionary<TKey, TValue>::Clear(void)
 
 /// Return how many objects there currently are in the dictionary
 template<class TKey, class TValue>
-INDEX Dictionary<TKey, TValue>::Count(void)
+int32_t Dictionary<TKey, TValue>::Count()
 {
 	// return the amount of pairs
 	return dic_saPairs.Count();
@@ -314,7 +314,7 @@ template<class TKey, class TValue>
 TValue& Dictionary<TKey, TValue>::operator[](const TKey &key)
 {
 	// get the index
-	INDEX iIndex = IndexByKey(key);
+	int32_t iIndex = IndexByKey(key);
 
 	// if the key doesn't exist
 	if (iIndex == -1) {
@@ -331,14 +331,14 @@ TValue& Dictionary<TKey, TValue>::operator[](const TKey &key)
 
 /// Get a pair from the dictionary using an index
 template<class TKey, class TValue>
-DictionaryPair<TKey, TValue> Dictionary<TKey, TValue>::GetPair(const INDEX iIndex)
+DictionaryPair<TKey, TValue> Dictionary<TKey, TValue>::GetPair(const int32_t iIndex)
 {
 	return dic_saPairs[iIndex];
 }
 
 /// Get a key from the dictionary using an index
 template<class TKey, class TValue>
-TKey& Dictionary<TKey, TValue>::GetKeyByIndex(const INDEX iIndex)
+TKey& Dictionary<TKey, TValue>::GetKeyByIndex(const int32_t iIndex)
 {
 	// return the key
 	return dic_saPairs[iIndex].key;
@@ -346,7 +346,7 @@ TKey& Dictionary<TKey, TValue>::GetKeyByIndex(const INDEX iIndex)
 
 /// Return value by index
 template<class TKey, class TValue>
-TValue& Dictionary<TKey, TValue>::GetValueByIndex(const INDEX iIndex)
+TValue& Dictionary<TKey, TValue>::GetValueByIndex(const int32_t iIndex)
 {
 	// return the value
 	return dic_saPairs[iIndex].value;

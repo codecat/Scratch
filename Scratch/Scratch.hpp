@@ -99,7 +99,7 @@
  * Basic usage:
  *   FileStream fs;
  *   fs.Open("test.bin", "r+");
- *   INDEX iTest;
+ *   int32_t iTest;
  *   fs >> iTest;
  *   fs << iTest * 2;
  *   fs.Close();
@@ -110,7 +110,7 @@
  * -------------------------------------------------
  * Basic usage:
  *   MemoryStream ms;
- *   ms << INDEX(5);
+ *   ms << int32_t(5);
  *   FileStream fs;
  *   fs.Open("test.bin", "w");
  *   fs << ms.Size();
@@ -123,8 +123,8 @@
  * Basic usage:
  *   NetworkStream ns;
  *   ns.Connect("127.0.0.1", 1234);
- *   ns << INDEX(5);
- *   INDEX iResult;
+ *   ns << int32_t(5);
+ *   int32_t iResult;
  *   ns >> iResult;
  *   ns.Close();
  */

@@ -23,7 +23,7 @@ Include Scratch.hpp in at least 1 implementation file while `SCRATCH_IMPL` is de
 
 ```C++
 #define SCRATCH_IMPL
-#include <Scratch.h>
+#include <Scratch.hpp>
 
 #include <stdio.h>
 

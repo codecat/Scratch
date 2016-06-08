@@ -34,7 +34,7 @@
 #pragma comment(lib, "wsock32.lib")
 #endif
 
-static BOOL _bWinsockInitialized = FALSE;
+static bool _bWinsockInitialized = FALSE;
 #endif
 
 #if !WINDOWS
@@ -52,34 +52,34 @@ public:
   WSADATA* ns_pWSAData;
   SOCKET ns_socket;
 #else
-  int ns_socket;
+	int32_t ns_socket;
 #endif
   sockaddr_in* ns_psin;
 
-  BOOL ns_bEOF;
+	bool ns_bEOF;
 
 public:
-	NetworkStream(void);
-	~NetworkStream(void);
+	NetworkStream();
+	~NetworkStream();
 
-  ULONG Size();
-  ULONG Location();
-  void Seek(ULONG ulPos, INDEX iOrigin);
-  BOOL AtEOF();
+	uint32_t Size();
+	uint32_t Location();
+	void Seek(uint32_t ulPos, int32_t iOrigin);
+	bool AtEOF();
 
-  BOOL Connect(const char* szAddress, USHORT iPort);
+	bool Connect(const char* szAddress, uint16_t iPort);
   void Close();
-  void Write(const void* p, ULONG iLen);
-  int Read(void* pDest, ULONG iLen);
+	void Write(const void* p, uint32_t iLen);
+	int Read(void* pDest, uint32_t iLen);
 
-  BOOL IsConnected();
+	bool IsConnected();
 
-  static void Cleanup(void);
+	static void Cleanup();
 };
 
 #ifdef SCRATCH_IMPL
 
-NetworkStream::NetworkStream(void)
+NetworkStream::NetworkStream()
 {
 #if WINDOWS
 	ns_pWSAData = new WSADATA;
@@ -105,7 +105,7 @@ NetworkStream::NetworkStream(void)
 #endif
 }
 
-NetworkStream::~NetworkStream(void)
+NetworkStream::~NetworkStream()
 {
 	if (ns_socket != 0) {
 #if WINDOWS
@@ -121,7 +121,7 @@ NetworkStream::~NetworkStream(void)
 	delete ns_psin;
 }
 
-ULONG NetworkStream::Size()
+uint32_t NetworkStream::Size()
 {
 #ifdef SCRATCH_NO_EXCEPTIONS
 	return 0;
@@ -130,7 +130,7 @@ ULONG NetworkStream::Size()
 #endif
 }
 
-ULONG NetworkStream::Location()
+uint32_t NetworkStream::Location()
 {
 #ifdef SCRATCH_NO_EXCEPTIONS
 	return 0;
@@ -139,35 +139,35 @@ ULONG NetworkStream::Location()
 #endif
 }
 
-void NetworkStream::Seek(ULONG ulPos, INDEX iOrigin)
+void NetworkStream::Seek(uint32_t ulPos, int32_t iOrigin)
 {
 #ifndef SCRATCH_NO_EXCEPTIONS
 	throw "Function not supported in Network Stream";
 #endif
 }
 
-BOOL NetworkStream::AtEOF()
+bool NetworkStream::AtEOF()
 {
 	return ns_bEOF;
 }
 
-BOOL NetworkStream::Connect(const char* szAddress, USHORT iPort)
+bool NetworkStream::Connect(const char* szAddress, uint16_t iPort)
 {
 	hostent* phe = gethostbyname(szAddress);
-	if (phe == NULL) {
-		return FALSE;
+	if (phe == nullptr) {
+		return false;
 	}
 
 	ns_psin->sin_family = AF_INET;
-	ns_psin->sin_addr.s_addr = *(ULONG*)phe->h_addr_list[0];
+	ns_psin->sin_addr.s_addr = *(uint32_t*)phe->h_addr_list[0];
 	ns_psin->sin_port = htons(iPort);
 
 	ns_socket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 	if (connect(ns_socket, (sockaddr*)ns_psin, sizeof(sockaddr_in)) == 0) {
-		return TRUE;
+		return true;
 	}
 
-	return FALSE;
+	return false;
 }
 
 void NetworkStream::Close()
@@ -180,31 +180,31 @@ void NetworkStream::Close()
 	ns_socket = 0;
 }
 
-void NetworkStream::Write(const void* p, ULONG iLen)
+void NetworkStream::Write(const void* p, uint32_t iLen)
 {
 	send(ns_socket, (const char*)p, iLen, 0);
 }
 
-int NetworkStream::Read(void* pDest, ULONG iLen)
+int NetworkStream::Read(void* pDest, uint32_t iLen)
 {
 	int iRet = recv(ns_socket, (char*)pDest, iLen, 0);
-	ns_bEOF = (iRet <= 0) || ((ULONG)iRet < iLen);
+	ns_bEOF = (iRet <= 0) || ((uint32_t)iRet < iLen);
 	return iRet;
 }
 
-BOOL NetworkStream::IsConnected()
+bool NetworkStream::IsConnected()
 {
 #if WINDOWS
 	fd_set fds;
 	fds.fd_array[0] = ns_socket;
 	fds.fd_count = 1;
-	return select(0, &fds, &fds, &fds, NULL) == 1;
+	return select(0, &fds, &fds, &fds, nullptr) == 1;
 #else
-	return TRUE; //TODO: FIXME
+	return true; //TODO: FIXME
 #endif
 }
 
-void NetworkStream::Cleanup(void)
+void NetworkStream::Cleanup()
 {
 #if WINDOWS
 	if (_bWinsockInitialized) {

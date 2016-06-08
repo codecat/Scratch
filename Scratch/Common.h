@@ -29,6 +29,7 @@
 #include <cstdio>
 #include <cmath>
 #include <cassert>
+#include <cstdint>
 
 #ifdef _MSC_VER
 	#include <WinSock2.h>
@@ -48,23 +49,12 @@
 #define SCRATCH_EXPORT
 
 #ifdef NULL
-	#undef NULL
+// Prefer nullptr instead
+#undef NULL
 #endif
-#define NULL 0
 
 #define TRUE 1
 #define FALSE 0
-
-typedef            int INDEX;
-typedef          float FLOAT;
-typedef         double DOUBLE;
-typedef            int BOOL;
-typedef  unsigned char UBYTE;
-#if !WINDOWS
-typedef unsigned short USHORT;
-typedef           long LONG;
-typedef  unsigned long ULONG;
-#endif
 
 #ifndef SCRATCH_NO_GLOBFUNC
 template<class T> inline T Max(const T &v1, const T &v2) { return v1 >= v2 ? v1 : v2; }

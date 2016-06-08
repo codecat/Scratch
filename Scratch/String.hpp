@@ -75,7 +75,7 @@ public:
   void AppendF(const char* szFormat, ...);
 
 	void Split(const String &strNeedle, StackArray<String> &astrResult) const;
-	void Split(const String &strNeedle, StackArray<String> &astrResult, BOOL bTrimAll) const;
+	void Split(const String &strNeedle, StackArray<String> &astrResult, bool bTrimAll) const;
 	void CommandLineSplit(StackArray<String> &astrResult) const;
 private:
 	String InternalTrim(bool bLeft, bool bRight, char c = ' ') const;
@@ -378,7 +378,7 @@ void String::Split(const String &strNeedle, StackArray<String> &astrResult) cons
 	Split(strNeedle, astrResult, FALSE);
 }
 
-void String::Split(const String &strNeedle, StackArray<String> &astrResult, BOOL bTrimAll) const
+void String::Split(const String &strNeedle, StackArray<String> &astrResult, bool bTrimAll) const
 {
 #ifndef SCRATCH_NO_THREADSAFE
 	MutexWait wait(str_mutex);
@@ -638,7 +638,7 @@ String String::SubString(int iStart, int iLen) const
 	String strRet(this->str_szBuffer + iStart);
 
 	// Check for stupid developers
-	if ((ULONG)iLen > strlen(strRet)) {
+	if ((uint32_t)iLen > strlen(strRet)) {
 		return strRet;
 	}
 

@@ -44,68 +44,68 @@ public:
   ENewLineMode strm_nlmNewLineMode;
 
 public:
-	Stream(void);
-	~Stream(void);
+	Stream();
+	~Stream();
 
-  virtual ULONG Size() = 0;
-  virtual ULONG Location() = 0;
-  virtual void Seek(ULONG ulPos, INDEX iOrigin) = 0;
-  virtual BOOL AtEOF() = 0;
+	virtual uint32_t Size() = 0;
+	virtual uint32_t Location() = 0;
+	virtual void Seek(uint32_t ulPos, int32_t iOrigin) = 0;
+	virtual bool AtEOF() = 0;
 
   virtual void Close();
 
-  virtual void Write(const void* p, ULONG iLen) = 0;
-  inline void WriteIndex(const INDEX &i)   { Write(&i, sizeof(INDEX)); }
-  inline void WriteLong(const LONG &l)     { Write(&l, sizeof(LONG)); }
-  inline void WriteFloat(const FLOAT &f)   { Write(&f, sizeof(FLOAT)); }
-  inline void WriteDouble(const DOUBLE &d) { Write(&d, sizeof(DOUBLE)); }
+	virtual void Write(const void* p, uint32_t iLen) = 0;
+	inline void WriteIndex(const int32_t &i) { Write(&i, sizeof(int32_t)); }
+	inline void WriteLong(const int64_t &l)  { Write(&l, sizeof(int64_t)); }
+	inline void WriteFloat(const float &f)   { Write(&f, sizeof(float)); }
+	inline void WriteDouble(const double &d) { Write(&d, sizeof(double)); }
   void WriteString(const String &str);
 	void WriteStream(Stream &strm);
 
-  virtual int Read(void* pDest, ULONG iLen) = 0;
+	virtual int Read(void* pDest, uint32_t iLen) = 0;
   void ReadToEnd(void* pDest);
-  inline INDEX  ReadIndex(void)  { INDEX  i = 0; Read(&i, sizeof(INDEX)); return i; }
-  inline LONG   ReadLong(void)   { LONG   l = 0; Read(&l, sizeof(LONG)); return l; }
-  inline FLOAT  ReadFloat(void)  { FLOAT  f = 0; Read(&f, sizeof(FLOAT)); return f; }
-  inline DOUBLE ReadDouble(void) { DOUBLE d = 0; Read(&d, sizeof(DOUBLE)); return d; }
-  String ReadString(void);
+	inline int32_t ReadIndex()  { int32_t i = 0; Read(&i, sizeof(int32_t)); return i; }
+	inline int64_t ReadLong()   { int64_t l = 0; Read(&l, sizeof(int64_t)); return l; }
+	inline float   ReadFloat()  { float   f = 0; Read(&f, sizeof(float)); return f; }
+	inline double  ReadDouble() { double  d = 0; Read(&d, sizeof(double)); return d; }
+	String ReadString();
 
-  inline char ReadChar(void) { char c = '\0'; Read(&c, 1); return c; }
-  inline char PeekChar(void) { char c = '\0'; Read(&c, 1); Seek(-1, 1/*SEEK_CUR*/); return c; }
+	inline char ReadChar() { char c = '\0'; Read(&c, 1); return c; }
+	inline char PeekChar() { char c = '\0'; Read(&c, 1); Seek(-1, 1/*SEEK_CUR*/); return c; }
 
   bool Expect(const String &str);
   char ReadUntil(String &strOut, const String &strCharacters);
 
   void WriteText(const String &str);
   void WriteLine(const String &str);
-  void WriteLine(void);
-  String ReadLine(void);
+	void WriteLine();
+	String ReadLine();
 
-	inline Stream& operator <<(INDEX i)       { WriteIndex(i); return *this; }
-	inline Stream& operator <<(FLOAT f)       { WriteFloat(f); return *this; }
-	inline Stream& operator <<(DOUBLE d)      { WriteDouble(d); return *this; }
+	inline Stream& operator <<(int32_t i)    { WriteIndex(i); return *this; }
+	inline Stream& operator <<(float f)      { WriteFloat(f); return *this; }
+	inline Stream& operator <<(double d)     { WriteDouble(d); return *this; }
 	inline Stream& operator <<(String str)   { WriteString(str); return *this; }
 	inline Stream& operator <<(Stream &strm) { WriteStream(strm); return *this; }
 
-	inline Stream& operator >>(INDEX &i)      { i = ReadIndex(); return *this; }
-	inline Stream& operator >>(FLOAT &f)      { f = ReadFloat(); return *this; }
-	inline Stream& operator >>(DOUBLE &d)     { d = ReadDouble(); return *this; }
+	inline Stream& operator >>(int32_t &i)   { i = ReadIndex(); return *this; }
+	inline Stream& operator >>(float &f)     { f = ReadFloat(); return *this; }
+	inline Stream& operator >>(double &d)    { d = ReadDouble(); return *this; }
 	inline Stream& operator >>(String &str)  { str = ReadString(); return *this; }
 };
 
 #ifdef SCRATCH_IMPL
 
-Stream::Stream(void)
+Stream::Stream()
 {
 	strm_nlmNewLineMode = ENLM_LF;
 }
 
-Stream::~Stream(void)
+Stream::~Stream()
 {
 	Close();
 }
 
-void Stream::Close(void)
+void Stream::Close()
 {
 }
 
@@ -117,11 +117,11 @@ void Stream::WriteString(const String &str)
 void Stream::WriteStream(Stream &strm)
 {
 	// get buffer size
-	ULONG ulBufferSize = strm.Size() - strm.Location();
-	ULONG ulBytesLeft = ulBufferSize;
+	uint32_t ulBufferSize = strm.Size() - strm.Location();
+	uint32_t ulBytesLeft = ulBufferSize;
 
 	// allocate memory for chunks
-	ULONG ulChunkSize = 1024;
+	uint32_t ulChunkSize = 1024;
 	void* pBuffer = malloc(ulChunkSize);
 
 	// loop through chunks required to write
@@ -145,7 +145,7 @@ void Stream::ReadToEnd(void* pDest)
 	Read(pDest, Size() - Location());
 }
 
-String Stream::ReadString(void)
+String Stream::ReadString()
 {
 	String strRet;
 	char c;
@@ -212,7 +212,7 @@ void Stream::WriteLine(const String &str)
 	WriteLine();
 }
 
-void Stream::WriteLine(void)
+void Stream::WriteLine()
 {
 	// write newline
 	switch (strm_nlmNewLineMode) {
@@ -222,7 +222,7 @@ void Stream::WriteLine(void)
 	}
 }
 
-String Stream::ReadLine(void)
+String Stream::ReadLine()
 {
 	String strRet;
 	char c;
