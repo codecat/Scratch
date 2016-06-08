@@ -1,27 +1,27 @@
-/*  libscratch - Multipurpose objective C++ library.
-    
-    Copyright (c) 2013 - 2016 Angelo Geels <spansjh@gmail.com>
-    
-    Permission is hereby granted, free of charge, to any person
-    obtaining a copy of this software and associated documentation
-    files (the "Software"), to deal in the Software without
-    restriction, including without limitation the rights to use,
-    copy, modify, merge, publish, distribute, sublicense, and/or sell
-    copies of the Software, and to permit persons to whom the
-    Software is furnished to do so, subject to the following
-    conditions:
-    
-    The above copyright notice and this permission notice shall be
-    included in all copies or substantial portions of the Software.
-    
-    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-    EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-    OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-    NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-    HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-    WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-    FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-    OTHER DEALINGS IN THE SOFTWARE.
+/*	libscratch - Multipurpose objective C++ library.
+
+		Copyright (c) 2013 - 2016 Angelo Geels <spansjh@gmail.com>
+
+		Permission is hereby granted, free of charge, to any person
+		obtaining a copy of this software and associated documentation
+		files (the "Software"), to deal in the Software without
+		restriction, including without limitation the rights to use,
+		copy, modify, merge, publish, distribute, sublicense, and/or sell
+		copies of the Software, and to permit persons to whom the
+		Software is furnished to do so, subject to the following
+		conditions:
+
+		The above copyright notice and this permission notice shall be
+		included in all copies or substantial portions of the Software.
+
+		THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+		EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+		OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+		NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+		HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+		WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+		FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+		OTHER DEALINGS IN THE SOFTWARE.
 */
 
 #pragma once
@@ -49,19 +49,19 @@ class SCRATCH_EXPORT String
 {
 	friend class Filename;
 protected:
-  char* str_szBuffer;
+	char* str_szBuffer;
 #ifndef SCRATCH_NO_THREADSAFE
 	Mutex str_mutex;
 #endif
 
-  void CopyToBuffer(const char* szSrc);
-  void AppendToBuffer(const char* szSrc);
-  void AppendToBuffer(const char* szSrc, int iCount);
-  void AppendToBuffer(const char cSrc);
+	void CopyToBuffer(const char* szSrc);
+	void AppendToBuffer(const char* szSrc);
+	void AppendToBuffer(const char* szSrc, int iCount);
+	void AppendToBuffer(const char cSrc);
 
 public:
-  static char* str_szEmpty;
-  static int str_iInstances;
+	static char* str_szEmpty;
+	static int str_iInstances;
 
 	String();
 	String(const char* szValue);
@@ -69,10 +69,10 @@ public:
 	String(const String &strCopy);
 	virtual ~String();
 
-  int Length() const;
+	int Length() const;
 
-  void SetF(const char* szFormat, ...);
-  void AppendF(const char* szFormat, ...);
+	void SetF(const char* szFormat, ...);
+	void AppendF(const char* szFormat, ...);
 
 	void Split(const String &strNeedle, StackArray<String> &astrResult) const;
 	void Split(const String &strNeedle, StackArray<String> &astrResult, bool bTrimAll) const;
@@ -92,21 +92,21 @@ public:
 	String ToLower() const;
 	String ToUpper() const;
 
-  int IndexOf(char c) const;
+	int IndexOf(char c) const;
 	int IndexOf(const String &strNeedle) const;
 
-  int IndexOfLast(char c) const;
+	int IndexOfLast(char c) const;
 	int IndexOfLast(const String &strNeedle) const;
 
-  void Fill(char c, int ct);
+	void Fill(char c, int ct);
 
 	bool Contains(const String &strNeedle);
-  bool Contains(char c) const;
+	bool Contains(char c) const;
 	bool StartsWith(const String &strNeedle);
 	bool EndsWith(const String &strNeedle);
 
-  operator const char*();
-  operator const char*() const;
+	operator const char*();
+	operator const char*() const;
 
 	String& operator=(char* szSrc);
 	String& operator=(const char* szSrc);
@@ -114,14 +114,14 @@ public:
 
 	String& operator+=(const char* szSrc);
 	String& operator+=(const char cSrc);
-  String& operator+=(const String &strSrc);
+	String& operator+=(const String &strSrc);
 
 	String& operator*=(int ctRepeat);
 
-  bool operator==(const char* szSrc) const;
-  bool operator!=(const char* szSrc) const;
+	bool operator==(const char* szSrc) const;
+	bool operator!=(const char* szSrc) const;
 
-  char& operator[](int iIndex);
+	char& operator[](int iIndex);
 };
 
 String SCRATCH_EXPORT operator+(const String &strLHS, const char* szRHS);

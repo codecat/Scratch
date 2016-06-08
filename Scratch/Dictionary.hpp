@@ -1,27 +1,27 @@
-/*  libscratch - Multipurpose objective C++ library.
-    
-    Copyright (c) 2013 - 2016 Angelo Geels <spansjh@gmail.com>
-    
-    Permission is hereby granted, free of charge, to any person
-    obtaining a copy of this software and associated documentation
-    files (the "Software"), to deal in the Software without
-    restriction, including without limitation the rights to use,
-    copy, modify, merge, publish, distribute, sublicense, and/or sell
-    copies of the Software, and to permit persons to whom the
-    Software is furnished to do so, subject to the following
-    conditions:
-    
-    The above copyright notice and this permission notice shall be
-    included in all copies or substantial portions of the Software.
-    
-    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-    EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-    OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-    NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-    HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-    WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-    FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-    OTHER DEALINGS IN THE SOFTWARE.
+/*	libscratch - Multipurpose objective C++ library.
+
+		Copyright (c) 2013 - 2016 Angelo Geels <spansjh@gmail.com>
+
+		Permission is hereby granted, free of charge, to any person
+		obtaining a copy of this software and associated documentation
+		files (the "Software"), to deal in the Software without
+		restriction, including without limitation the rights to use,
+		copy, modify, merge, publish, distribute, sublicense, and/or sell
+		copies of the Software, and to permit persons to whom the
+		Software is furnished to do so, subject to the following
+		conditions:
+
+		The above copyright notice and this permission notice shall be
+		included in all copies or substantial portions of the Software.
+
+		THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+		EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+		OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+		NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+		HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+		WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+		FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+		OTHER DEALINGS IN THE SOFTWARE.
 */
 
 #pragma once
@@ -39,24 +39,24 @@ class SCRATCH_EXPORT DictionaryPair
 {
 	friend class Dictionary<TKey, TValue>;
 public:
-  TKey key;
-  TValue value;
+	TKey key;
+	TValue value;
 
 public:
 	DictionaryPair();
-  DictionaryPair(const TKey& k);
-  DictionaryPair(const TKey& k, const TValue& v);
+	DictionaryPair(const TKey& k);
+	DictionaryPair(const TKey& k, const TValue& v);
 	~DictionaryPair();
 
 #ifndef SCRATCH_ALLOW_PAIR_COPY
 private:
-  /// This is most likely an unintended pair copy.. you can define
-  /// SCRATCH_ALLOW_PAIR_COPY if this was intended.
-  DictionaryPair(const DictionaryPair<TKey, TValue>& copy)
-    : key(copy.key),
-      value(copy.value)
-  {
-  }
+	/// This is most likely an unintended pair copy.. you can define
+	/// SCRATCH_ALLOW_PAIR_COPY if this was intended.
+	DictionaryPair(const DictionaryPair<TKey, TValue>& copy)
+		: key(copy.key),
+			value(copy.value)
+	{
+	}
 #endif
 };
 
@@ -64,7 +64,7 @@ template<class TKey, class TValue>
 class SCRATCH_EXPORT Dictionary
 {
 private:
-  StackArray<DictionaryPair<TKey, TValue>> dic_saPairs;
+	StackArray<DictionaryPair<TKey, TValue>> dic_saPairs;
 
 public:
 	bool dic_bAllowDuplicateKeys;
@@ -74,48 +74,48 @@ public:
 	Dictionary(const Dictionary<TKey, TValue> &copy);
 	~Dictionary();
 
-  /// Add to the dictionary
-  void Add(const TKey &key, const TValue &value);
-  /// Push to the dictionary
+	/// Add to the dictionary
+	void Add(const TKey &key, const TValue &value);
+	/// Push to the dictionary
 	DictionaryPair<TKey, TValue> &Push(const TKey &key);
 
-  /// Get the index of the given key
+	/// Get the index of the given key
 	int32_t IndexByKey(const TKey &key);
-  /// Get the index of the given value
+	/// Get the index of the given value
 	int32_t IndexByValue(const TValue &value);
 
-  /// Does this dictionary have the given key?
+	/// Does this dictionary have the given key?
 	bool HasKey(const TKey &key);
-  /// Does this dictionary have the given value?
+	/// Does this dictionary have the given value?
 	bool HasValue(const TValue &value);
 
-  /// Remove a value by its index
+	/// Remove a value by its index
 	void RemoveByIndex(const int32_t iIndex);
-  /// Remove a value from the dictionary by key
-  void RemoveByKey(const TKey &key);
-  /// Remove a value from the dictionary
-  void RemoveByValue(const TValue &value);
+	/// Remove a value from the dictionary by key
+	void RemoveByKey(const TKey &key);
+	/// Remove a value from the dictionary
+	void RemoveByValue(const TValue &value);
 
-  /// Pop a value by its index
+	/// Pop a value by its index
 	DictionaryPair<TKey, TValue> &PopByIndex(const int32_t iIndex);
-  /// Pop a value from the dictionary by key
+	/// Pop a value from the dictionary by key
 	DictionaryPair<TKey, TValue> &PopByKey(const TKey &key);
-  /// Pop a value from the dictionary
+	/// Pop a value from the dictionary
 	DictionaryPair<TKey, TValue> &PopByValue(const TValue &value);
 
-  /// Clear all items
+	/// Clear all items
 	void Clear();
 
-  /// Return how many objects there currently are in the dictionary
+	/// Return how many objects there currently are in the dictionary
 	int32_t Count();
 
-  TValue& operator[](const TKey &key);
+	TValue& operator[](const TKey &key);
 
-  /// Get a pair from the dictionary using an index
+	/// Get a pair from the dictionary using an index
 	DictionaryPair<TKey, TValue> GetPair(const int32_t iIndex);
-  /// Get a key from the dictionary using an index
+	/// Get a key from the dictionary using an index
 	TKey& GetKeyByIndex(const int32_t iIndex);
-  /// Get a value from the dictionary using an index
+	/// Get a value from the dictionary using an index
 	TValue& GetValueByIndex(const int32_t iIndex);
 };
 

@@ -1,27 +1,27 @@
-/*  libscratch - Multipurpose objective C++ library.
-    
-    Copyright (c) 2013 - 2016 Angelo Geels <spansjh@gmail.com>
-    
-    Permission is hereby granted, free of charge, to any person
-    obtaining a copy of this software and associated documentation
-    files (the "Software"), to deal in the Software without
-    restriction, including without limitation the rights to use,
-    copy, modify, merge, publish, distribute, sublicense, and/or sell
-    copies of the Software, and to permit persons to whom the
-    Software is furnished to do so, subject to the following
-    conditions:
-    
-    The above copyright notice and this permission notice shall be
-    included in all copies or substantial portions of the Software.
-    
-    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-    EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-    OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-    NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-    HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-    WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-    FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-    OTHER DEALINGS IN THE SOFTWARE.
+/*	libscratch - Multipurpose objective C++ library.
+
+		Copyright (c) 2013 - 2016 Angelo Geels <spansjh@gmail.com>
+
+		Permission is hereby granted, free of charge, to any person
+		obtaining a copy of this software and associated documentation
+		files (the "Software"), to deal in the Software without
+		restriction, including without limitation the rights to use,
+		copy, modify, merge, publish, distribute, sublicense, and/or sell
+		copies of the Software, and to permit persons to whom the
+		Software is furnished to do so, subject to the following
+		conditions:
+
+		The above copyright notice and this permission notice shall be
+		included in all copies or substantial portions of the Software.
+
+		THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+		EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+		OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+		NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+		HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+		WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+		FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+		OTHER DEALINGS IN THE SOFTWARE.
 */
 
 #pragma once
@@ -33,15 +33,15 @@ SCRATCH_NAMESPACE_BEGIN;
 
 enum SCRATCH_EXPORT ENewLineMode
 {
-  ENLM_CRLF,
-  ENLM_LF,
-  ENLM_CR,
+	ENLM_CRLF,
+	ENLM_LF,
+	ENLM_CR,
 };
 
 class SCRATCH_EXPORT Stream
 {
 public:
-  ENewLineMode strm_nlmNewLineMode;
+	ENewLineMode strm_nlmNewLineMode;
 
 public:
 	Stream();
@@ -52,45 +52,45 @@ public:
 	virtual void Seek(uint32_t ulPos, int32_t iOrigin) = 0;
 	virtual bool AtEOF() = 0;
 
-  virtual void Close();
+	virtual void Close();
 
 	virtual void Write(const void* p, uint32_t iLen) = 0;
 	inline void WriteIndex(const int32_t &i) { Write(&i, sizeof(int32_t)); }
-	inline void WriteLong(const int64_t &l)  { Write(&l, sizeof(int64_t)); }
-	inline void WriteFloat(const float &f)   { Write(&f, sizeof(float)); }
+	inline void WriteLong(const int64_t &l)	{ Write(&l, sizeof(int64_t)); }
+	inline void WriteFloat(const float &f)	 { Write(&f, sizeof(float)); }
 	inline void WriteDouble(const double &d) { Write(&d, sizeof(double)); }
-  void WriteString(const String &str);
+	void WriteString(const String &str);
 	void WriteStream(Stream &strm);
 
 	virtual int Read(void* pDest, uint32_t iLen) = 0;
-  void ReadToEnd(void* pDest);
-	inline int32_t ReadIndex()  { int32_t i = 0; Read(&i, sizeof(int32_t)); return i; }
-	inline int64_t ReadLong()   { int64_t l = 0; Read(&l, sizeof(int64_t)); return l; }
-	inline float   ReadFloat()  { float   f = 0; Read(&f, sizeof(float)); return f; }
-	inline double  ReadDouble() { double  d = 0; Read(&d, sizeof(double)); return d; }
+	void ReadToEnd(void* pDest);
+	inline int32_t ReadIndex()	{ int32_t i = 0; Read(&i, sizeof(int32_t)); return i; }
+	inline int64_t ReadLong()	 { int64_t l = 0; Read(&l, sizeof(int64_t)); return l; }
+	inline float	 ReadFloat()	{ float	 f = 0; Read(&f, sizeof(float)); return f; }
+	inline double	ReadDouble() { double	d = 0; Read(&d, sizeof(double)); return d; }
 	String ReadString();
 
 	inline char ReadChar() { char c = '\0'; Read(&c, 1); return c; }
 	inline char PeekChar() { char c = '\0'; Read(&c, 1); Seek(-1, 1/*SEEK_CUR*/); return c; }
 
-  bool Expect(const String &str);
-  char ReadUntil(String &strOut, const String &strCharacters);
+	bool Expect(const String &str);
+	char ReadUntil(String &strOut, const String &strCharacters);
 
-  void WriteText(const String &str);
-  void WriteLine(const String &str);
+	void WriteText(const String &str);
+	void WriteLine(const String &str);
 	void WriteLine();
 	String ReadLine();
 
-	inline Stream& operator <<(int32_t i)    { WriteIndex(i); return *this; }
-	inline Stream& operator <<(float f)      { WriteFloat(f); return *this; }
-	inline Stream& operator <<(double d)     { WriteDouble(d); return *this; }
-	inline Stream& operator <<(String str)   { WriteString(str); return *this; }
+	inline Stream& operator <<(int32_t i)		{ WriteIndex(i); return *this; }
+	inline Stream& operator <<(float f)			{ WriteFloat(f); return *this; }
+	inline Stream& operator <<(double d)		 { WriteDouble(d); return *this; }
+	inline Stream& operator <<(String str)	 { WriteString(str); return *this; }
 	inline Stream& operator <<(Stream &strm) { WriteStream(strm); return *this; }
 
-	inline Stream& operator >>(int32_t &i)   { i = ReadIndex(); return *this; }
-	inline Stream& operator >>(float &f)     { f = ReadFloat(); return *this; }
-	inline Stream& operator >>(double &d)    { d = ReadDouble(); return *this; }
-	inline Stream& operator >>(String &str)  { str = ReadString(); return *this; }
+	inline Stream& operator >>(int32_t &i)	 { i = ReadIndex(); return *this; }
+	inline Stream& operator >>(float &f)		 { f = ReadFloat(); return *this; }
+	inline Stream& operator >>(double &d)		{ d = ReadDouble(); return *this; }
+	inline Stream& operator >>(String &str)	{ str = ReadString(); return *this; }
 };
 
 #ifdef SCRATCH_IMPL
@@ -239,8 +239,8 @@ String Stream::ReadLine()
 		// skip \r
 		if (c == '\r') {
 			//WARNING: This can potentially cause problems on certain operating systems
-			//         that work with \r _only_ as a newline character. We should incorporate
-			//         strm_nlmNewLineMode with this in a future version.
+			//				 that work with \r _only_ as a newline character. We should incorporate
+			//				 strm_nlmNewLineMode with this in a future version.
 			continue;
 		}
 

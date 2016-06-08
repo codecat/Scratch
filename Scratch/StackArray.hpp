@@ -1,27 +1,27 @@
-/*  libscratch - Multipurpose objective C++ library.
-    
-    Copyright (c) 2013 - 2016 Angelo Geels <spansjh@gmail.com>
-    
-    Permission is hereby granted, free of charge, to any person
-    obtaining a copy of this software and associated documentation
-    files (the "Software"), to deal in the Software without
-    restriction, including without limitation the rights to use,
-    copy, modify, merge, publish, distribute, sublicense, and/or sell
-    copies of the Software, and to permit persons to whom the
-    Software is furnished to do so, subject to the following
-    conditions:
-    
-    The above copyright notice and this permission notice shall be
-    included in all copies or substantial portions of the Software.
-    
-    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-    EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-    OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-    NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-    HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-    WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-    FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-    OTHER DEALINGS IN THE SOFTWARE.
+/*	libscratch - Multipurpose objective C++ library.
+
+		Copyright (c) 2013 - 2016 Angelo Geels <spansjh@gmail.com>
+
+		Permission is hereby granted, free of charge, to any person
+		obtaining a copy of this software and associated documentation
+		files (the "Software"), to deal in the Software without
+		restriction, including without limitation the rights to use,
+		copy, modify, merge, publish, distribute, sublicense, and/or sell
+		copies of the Software, and to permit persons to whom the
+		Software is furnished to do so, subject to the following
+		conditions:
+
+		The above copyright notice and this permission notice shall be
+		included in all copies or substantial portions of the Software.
+
+		THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+		EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+		OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+		NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+		HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+		WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+		FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+		OTHER DEALINGS IN THE SOFTWARE.
 */
 
 #pragma once
@@ -41,12 +41,12 @@ template<class Type>
 class SCRATCH_EXPORT StackArray
 {
 public:
-  Type** sa_pItems;
+	Type** sa_pItems;
 	int32_t sa_ctSlots;
 	int32_t sa_ctUsed;
 	bool sa_bOnlyPop;
 #ifndef SCRATCH_NO_THREADSAFE
-  Mutex sa_mutex;
+	Mutex sa_mutex;
 #endif
 
 public:
@@ -55,39 +55,39 @@ public:
 	StackArray<Type> &operator=(const StackArray<Type> &copy);
 	~StackArray();
 
-  /// Push to the beginning of the stack, return a reference to the newly made object
+	/// Push to the beginning of the stack, return a reference to the newly made object
 	Type& PushBegin();
-  /// Push to the stack, return a reference to the newly made object
+	/// Push to the stack, return a reference to the newly made object
 	Type& Push();
-  /// Push a pointer to the stack
-  void Push(Type* pObj);
-  /// Pop top object from the stack
+	/// Push a pointer to the stack
+	void Push(Type* pObj);
+	/// Pop top object from the stack
 	Type* Pop();
-  /// Pop a certain index from the stack
+	/// Pop a certain index from the stack
 	Type* PopAt(int32_t iIndex);
 
-  /// Pop all objects from the stack
+	/// Pop all objects from the stack
 	void PopAll();
-  /// Clear all objects in the stack
+	/// Clear all objects in the stack
 	void Clear();
 
-  /// Return how many objects there currently are in the stack
+	/// Return how many objects there currently are in the stack
 	int32_t Count();
 
-  /// Find the index of the given object in the stack
+	/// Find the index of the given object in the stack
 	int32_t Find(const Type &obj);
-  /// Find the index of the given pointer in the stack
+	/// Find the index of the given pointer in the stack
 	int32_t FindPointer(const Type* pObj);
-  /// Find the index of the given condition in the stack
-  template<typename Func>
+	/// Find the index of the given condition in the stack
+	template<typename Func>
 	int32_t FindAny(Func f);
 
-  /// Returns whether the given object is currently in the stack
+	/// Returns whether the given object is currently in the stack
 	bool Contains(const Type &obj);
-  /// Returns whether the given pointer is currently in the stack
+	/// Returns whether the given pointer is currently in the stack
 	bool ContainsPointer(const Type* pObj);
-  /// Returns whether the given condition is currently in the stack
-  template<typename Func>
+	/// Returns whether the given condition is currently in the stack
+	template<typename Func>
 	bool ContainsAny(Func f);
 
 	Type& operator[](int32_t iIndex);

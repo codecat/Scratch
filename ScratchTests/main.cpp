@@ -4,7 +4,7 @@
 // checking their values in tests.
 
 #ifndef _MSC_VER
-// Visual Studio: fatal error C1189: #error :  The C++ Standard Library forbids macroizing keywords. Enable warning C4005 to find the forbidden macro.
+// Visual Studio: fatal error C1189: #error :	The C++ Standard Library forbids macroizing keywords. Enable warning C4005 to find the forbidden macro.
 #define TEST_PRIVATE(expr) TEST(expr)
 
 #define protected public
@@ -22,30 +22,30 @@ static int g_iTestOK = 0;
 static int g_iTestFailed = 0;
 
 #if DEBUG
-  #if WINDOWS
-    #define TEST_BREAK() __asm { int 3 };
-  #else
-    #define TEST_BREAK() __asm__("int $0x03");
-  #endif
+	#if WINDOWS
+		#define TEST_BREAK() __asm { int 3 };
+	#else
+		#define TEST_BREAK() __asm__("int $0x03");
+	#endif
 #else
-  #define TEST_BREAK()
+	#define TEST_BREAK()
 #endif
 
 #define TESTS(id) \
-  aTests.Push() = id; \
-  if(strArg == id || strArg == "All")
+	aTests.Push() = id; \
+	if(strArg == id || strArg == "All")
 
 #define TEST(expr) { \
-  printf("TEST %d: (%s) - ", g_iTestNumber, #expr); \
-  if(!(expr)) { \
-    printf("FAILED!!!\n"); \
-    g_iTestFailed++; \
-    TEST_BREAK(); \
-  } else { \
-    printf("OK\n"); \
-    g_iTestOK++; \
-  } \
-  g_iTestNumber++; \
+	printf("TEST %d: (%s) - ", g_iTestNumber, #expr); \
+	if(!(expr)) { \
+		printf("FAILED!!!\n"); \
+		g_iTestFailed++; \
+		TEST_BREAK(); \
+	} else { \
+		printf("OK\n"); \
+		g_iTestOK++; \
+	} \
+	g_iTestNumber++; \
 }
 
 #if WINDOWS
@@ -60,311 +60,311 @@ static int g_iTestFailed = 0;
 
 MAIN
 {
-  StackArray<String> aTests;
-  String strArg;
+	StackArray<String> aTests;
+	String strArg;
 
-  char buffer[1024];
-  if(argc > 1) {
+	char buffer[1024];
+	if(argc > 1) {
 #if WINDOWS
-    int writen = wcstombs(buffer, argv[1], sizeof(buffer));
-    if (writen == 1024) {
-      printf("Invalid test name given");
-      return -1;
-    }
+		int writen = wcstombs(buffer, argv[1], sizeof(buffer));
+		if (writen == 1024) {
+			printf("Invalid test name given");
+			return -1;
+		}
 
-    strArg = buffer;
+		strArg = buffer;
 #else
-    strArg = argv[1];
+		strArg = argv[1];
 #endif
-  } else {
-    printf("No test name given! Existing tests:\n\n");
-    for (int i = 0; i<aTests.Count(); i++) {
-      printf(" * %s\n", (const char*)aTests[i]);
-    }
-    printf("\nOr pass \"All\" to run all tests.\nEnter a test to run: ");
-  
-    scanf("%[^\n]", buffer);
-    strArg = buffer;
-  }
+	} else {
+		printf("No test name given! Existing tests:\n\n");
+		for (int i = 0; i<aTests.Count(); i++) {
+			printf(" * %s\n", (const char*)aTests[i]);
+		}
+		printf("\nOr pass \"All\" to run all tests.\nEnter a test to run: ");
 
-  TESTS("String")
-  {
-    String strFoo;
-    TEST_PRIVATE(strFoo.str_szBuffer == String::str_szEmpty);
+		scanf("%[^\n]", buffer);
+		strArg = buffer;
+	}
 
-    strFoo = "a";
-    TEST(strFoo == "a");
+	TESTS("String")
+	{
+		String strFoo;
+		TEST_PRIVATE(strFoo.str_szBuffer == String::str_szEmpty);
 
-    strFoo = "";
-    TEST_PRIVATE(strFoo.str_szBuffer == String::str_szEmpty);
+		strFoo = "a";
+		TEST(strFoo == "a");
 
-    int x = 5;
-    int y = 10;
-    strFoo.SetF("%d %d", x, y);
-    TEST(strFoo == "5 10");
+		strFoo = "";
+		TEST_PRIVATE(strFoo.str_szBuffer == String::str_szEmpty);
 
-    strFoo.AppendF(" %d", x);
-    TEST(strFoo == "5 10 5");
+		int x = 5;
+		int y = 10;
+		strFoo.SetF("%d %d", x, y);
+		TEST(strFoo == "5 10");
 
-    StackArray<String> aParse;
-    strFoo.Split(" ", aParse);
-    TEST(aParse.Count() == 3);
-    TEST(aParse[0] == "5" && aParse[1] == "10" && aParse[2] == "5");
+		strFoo.AppendF(" %d", x);
+		TEST(strFoo == "5 10 5");
 
-    strFoo = "     Foo  ";
-    TEST(strFoo.Trim() == "Foo");
-    TEST(strFoo.TrimLeft() == "Foo  ");
-    TEST(strFoo.TrimRight() == "     Foo");
+		StackArray<String> aParse;
+		strFoo.Split(" ", aParse);
+		TEST(aParse.Count() == 3);
+		TEST(aParse[0] == "5" && aParse[1] == "10" && aParse[2] == "5");
 
-    strFoo = "..Foo!!";
-    TEST(strFoo.Trim('!') == "..Foo");
-    TEST(strFoo.TrimLeft('.') == "Foo!!");
-    TEST(strFoo.TrimRight('!') == "..Foo");
+		strFoo = "      Foo  ";
+		TEST(strFoo.Trim() == "Foo");
+		TEST(strFoo.TrimLeft() == "Foo  ");
+		TEST(strFoo.TrimRight() == "      Foo");
 
-    strFoo = "a a b b a";
-    TEST(strFoo.Replace("b", "a") == "a a a a a");
+		strFoo = "..Foo!!";
+		TEST(strFoo.Trim('!') == "..Foo");
+		TEST(strFoo.TrimLeft('.') == "Foo!!");
+		TEST(strFoo.TrimRight('!') == "..Foo");
 
-    TEST(strFoo.SubString(4, 3) == "b b");
+		strFoo = "a a b b a";
+		TEST(strFoo.Replace("b", "a") == "a a a a a");
 
-    TEST(strFoo.ToUpper() == "A A B B A");
+		TEST(strFoo.SubString(4, 3) == "b b");
 
-    strFoo = "A A B B A";
-    TEST(strFoo.ToLower() == "a a b b a");
+		TEST(strFoo.ToUpper() == "A A B B A");
 
-    strFoo.Fill('x', 5);
-    TEST(strFoo == "xxxxx");
+		strFoo = "A A B B A";
+		TEST(strFoo.ToLower() == "a a b b a");
 
-    strFoo = "BaaaaaXaaaB";
-    TEST(strFoo.Contains('X'));
-    TEST(strFoo.Contains("Xaaa"));
+		strFoo.Fill('x', 5);
+		TEST(strFoo == "xxxxx");
 
-    TEST(strFoo.StartsWith("Baaa"));
-    TEST(strFoo.EndsWith("aaaB"));
-    TEST(!strFoo.EndsWith("Xaaa"));
+		strFoo = "BaaaaaXaaaB";
+		TEST(strFoo.Contains('X'));
+		TEST(strFoo.Contains("Xaaa"));
 
-    TEST_PRIVATE((const char*)strFoo == strFoo.str_szBuffer);
+		TEST(strFoo.StartsWith("Baaa"));
+		TEST(strFoo.EndsWith("aaaB"));
+		TEST(!strFoo.EndsWith("Xaaa"));
 
-    strFoo = "x";
-    strFoo += "x";
-    strFoo += String("x");
+		TEST_PRIVATE((const char*)strFoo == strFoo.str_szBuffer);
 
-    TEST(strFoo == "xxx");
+		strFoo = "x";
+		strFoo += "x";
+		strFoo += String("x");
 
-    strFoo *= 3;
-    TEST(strFoo == "xxxxxxxxx");
-    TEST(strFoo != "aaaaaaaaa");
+		TEST(strFoo == "xxx");
 
-    strFoo = "x";
-    TEST(strFoo + "y" == "xy");
+		strFoo *= 3;
+		TEST(strFoo == "xxxxxxxxx");
+		TEST(strFoo != "aaaaaaaaa");
 
-    TEST(strFoo * 3 == "xxx");
+		strFoo = "x";
+		TEST(strFoo + "y" == "xy");
 
-    TEST(strPrintF("Hello %d %d", x, y) == "Hello 5 10");
-  }
+		TEST(strFoo * 3 == "xxx");
 
-  TESTS("Filename")
-  {
-    Filename fnmFoo;
+		TEST(strPrintF("Hello %d %d", x, y) == "Hello 5 10");
+	}
 
-    TEST_PRIVATE(fnmFoo.str_szBuffer == String::str_szEmpty);
+	TESTS("Filename")
+	{
+		Filename fnmFoo;
 
-    fnmFoo = "/var/www/test.html";
-    TEST(fnmFoo.Extension() == "html");
-    TEST(fnmFoo.Path() == "/var/www");
-        TEST(fnmFoo.Name() == "test.html");
+		TEST_PRIVATE(fnmFoo.str_szBuffer == String::str_szEmpty);
 
-    fnmFoo.FromHome(".zshrc");
-    TEST_WINDOWS(fnmFoo.StartsWith("C:\\Users\\"));
-    TEST_UNIX(fnmFoo == "~/.zshrc");
-  }
+		fnmFoo = "/var/www/test.html";
+		TEST(fnmFoo.Extension() == "html");
+		TEST(fnmFoo.Path() == "/var/www");
+				TEST(fnmFoo.Name() == "test.html");
 
-  TESTS("StackArray")
-  {
-    StackArray<int> sa;
-    TEST(sa.Count() == 0);
+		fnmFoo.FromHome(".zshrc");
+		TEST_WINDOWS(fnmFoo.StartsWith("C:\\Users\\"));
+		TEST_UNIX(fnmFoo == "~/.zshrc");
+	}
 
-    sa.Push() = 5;
-    TEST(sa.Count() == 1);
-    TEST(sa[0] == 5);
+	TESTS("StackArray")
+	{
+		StackArray<int> sa;
+		TEST(sa.Count() == 0);
 
-    sa.PushBegin() = 10;
-    TEST(sa.Count() == 2);
-    TEST(sa[0] == 10);
+		sa.Push() = 5;
+		TEST(sa.Count() == 1);
+		TEST(sa[0] == 5);
 
-    int* pNewInt = new int;
-    *pNewInt = 15;
-    sa.Push(pNewInt);
-    TEST(sa.Count() == 3);
-    TEST(sa[2] == 15);
+		sa.PushBegin() = 10;
+		TEST(sa.Count() == 2);
+		TEST(sa[0] == 10);
 
-    int* pLastInt = sa.Pop();
-    TEST(sa.Count() == 2);
-    TEST(pLastInt == pNewInt);
-    delete pLastInt;
+		int* pNewInt = new int;
+		*pNewInt = 15;
+		sa.Push(pNewInt);
+		TEST(sa.Count() == 3);
+		TEST(sa[2] == 15);
 
-    delete sa.PopAt(0);
-    TEST(sa.Count() == 1);
-    TEST(sa[0] == 5);
+		int* pLastInt = sa.Pop();
+		TEST(sa.Count() == 2);
+		TEST(pLastInt == pNewInt);
+		delete pLastInt;
 
-    int* pRemainingInt = &sa[0];
-    sa.PopAll();
-    TEST(sa.Count() == 0);
-    TEST(*pRemainingInt == 5);
-    delete pRemainingInt;
+		delete sa.PopAt(0);
+		TEST(sa.Count() == 1);
+		TEST(sa[0] == 5);
 
-    sa.Push() = 20;
-    sa.Clear();
-    TEST(sa.Count() == 0);
+		int* pRemainingInt = &sa[0];
+		sa.PopAll();
+		TEST(sa.Count() == 0);
+		TEST(*pRemainingInt == 5);
+		delete pRemainingInt;
 
-    pNewInt = new int;
-    *pNewInt = 15;
-    sa.Push() = 5;
-    sa.Push() = 10;
-    sa.Push(pNewInt);
-    sa.Push() = 20;
-    TEST(sa.Find(10) == 1);
-    TEST(sa.Find(25) == -1);
-    TEST(sa.FindPointer(pNewInt) == 2);
-    TEST(sa.FindAny([](int &i) { return i == 20; }) == 3);
+		sa.Push() = 20;
+		sa.Clear();
+		TEST(sa.Count() == 0);
 
-    TEST(sa.Contains(15));
-    TEST(!sa.Contains(25));
-    TEST(sa.ContainsPointer(pNewInt));
-    TEST(sa.ContainsAny([](int &i) { return i == 20; }));
-  }
+		pNewInt = new int;
+		*pNewInt = 15;
+		sa.Push() = 5;
+		sa.Push() = 10;
+		sa.Push(pNewInt);
+		sa.Push() = 20;
+		TEST(sa.Find(10) == 1);
+		TEST(sa.Find(25) == -1);
+		TEST(sa.FindPointer(pNewInt) == 2);
+		TEST(sa.FindAny([](int &i) { return i == 20; }) == 3);
 
-  TESTS("Dictionary")
-  {
-    Dictionary<String, int> dic;
-    TEST(dic.Count() == 0);
+		TEST(sa.Contains(15));
+		TEST(!sa.Contains(25));
+		TEST(sa.ContainsPointer(pNewInt));
+		TEST(sa.ContainsAny([](int &i) { return i == 20; }));
+	}
 
-    dic.Add("foo", 5);
-    TEST(dic.Count() == 1);
-    TEST(dic["foo"] == 5);
+	TESTS("Dictionary")
+	{
+		Dictionary<String, int> dic;
+		TEST(dic.Count() == 0);
 
-    dic["bar"] = 10;
-    TEST(dic["bar"] == 10);
+		dic.Add("foo", 5);
+		TEST(dic.Count() == 1);
+		TEST(dic["foo"] == 5);
 
-    DictionaryPair<String, int> &pair = dic.Push("foobar");
-    pair.value = 15;
-    TEST(dic["foobar"] == 15);
+		dic["bar"] = 10;
+		TEST(dic["bar"] == 10);
 
-    TEST(dic.IndexByKey("bar") == 1);
-    TEST(dic.IndexByValue(10) == 1);
+		DictionaryPair<String, int> &pair = dic.Push("foobar");
+		pair.value = 15;
+		TEST(dic["foobar"] == 15);
 
-    TEST(dic.HasKey("foobar"));
-    TEST(dic.HasValue(15));
+		TEST(dic.IndexByKey("bar") == 1);
+		TEST(dic.IndexByValue(10) == 1);
 
-    dic.RemoveByIndex(0);
-    TEST(dic.Count() == 2);
-    TEST(!dic.HasKey("foo"));
+		TEST(dic.HasKey("foobar"));
+		TEST(dic.HasValue(15));
 
-    dic.RemoveByKey("bar");
-    TEST(dic.Count() == 1);
-    TEST(!dic.HasKey("bar"));
+		dic.RemoveByIndex(0);
+		TEST(dic.Count() == 2);
+		TEST(!dic.HasKey("foo"));
 
-    dic.RemoveByValue(15);
-    TEST(dic.Count() == 0);
+		dic.RemoveByKey("bar");
+		TEST(dic.Count() == 1);
+		TEST(!dic.HasKey("bar"));
 
-    dic["foo"] = 5;
-    dic["bar"] = 10;
-    dic["foobar"] = 15;
-    dic["barfoo"] = 20;
-    TEST(dic.Count() == 4);
-    delete &dic.PopByIndex(0);
-    TEST(dic.Count() == 3);
-    TEST(!dic.HasKey("foo"));
-    delete &dic.PopByKey("bar");
-    TEST(dic.Count() == 2);
-    TEST(!dic.HasKey("bar"));
-    delete &dic.PopByValue(15);
-    TEST(dic.Count() == 1);
-    TEST(!dic.HasKey("foobar"));
+		dic.RemoveByValue(15);
+		TEST(dic.Count() == 0);
 
-    dic.Clear();
-    TEST(dic.Count() == 0);
+		dic["foo"] = 5;
+		dic["bar"] = 10;
+		dic["foobar"] = 15;
+		dic["barfoo"] = 20;
+		TEST(dic.Count() == 4);
+		delete &dic.PopByIndex(0);
+		TEST(dic.Count() == 3);
+		TEST(!dic.HasKey("foo"));
+		delete &dic.PopByKey("bar");
+		TEST(dic.Count() == 2);
+		TEST(!dic.HasKey("bar"));
+		delete &dic.PopByValue(15);
+		TEST(dic.Count() == 1);
+		TEST(!dic.HasKey("foobar"));
 
-    dic["foo"] = 5;
-    dic["bar"] = 10;
-    TEST(dic.GetKeyByIndex(0) == "foo");
-    TEST(dic.GetValueByIndex(1) == 10);
-  }
+		dic.Clear();
+		TEST(dic.Count() == 0);
 
-  TESTS("FileStream")
-  {
-    FileStream fsWriter;
-    fsWriter.Open("test.txt", "w");
-    fsWriter.WriteLine("foo");
-    fsWriter.WriteLine("bar");
+		dic["foo"] = 5;
+		dic["bar"] = 10;
+		TEST(dic.GetKeyByIndex(0) == "foo");
+		TEST(dic.GetValueByIndex(1) == 10);
+	}
+
+	TESTS("FileStream")
+	{
+		FileStream fsWriter;
+		fsWriter.Open("test.txt", "w");
+		fsWriter.WriteLine("foo");
+		fsWriter.WriteLine("bar");
 		fsWriter << int32_t(5);
 		fsWriter << float(2.5f);
-    fsWriter << String("test");
-    fsWriter.Close();
+		fsWriter << String("test");
+		fsWriter.Close();
 
-    FileStream fsReader;
-    fsReader.Open("test.txt", "r");
+		FileStream fsReader;
+		fsReader.Open("test.txt", "r");
 
-    TEST(fsReader.ReadLine() == "foo");
-    TEST(fsReader.ReadLine() == "bar");
+		TEST(fsReader.ReadLine() == "foo");
+		TEST(fsReader.ReadLine() == "bar");
 
 		int32_t i;
 		float f;
-    String s;
+		String s;
 
-    fsReader >> i;
-    TEST(i == 5);
+		fsReader >> i;
+		TEST(i == 5);
 
-    fsReader >> f;
-    TEST(f > 2.0f && f < 3.0f);
+		fsReader >> f;
+		TEST(f > 2.0f && f < 3.0f);
 
-    fsReader >> s;
-    TEST(s == "test");
+		fsReader >> s;
+		TEST(s == "test");
 
-    fsReader.ReadChar();
-    TEST(fsReader.AtEOF());
+		fsReader.ReadChar();
+		TEST(fsReader.AtEOF());
 
-    fsReader.Close();
-  }
+		fsReader.Close();
+	}
 
-  TESTS("Mutex")
-  {
-    Mutex mutex;
+	TESTS("Mutex")
+	{
+		Mutex mutex;
 
-    {
-      TEST(mutex.TryLock() == TRUE);
-      TEST(mutex.TryLock() == FALSE);
-      mutex.Unlock();
-    }
+		{
+			TEST(mutex.TryLock() == TRUE);
+			TEST(mutex.TryLock() == FALSE);
+			mutex.Unlock();
+		}
 
-    {
-      mutex.Lock();
-      mutex.Unlock();
-    }
+		{
+			mutex.Lock();
+			mutex.Unlock();
+		}
 
-    {
-      MutexWait wait(mutex);
-    }
-  }
+		{
+			MutexWait wait(mutex);
+		}
+	}
 
 #ifndef SCRATCH_NO_EXCEPTIONS
-  TESTS("Exception")
-  {
-    try {
-      throw Exception("%d", 123);
-    } catch(Exception &ex) {
-      TEST(ex.Message == "123");
-    }
-  }
+	TESTS("Exception")
+	{
+		try {
+			throw Exception("%d", 123);
+		} catch(Exception &ex) {
+			TEST(ex.Message == "123");
+		}
+	}
 #endif
 
-  printf("\n");
-  printf("      OK: %d\n", g_iTestOK);
-  printf("  Failed: %d\n", g_iTestFailed);
-  printf("\n");
+	printf("\n");
+	printf("      OK: %d\n", g_iTestOK);
+	printf("  Failed: %d\n", g_iTestFailed);
+	printf("\n");
 
 #if _DEBUG
-  getchar();
+	getchar();
 #endif
 
-  return g_iTestFailed;
+	return g_iTestFailed;
 }

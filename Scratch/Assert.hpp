@@ -1,4 +1,4 @@
-/*  libscratch - Multipurpose objective C++ library.
+/*	libscratch - Multipurpose objective C++ library.
 
 		Copyright (c) 2013 - 2016 Angelo Geels <spansjh@gmail.com>
 
@@ -63,19 +63,19 @@ BOOL SCRATCH_EXPORT _scratch_assert(const char* expr, const char* filename, unsi
 #endif
 SCRATCH_NAMESPACE_END;
 // Windows
-#define ASSERT(expr) {             \
-  if(!(expr)) {                    \
-    static UBYTE bWasHere = 0;     \
-    if(!bWasHere) {                \
-      if(Scratch::_scratch_assert( \
-        #expr,                     \
-        __FILE__,                  \
-        __LINE__)) {               \
-        __asm { int 3 }            \
-      }                            \
-      bWasHere = 1;                \
-    }                              \
-  }                                \
+#define ASSERT(expr) {						 \
+	if(!(expr)) {										\
+		static UBYTE bWasHere = 0;		 \
+		if(!bWasHere) {								\
+			if(Scratch::_scratch_assert( \
+				#expr,										 \
+				__FILE__,									\
+				__LINE__)) {							 \
+				__asm { int 3 }						\
+			}														\
+			bWasHere = 1;								\
+		}															\
+	}																\
 }
 #else
 // Other sensible operating systems
