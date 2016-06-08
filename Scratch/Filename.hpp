@@ -103,7 +103,7 @@ void Filename::FromHome(const String &strPath)
 {
 #if WINDOWS
 	char szPath[MAX_PATH];
-	if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, szPath))) {
+	if (SUCCEEDED(SHGetFolderPath(nullptr, CSIDL_PROFILE, nullptr, 0, szPath))) {
 		this->CopyToBuffer(szPath);
 		this->AppendToBuffer("\\" + strPath);
 	}

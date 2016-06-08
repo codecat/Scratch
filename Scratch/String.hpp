@@ -143,7 +143,7 @@ char* String::str_szEmpty = (char*)"";
 void String::CopyToBuffer(const char* szSrc)
 {
 	// Validate the source string
-	if (szSrc == NULL) {
+	if (szSrc == nullptr) {
 		return;
 	}
 
@@ -190,7 +190,7 @@ void String::AppendToBuffer(const char* szSrc)
 void String::AppendToBuffer(const char* szSrc, int iCount)
 {
 	// Validate source string
-	if (szSrc == NULL) {
+	if (szSrc == nullptr) {
 		return;
 	}
 
@@ -395,7 +395,7 @@ void String::Split(const String &strNeedle, StackArray<String> &astrResult, bool
 		szOffset = strstr(szOffset, strNeedle);
 
 		// If the needle is found
-		if (szOffset != NULL) {
+		if (szOffset != nullptr) {
 			// Get the length for the string
 			int iLen = szOffset - szOffsetPrev;
 
@@ -443,7 +443,7 @@ void String::Split(const String &strNeedle, StackArray<String> &astrResult, bool
 			}
 			delete[] szPart;
 		}
-	} while (szOffset != NULL);
+	} while (szOffset != nullptr);
 }
 
 void String::CommandLineSplit(StackArray<String> &astrResult) const
@@ -594,7 +594,7 @@ String String::Replace(const String &strNeedle, const String &strReplace) const
 		szOffset = strstr(szOffset, strNeedle);
 
 		// If it's found
-		if (szOffset != NULL) {
+		if (szOffset != nullptr) {
 			// Append everything before the needle of the original characters to the return value
 			strRet.AppendToBuffer(szOffsetPrev, szOffset - szOffsetPrev);
 
@@ -610,7 +610,7 @@ String String::Replace(const String &strNeedle, const String &strReplace) const
 			// Append the remaining part of the source string
 			strRet.AppendToBuffer(szOffsetPrev, strlen(szOffsetPrev));
 		}
-	} while (szOffset != NULL);
+	} while (szOffset != nullptr);
 
 	return strRet;
 }
@@ -693,7 +693,7 @@ int String::IndexOf(char c) const
 	MutexWait wait(str_mutex);
 #endif
 	const char* sz = strchr(this->str_szBuffer, c);
-	if (sz != NULL) {
+	if (sz != nullptr) {
 		return sz - this->str_szBuffer;
 	}
 	return -1;
@@ -705,7 +705,7 @@ int String::IndexOf(const String &strNeedle) const
 	MutexWait wait(str_mutex);
 #endif
 	const char* sz = strstr(this->str_szBuffer, strNeedle);
-	if (sz != NULL) {
+	if (sz != nullptr) {
 		return sz - this->str_szBuffer;
 	}
 	return -1;
@@ -717,7 +717,7 @@ int String::IndexOfLast(char c) const
 	MutexWait wait(str_mutex);
 #endif
 	const char* sz = strrchr(this->str_szBuffer, c);
-	if (sz != NULL) {
+	if (sz != nullptr) {
 		return sz - this->str_szBuffer;
 	}
 	return -1;
@@ -744,7 +744,7 @@ static char* strrstr(const char* s1, const char* s2)
 			}
 		}
 	}
-	return NULL;
+	return nullptr;
 }
 
 int String::IndexOfLast(const String &strNeedle) const
@@ -753,7 +753,7 @@ int String::IndexOfLast(const String &strNeedle) const
 	MutexWait wait(str_mutex);
 #endif
 	const char* sz = strrstr(this->str_szBuffer, strNeedle);
-	if (sz != NULL) {
+	if (sz != nullptr) {
 		return sz - this->str_szBuffer;
 	}
 	return -1;
@@ -776,7 +776,7 @@ bool String::Contains(const String &strNeedle)
 	MutexWait wait(str_mutex);
 	MutexWait wait2(strNeedle.str_mutex);
 #endif
-	return strstr(this->str_szBuffer, strNeedle) != NULL;
+	return strstr(this->str_szBuffer, strNeedle) != nullptr;
 }
 
 bool String::Contains(char c) const
@@ -813,7 +813,7 @@ bool String::EndsWith(const String &strNeedle)
 	const char* szTemp = strstr(this->str_szBuffer, strNeedle);
 
 	// Make sure the needle is found
-	if (szTemp == NULL) {
+	if (szTemp == nullptr) {
 		return false;
 	}
 

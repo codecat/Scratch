@@ -83,7 +83,7 @@ NetworkStream::NetworkStream()
 {
 #if WINDOWS
 	ns_pWSAData = new WSADATA;
-	ns_socket = NULL;
+	ns_socket = nullptr;
 #else
 	ns_socket = 0;
 #endif

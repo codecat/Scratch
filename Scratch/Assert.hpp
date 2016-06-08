@@ -41,7 +41,7 @@ BOOL SCRATCH_EXPORT _scratch_assert(const char* expr, const char* filename, unsi
 
 	char szProgname[MAX_PATH + 1];
 	szProgname[MAX_PATH] = '\0';
-	GetModuleFileName(NULL, szProgname, MAX_PATH);
+	GetModuleFileName(nullptr, szProgname, MAX_PATH);
 
 	strText.SetF(
 		"Assertion Failed!\n\n"
@@ -52,7 +52,7 @@ BOOL SCRATCH_EXPORT _scratch_assert(const char* expr, const char* filename, unsi
 		"(Press Retry to break)",
 		szProgname, filename, lineno, expr);
 
-	int nCode = MessageBox(NULL, strText, "Scratch Assertion", MB_ABORTRETRYIGNORE | MB_ICONHAND | MB_SETFOREGROUND | MB_TASKMODAL);
+	int nCode = MessageBox(nullptr, strText, "Scratch Assertion", MB_ABORTRETRYIGNORE | MB_ICONHAND | MB_SETFOREGROUND | MB_TASKMODAL);
 
 	if (nCode == IDABORT) { exit(3); return FALSE; }
 	if (nCode == IDRETRY) { return TRUE; }

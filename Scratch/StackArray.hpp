@@ -149,7 +149,7 @@ StackArray<Type>::~StackArray()
 	}
 
 	// free allocated memory for data
-	if (sa_pItems != NULL) {
+	if (sa_pItems != nullptr) {
 		free(sa_pItems);
 	}
 }
@@ -162,7 +162,7 @@ void StackArray<Type>::AllocateSlots(int32_t ctSlots)
 	Type** pNewMem = (Type**)malloc(sizeof(Type*) * sa_ctSlots);
 
 	// if we allocated memory before
-	if (sa_pItems != NULL) {
+	if (sa_pItems != nullptr) {
 		// copy data to the new memory
 		memcpy(pNewMem, sa_pItems, sizeof(Type*) * (sa_ctSlots - ctSlots));
 		// free previously allocated memory
@@ -275,8 +275,8 @@ Type* StackArray<Type>::Pop()
 	// get the item on top of the stack
 	Type* tObject = sa_pItems[sa_ctUsed];
 
-	// set the remaining pointer to NULL (just to be sure)
-	sa_pItems[sa_ctUsed] = NULL;
+	// set the remaining pointer to nullptr (just to be sure)
+	sa_pItems[sa_ctUsed] = nullptr;
 
 	// return the object
 	return tObject;
@@ -304,8 +304,8 @@ Type* StackArray<Type>::PopAt(int32_t iIndex)
 		sa_pItems[i] = sa_pItems[i + 1];
 	}
 
-	// set last pointer to NULL (just in case)
-	sa_pItems[sa_ctUsed] = NULL;
+	// set last pointer to nullptr (just in case)
+	sa_pItems[sa_ctUsed] = nullptr;
 
 	// return the object
 	return tObject;
@@ -321,8 +321,8 @@ void StackArray<Type>::PopAll()
 
 	// for every object
 	for (int32_t i = 0; i < sa_ctUsed; i++) {
-		// set remaining pointer to NULL (just to be sure)
-		sa_pItems[i] = NULL;
+		// set remaining pointer to nullptr (just to be sure)
+		sa_pItems[i] = nullptr;
 	}
 
 	// reset iterator to 0
@@ -341,8 +341,8 @@ void StackArray<Type>::Clear()
 	for (int32_t i = 0; i < sa_ctUsed; i++) {
 		// delete it
 		delete sa_pItems[i];
-		// set remaining pointer to NULL (just to be sure)
-		sa_pItems[i] = NULL;
+		// set remaining pointer to nullptr (just to be sure)
+		sa_pItems[i] = nullptr;
 	}
 
 	// reset iterator to 0

@@ -154,7 +154,7 @@ void MemoryStream::AllocateMoreMemory(uint32_t ctBytes)
 	uint8_t* pubOldBuffer = strm_pubBuffer;
 
 	// if there's old memory to copy
-	if (pubOldBuffer != NULL && strm_ulSize > 0) {
+	if (pubOldBuffer != nullptr && strm_ulSize > 0) {
 		memcpy(pubNewBuffer, pubOldBuffer, strm_ulSize);
 	}
 
@@ -165,7 +165,7 @@ void MemoryStream::AllocateMoreMemory(uint32_t ctBytes)
 	strm_pubBuffer = pubNewBuffer;
 
 	// delete old memory
-	if (pubOldBuffer != NULL) {
+	if (pubOldBuffer != nullptr) {
 		delete[] pubOldBuffer;
 	}
 }

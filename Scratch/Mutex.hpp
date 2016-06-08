@@ -71,7 +71,7 @@ Mutex::Mutex()
 {
 #ifndef _MSC_VER
 	m_pMutex = (void*)new pthread_mutex_t;
-	pthread_mutex_init((pthread_mutex_t*)m_pMutex, NULL);
+	pthread_mutex_init((pthread_mutex_t*)m_pMutex, nullptr);
 #else
 	m_pMutex = CreateMutex(0, false, 0);
 #endif
@@ -88,7 +88,7 @@ Mutex &Mutex::operator=(const Mutex &copy)
 	ASSERT(!copy.m_bIsLocked);
 #ifndef _MSC_VER
 	m_pMutex = (void*)new pthread_mutex_t;
-	pthread_mutex_init((pthread_mutex_t*)m_pMutex, NULL);
+	pthread_mutex_init((pthread_mutex_t*)m_pMutex, nullptr);
 #else
 	m_pMutex = CreateMutex(0, false, 0);
 #endif

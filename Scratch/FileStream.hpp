@@ -63,7 +63,7 @@ public:
 
 FileStream::FileStream()
 {
-	fs_pfh = NULL;
+	fs_pfh = nullptr;
 }
 
 FileStream::~FileStream()

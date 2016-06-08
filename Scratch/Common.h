@@ -48,11 +48,6 @@
 // Legacy define - does nothing
 #define SCRATCH_EXPORT
 
-#ifdef NULL
-// Prefer nullptr instead
-#undef NULL
-#endif
-
 #define TRUE 1
 #define FALSE 0
 
