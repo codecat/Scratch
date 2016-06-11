@@ -665,6 +665,9 @@ void strupr(char* sz)
 		sz[i] = toupper(sz[i]);
 	}
 }
+#else
+#define strlwr _strlwr
+#define strupr _strupr
 #endif
 
 String String::ToLower() const

@@ -83,10 +83,8 @@ NetworkStream::NetworkStream()
 {
 #if WINDOWS
 	ns_pWSAData = new WSADATA;
-	ns_socket = nullptr;
-#else
-	ns_socket = 0;
 #endif
+	ns_socket = 0;
 	ns_psin = new sockaddr_in;
 
 	ns_bEOF = FALSE;
