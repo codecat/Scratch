@@ -495,7 +495,11 @@ String String::InternalTrim(bool bLeft, bool bRight, char c) const
 	// Copy ourselves into a new buffer
 	int len = strlen(this->str_szBuffer);
 	char* szBuffer = new char[len + 1];
+#if WINDOWS
 	strcpy_s(szBuffer, len + 1, this->str_szBuffer);
+#else
+	strcpy(szBuffer, this->str_szBuffer);
+#endif
 
 	// Keep a pointer to the current offset
 	char* szOffset = szBuffer;
