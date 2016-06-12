@@ -34,10 +34,6 @@ endif()
 
 set_target_properties(Scratch PROPERTIES LINKER_LANGUAGE CXX)
 
-if(WIN32)
-	add_definitions("/wd4996")
-endif()
-
 set(presrc_tests "ScratchTests")
 
 add_executable(ScratchTests ${presrc_tests}/main.cpp)

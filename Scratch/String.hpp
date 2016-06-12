@@ -493,8 +493,9 @@ void String::CommandLineSplit(StackArray<String> &astrResult) const
 String String::InternalTrim(bool bLeft, bool bRight, char c) const
 {
 	// Copy ourselves into a new buffer
-	char* szBuffer = new char[strlen(this->str_szBuffer) + 1];
-	strcpy(szBuffer, this->str_szBuffer);
+	int len = strlen(this->str_szBuffer);
+	char* szBuffer = new char[len + 1];
+	strcpy_s(szBuffer, len + 1, this->str_szBuffer);
 
 	// Keep a pointer to the current offset
 	char* szOffset = szBuffer;
@@ -665,9 +666,6 @@ void strupr(char* sz)
 		sz[i] = toupper(sz[i]);
 	}
 }
-#else
-#define strlwr _strlwr
-#define strupr _strupr
 #endif
 
 String String::ToLower() const
@@ -676,7 +674,12 @@ String String::ToLower() const
 	MutexWait wait(str_mutex);
 #endif
 	String strRet(this->str_szBuffer);
+#if WINDOWS
+	int len = strlen(this->str_szBuffer);
+	_strlwr_s(strRet.str_szBuffer, len + 1);
+#else
 	strlwr(strRet.str_szBuffer);
+#endif
 	return strRet;
 }
 
@@ -686,7 +689,12 @@ String String::ToUpper() const
 	MutexWait wait(str_mutex);
 #endif
 	String strRet(this->str_szBuffer);
+#if WINDOWS
+	int len = strlen(this->str_szBuffer);
+	_strupr_s(strRet.str_szBuffer, len + 1);
+#else
 	strupr(strRet.str_szBuffer);
+#endif
 	return strRet;
 }
 

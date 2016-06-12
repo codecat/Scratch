@@ -101,7 +101,8 @@ bool FileStream::Open(const char* szFileName, const char* szMode)
 	ASSERT(fs_pfh == nullptr);
 
 	// open file
-	FILE* pfh = fopen(szFileName, szMode);
+	FILE* pfh = nullptr;
+	fopen_s(&pfh, szFileName, szMode);
 
 	// it might not exist
 	if (pfh == nullptr) {
