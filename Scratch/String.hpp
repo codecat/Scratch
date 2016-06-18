@@ -825,7 +825,7 @@ bool String::EndsWith(const String &strNeedle)
 #endif
 
 	// Get the offset
-	const char* szTemp = strstr(this->str_szBuffer, strNeedle);
+	const char* szTemp = this->str_szBuffer + strlen(this->str_szBuffer) - strlen(strNeedle);
 
 	// Make sure the needle is found
 	if (szTemp == nullptr) {
