@@ -26,10 +26,8 @@
 
 #pragma once
 
-#ifdef SCRATCH_IMPL
 #include <cstdlib>
 #include <cstring>
-#endif
 
 #ifndef SCRATCH_NO_THREADSAFE
 #include "Mutex.hpp"
@@ -95,8 +93,6 @@ public:
 private:
 	void AllocateSlots(int32_t ctSlots);
 };
-
-#ifdef SCRATCH_IMPL
 
 template<class Type>
 StackArray<Type>::StackArray()
@@ -447,7 +443,5 @@ Type& StackArray<Type>::operator[](int32_t iIndex)
 	ASSERT(iIndex >= 0 && iIndex < sa_ctUsed);
 	return *sa_pItems[iIndex];
 }
-
-#endif
 
 SCRATCH_NAMESPACE_END;
