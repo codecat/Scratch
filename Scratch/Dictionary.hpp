@@ -119,8 +119,6 @@ public:
 	TValue& GetValueByIndex(const int32_t iIndex);
 };
 
-#ifdef SCRATCH_IMPL
-
 template<class TKey, class TValue>
 DictionaryPair<TKey, TValue>::DictionaryPair()
 {
@@ -351,7 +349,5 @@ TValue& Dictionary<TKey, TValue>::GetValueByIndex(const int32_t iIndex)
 	// return the value
 	return dic_saPairs[iIndex].value;
 }
-
-#endif
 
 SCRATCH_NAMESPACE_END;
