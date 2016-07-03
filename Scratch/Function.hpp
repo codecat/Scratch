@@ -52,12 +52,12 @@ namespace Internal
 		{
 		}
 
-		Result operator()(Args... args) override
+		virtual Result operator()(Args... args)
 		{
 			return m_func(args...);
 		}
 
-		concrete_function* clone() const override
+		virtual concrete_function* clone() const
 		{
 			return new concrete_function(m_func);
 		}
