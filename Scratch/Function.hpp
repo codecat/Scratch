@@ -37,7 +37,7 @@ namespace Internal
 	{
 		virtual Result operator()(Args... args) = 0;
 		virtual abstract_function *clone() const = 0;
-		virtual ~abstract_function() = default;
+		virtual ~abstract_function() {}
 	};
 
 	template<typename Func, typename Result, typename ...Args>
