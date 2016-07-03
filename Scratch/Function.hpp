@@ -91,7 +91,8 @@ public:
 		m_func = nullptr;
 	}
 
-	template<typename Func> Function(const Func &x)
+	template<typename Func>
+	Function(const Func &x)
 	{
 		m_func = new Internal::concrete_function<typename Internal::func_filter<Func>::type, Result, Args...>(x);
 	}
@@ -124,7 +125,8 @@ public:
 		return *this;
 	}
 
-	template<typename Func> Function &operator=(const Func &x)
+	template<typename Func>
+	Function &operator=(const Func &x)
 	{
 		auto temp = new Internal::concrete_function<typename Internal::func_filter<Func>::type, Result, Args...>(x);
 		if (m_func != nullptr) {
