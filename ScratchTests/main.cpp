@@ -58,6 +58,12 @@ static int g_iTestFailed = 0;
 #define MAIN int main(int argc, char* argv[])
 #endif
 
+// Used in testing Function<>
+static int FunctionTest(int x)
+{
+	return x * x * x;
+}
+
 MAIN
 {
 	StackArray<String> aTests;
@@ -356,6 +362,26 @@ MAIN
 		}
 	}
 #endif
+
+	TESTS("Function")
+	{
+		Function<int(int)> fd = [](int x) { return x * 2; };
+		TEST(fd(10) == 20);
+		TEST(fd(100) == 200);
+
+		fd = [](int x) { return x * x; };
+		TEST(fd(10) == 100);
+		TEST(fd(50) == 2500);
+
+		bool b = false;
+		Function<void()> fs = [&b]() { b = true; };
+		fs();
+		TEST(b == true);
+
+		Function<int(int)> fp = &FunctionTest;
+		TEST(fp(10) == 1000);
+		TEST(fp(50) == 125000);
+	}
 
 	printf("\n");
 	printf("      OK: %d\n", g_iTestOK);

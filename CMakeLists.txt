@@ -23,10 +23,12 @@ add_library(Scratch
 	${presrc}/StackArray.hpp
 	${presrc}/Stream.hpp
 	${presrc}/String.hpp
+	${presrc}/Function.hpp
 	${presrc}/Filename.hpp
 	${presrc}/Mutex.hpp
 	${presrc}/Common.h
-	${presrc}/Scratch.hpp)
+	${presrc}/Scratch.hpp
+)
 
 if(APPLE)
 	set_target_properties(Scratch PROPERTIES MACOSX_RPATH 1)
@@ -63,3 +65,5 @@ add_test(Mutex ScratchTests Mutex)
 add_test(Mutex_NTS ScratchTests_No_ThreadSafe Mutex)
 add_test(Exception ScratchTests Exception)
 add_test(Exception_NTS ScratchTests_No_ThreadSafe Exception)
+add_test(Function ScratchTests Function)
+add_test(Function_NTS ScratchTests_No_ThreadSafe Function)

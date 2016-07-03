@@ -155,6 +155,17 @@
  */
 #include "Exception.hpp"
 
+/* Function: high level anonymous functions
+ * ----------------------------------------
+ * Basic usage:
+ *   Function<int(int)> f = [](int x) {
+ *     printf("Hello, world %d!\n", x);
+ *     return x * 10;
+ *   };
+ *   int y = f(2);
+ */
+#include "Function.hpp"
+
 /* Assert: nicer assertions
  * ------------------------
  * Basic usage:
