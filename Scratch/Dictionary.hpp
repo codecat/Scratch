@@ -35,7 +35,7 @@ template<class TKey, class TValue>
 class Dictionary;
 
 template<class TKey, class TValue>
-class SCRATCH_EXPORT DictionaryPair
+class DictionaryPair
 {
 	friend class Dictionary<TKey, TValue>;
 public:
@@ -61,7 +61,7 @@ private:
 };
 
 template<class TKey, class TValue>
-class SCRATCH_EXPORT Dictionary
+class Dictionary
 {
 private:
 	StackArray<DictionaryPair<TKey, TValue>> dic_saPairs;

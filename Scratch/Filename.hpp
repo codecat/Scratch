@@ -36,7 +36,7 @@
 
 SCRATCH_NAMESPACE_BEGIN;
 
-class SCRATCH_EXPORT Filename : public String
+class Filename : public String
 {
 public:
 	Filename();

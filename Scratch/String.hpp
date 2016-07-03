@@ -45,7 +45,7 @@
 
 SCRATCH_NAMESPACE_BEGIN;
 
-class SCRATCH_EXPORT String
+class String
 {
 	friend class Filename;
 protected:
@@ -124,16 +124,16 @@ public:
 	char& operator[](int iIndex);
 };
 
-String SCRATCH_EXPORT operator+(const String &strLHS, const char* szRHS);
-String SCRATCH_EXPORT operator+(const String &strLHS, const char cRHS);
+String operator+(const String &strLHS, const char* szRHS);
+String operator+(const String &strLHS, const char cRHS);
 
-String SCRATCH_EXPORT operator+(const char* szLHS, String &strRHS);
-String SCRATCH_EXPORT operator+(const char cLHS, String &strRHS);
+String operator+(const char* szLHS, String &strRHS);
+String operator+(const char cLHS, String &strRHS);
 
-String SCRATCH_EXPORT operator*(const String &strLHS, int ctRepeat);
-String SCRATCH_EXPORT operator*(int ctRepeat, const String &strRHS);
+String operator*(const String &strLHS, int ctRepeat);
+String operator*(int ctRepeat, const String &strRHS);
 
-String SCRATCH_EXPORT strPrintF(const char* szFormat, ...);
+String strPrintF(const char* szFormat, ...);
 
 #ifdef SCRATCH_IMPL
 

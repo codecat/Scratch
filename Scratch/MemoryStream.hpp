@@ -31,7 +31,7 @@
 
 SCRATCH_NAMESPACE_BEGIN;
 
-class SCRATCH_EXPORT MemoryStream : public Stream
+class MemoryStream : public Stream
 {
 public:
 	uint8_t* strm_pubBuffer;

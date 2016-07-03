@@ -31,14 +31,14 @@
 
 SCRATCH_NAMESPACE_BEGIN;
 
-enum SCRATCH_EXPORT ENewLineMode
+enum ENewLineMode
 {
 	ENLM_CRLF,
 	ENLM_LF,
 	ENLM_CR,
 };
 
-class SCRATCH_EXPORT Stream
+class Stream
 {
 public:
 	ENewLineMode strm_nlmNewLineMode;

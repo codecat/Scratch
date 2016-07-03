@@ -38,7 +38,7 @@
 
 SCRATCH_NAMESPACE_BEGIN;
 
-class SCRATCH_EXPORT Mutex
+class Mutex
 {
 private:
 	void* m_pMutex;
@@ -55,7 +55,7 @@ public:
 	void Unlock();
 };
 
-class SCRATCH_EXPORT MutexWait
+class MutexWait
 {
 public:
 	Mutex* m_pMutex;

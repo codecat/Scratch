@@ -36,7 +36,7 @@
 SCRATCH_NAMESPACE_BEGIN;
 
 template<class Type>
-class SCRATCH_EXPORT StackArray
+class StackArray
 {
 public:
 	Type** sa_pItems;

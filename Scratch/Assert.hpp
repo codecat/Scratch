@@ -32,10 +32,10 @@
 
 #ifdef _MSC_VER
 SCRATCH_NAMESPACE_BEGIN;
-BOOL SCRATCH_EXPORT _scratch_assert(const char* expr, const char* filename, unsigned lineno);
+BOOL _scratch_assert(const char* expr, const char* filename, unsigned lineno);
 #ifdef SCRATCH_IMPL
 #include "String.hpp"
-BOOL SCRATCH_EXPORT _scratch_assert(const char* expr, const char* filename, unsigned lineno)
+BOOL _scratch_assert(const char* expr, const char* filename, unsigned lineno)
 {
 	String strText;
 

@@ -40,7 +40,7 @@
 
 SCRATCH_NAMESPACE_BEGIN;
 
-class SCRATCH_EXPORT Exception
+class Exception
 {
 public:
 	String Message;

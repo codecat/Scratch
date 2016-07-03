@@ -45,7 +45,7 @@ static bool _bWinsockInitialized = FALSE;
 
 SCRATCH_NAMESPACE_BEGIN;
 
-class SCRATCH_EXPORT NetworkStream : public Stream
+class NetworkStream : public Stream
 {
 public:
 #if WINDOWS

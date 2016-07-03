@@ -45,9 +45,6 @@
 #define SCRATCH_NAMESPACE_BEGIN namespace Scratch {
 #define SCRATCH_NAMESPACE_END }
 
-// Legacy define - does nothing
-#define SCRATCH_EXPORT
-
 #define TRUE 1
 #define FALSE 0
 

@@ -32,7 +32,7 @@
 
 SCRATCH_NAMESPACE_BEGIN;
 
-class SCRATCH_EXPORT FileStream : public Stream
+class FileStream : public Stream
 {
 public:
 	String fs_strFileName;
