@@ -36,6 +36,40 @@
 SCRATCH_NAMESPACE_BEGIN;
 
 template<class Type>
+class StackArray;
+
+template<class Type>
+class StackArrayIterator
+{
+public:
+	StackArray<Type>* m_stack;
+	int m_index;
+
+public:
+	StackArrayIterator(StackArray<Type>* stack, int index)
+	{
+		m_stack = stack;
+		m_index = index;
+	}
+
+	bool operator!=(const StackArrayIterator<Type> &i)
+	{
+		return m_index != i.m_index;
+	}
+
+	StackArrayIterator<Type> &operator++()
+	{
+		m_index++;
+		return *this;
+	}
+
+	Type &operator*()
+	{
+		return (*m_stack)[m_index];
+	}
+};
+
+template<class Type>
 class StackArray
 {
 public:
@@ -89,6 +123,9 @@ public:
 	bool ContainsAny(Func f);
 
 	Type& operator[](int32_t iIndex);
+
+	StackArrayIterator<Type> begin();
+	StackArrayIterator<Type> end();
 
 private:
 	void AllocateSlots(int32_t ctSlots);
@@ -442,6 +479,18 @@ Type& StackArray<Type>::operator[](int32_t iIndex)
 #endif
 	ASSERT(iIndex >= 0 && iIndex < sa_ctUsed);
 	return *sa_pItems[iIndex];
+}
+
+template<class Type>
+StackArrayIterator<Type> StackArray<Type>::begin()
+{
+	return StackArrayIterator<Type>(this, 0);
+}
+
+template<class Type>
+StackArrayIterator<Type> StackArray<Type>::end()
+{
+	return StackArrayIterator<Type>(this, sa_ctUsed);
 }
 
 SCRATCH_NAMESPACE_END;

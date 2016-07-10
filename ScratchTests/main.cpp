@@ -237,6 +237,19 @@ MAIN
 		TEST(!sa.Contains(25));
 		TEST(sa.ContainsPointer(pNewInt));
 		TEST(sa.ContainsAny([](int &i) { return i == 20; }));
+
+		StackArray<int> arr;
+		arr.Push() = 5;
+		arr.Push() = 10;
+		arr.Push() = 15;
+		int iSum = 0;
+		int iCount = 0;
+		for (int i : arr) {
+			iSum += i;
+			iCount++;
+		}
+		TEST(iCount == 3);
+		TEST(iSum == 30);
 	}
 
 	TESTS("Dictionary")
