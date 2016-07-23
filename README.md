@@ -1,4 +1,4 @@
-# Scratch [![Build Status](https://travis-ci.org/angelog/Scratch.svg?branch=master)](https://travis-ci.org/AngeloG/Scratch)
+# Scratch [![Build Status](https://travis-ci.org/angelog/Scratch.svg?branch=master)](https://travis-ci.org/angelog/Scratch)
 
 Scratch, a header-only core library. Thread-safe by default. Currently includes the following classes:
 
