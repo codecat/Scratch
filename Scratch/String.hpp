@@ -100,10 +100,10 @@ public:
 
 	void Fill(char c, int ct);
 
-	bool Contains(const String &strNeedle);
+	bool Contains(const String &strNeedle) const;
 	bool Contains(char c) const;
-	bool StartsWith(const String &strNeedle);
-	bool EndsWith(const String &strNeedle);
+	bool StartsWith(const String &strNeedle) const;
+	bool EndsWith(const String &strNeedle) const;
 
 	operator const char*();
 	operator const char*() const;
@@ -785,7 +785,7 @@ void String::Fill(char c, int ct)
 	CopyToBuffer(szBuffer);
 }
 
-bool String::Contains(const String &strNeedle)
+bool String::Contains(const String &strNeedle) const
 {
 #ifndef SCRATCH_NO_THREADSAFE
 	MutexWait wait(str_mutex);
@@ -808,7 +808,7 @@ bool String::Contains(char c) const
 	return false;
 }
 
-bool String::StartsWith(const String &strNeedle)
+bool String::StartsWith(const String &strNeedle) const
 {
 #ifndef SCRATCH_NO_THREADSAFE
 	MutexWait wait(str_mutex);
@@ -817,7 +817,7 @@ bool String::StartsWith(const String &strNeedle)
 	return strstr(this->str_szBuffer, strNeedle) == this->str_szBuffer;
 }
 
-bool String::EndsWith(const String &strNeedle)
+bool String::EndsWith(const String &strNeedle) const
 {
 #ifndef SCRATCH_NO_THREADSAFE
 	MutexWait wait(str_mutex);
