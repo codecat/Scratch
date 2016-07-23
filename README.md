@@ -17,6 +17,7 @@ Scratch, a header-only core library. Thread-safe by default. Currently includes 
   * `Exception`
   * `Mutex`
   * `Assert`
+  * `Function`
 
 ## Usage
 Include Scratch.hpp in at least 1 implementation file while `SCRATCH_IMPL` is defined.
