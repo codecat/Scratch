@@ -47,11 +47,13 @@ public:
 	void Seek(uint32_t ulPos, int32_t iOrigin);
 	bool AtEOF();
 
-	bool Open(const char* szFileName, const char* szMode);
+	bool Open(const char* szFileName, const char* szMode, bool sharedHandle = false);
 
 	void OpenStdout();
 	void OpenStdin();
 	void OpenStderr();
+
+	void Flush();
 
 	void Close();
 	void Write(const void* p, uint32_t iLen);
@@ -60,6 +62,10 @@ public:
 };
 
 #ifdef SCRATCH_IMPL
+
+#if WINDOWS
+#include <share.h>
+#endif
 
 FileStream::FileStream()
 {
@@ -95,7 +101,7 @@ bool FileStream::AtEOF()
 	return feof(fs_pfh) > 0;
 }
 
-bool FileStream::Open(const char* szFileName, const char* szMode)
+bool FileStream::Open(const char* szFileName, const char* szMode, bool sharedHandle)
 {
 	// must not already have a handle open
 	ASSERT(fs_pfh == nullptr);
@@ -103,7 +109,11 @@ bool FileStream::Open(const char* szFileName, const char* szMode)
 	// open file
 #if WINDOWS
 	FILE* pfh = nullptr;
-	fopen_s(&pfh, szFileName, szMode);
+	if (sharedHandle) {
+		pfh = _fsopen(szFileName, szMode, _SH_DENYWR);
+	} else {
+		fopen_s(&pfh, szFileName, szMode);
+	}
 #else
 	FILE* pfh = fopen(szFileName, szMode);
 #endif
@@ -137,6 +147,11 @@ void FileStream::OpenStderr()
 {
 	fs_strFileName = "stderr";
 	fs_pfh = stderr;
+}
+
+void FileStream::Flush()
+{
+	fflush(fs_pfh);
 }
 
 void FileStream::Close()

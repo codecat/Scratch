@@ -52,6 +52,7 @@ public:
 	virtual void Seek(uint32_t ulPos, int32_t iOrigin) = 0;
 	virtual bool AtEOF() = 0;
 
+	virtual void Flush();
 	virtual void Close();
 
 	virtual void Write(const void* p, uint32_t iLen) = 0;
@@ -103,6 +104,10 @@ Stream::Stream()
 Stream::~Stream()
 {
 	Close();
+}
+
+void Stream::Flush()
+{
 }
 
 void Stream::Close()
