@@ -42,6 +42,12 @@
 	#define WINDOWS 0
 #endif
 
+#ifdef __APPLE__
+	#define MACOSX 1
+#else
+	#define MACOSX 0
+#endif
+
 #define SCRATCH_NAMESPACE_BEGIN namespace Scratch {
 #define SCRATCH_NAMESPACE_END }
 
