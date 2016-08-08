@@ -29,6 +29,10 @@
 #ifdef SCRATCH_IMPL
 #if WINDOWS
 #include <ShlObj.h>
+#else
+#include <unistd.h>
+#include <sys/types.h>
+#include <pwd.h>
 #endif
 #endif
 
@@ -108,7 +112,15 @@ void Filename::FromHome(const String &strPath)
 		this->AppendToBuffer("\\" + strPath);
 	}
 #else
-	this->CopyToBuffer("~/" + strPath);
+	const char* homedir;
+	if ((homedir = getenv("HOME")) == nullptr) {
+		homedir = getpwuid(getuid())->pw_dir;
+	}
+	if (homedir == nullptr) {
+		this->CopyToBuffer("~/" + strPath);
+	} else {
+		this->CopyToBuffer(String(homedir) + "/" + strPath);
+	}
 #endif
 }
 
