@@ -177,11 +177,11 @@ MAIN
 		fnmFoo = "/var/www/test.html";
 		TEST(fnmFoo.Extension() == "html");
 		TEST(fnmFoo.Path() == "/var/www");
-				TEST(fnmFoo.Name() == "test.html");
+		TEST(fnmFoo.Name() == "test.html");
 
 		fnmFoo.FromHome(".zshrc");
 		TEST_WINDOWS(fnmFoo.StartsWith("C:\\Users\\"));
-		TEST_UNIX(fnmFoo == "~/.zshrc");
+		TEST_UNIX(fnmFoo.StartsWith("/home/");
 	}
 
 	TESTS("StackArray")
