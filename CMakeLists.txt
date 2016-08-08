@@ -28,6 +28,8 @@ add_library(Scratch
 	${presrc}/Mutex.hpp
 	${presrc}/Common.h
 	${presrc}/Scratch.hpp
+
+	${presrc}/utf8.h
 )
 
 if(APPLE)

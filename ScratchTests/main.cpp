@@ -1,4 +1,4 @@
-#include <stdio.h>
+﻿#include <stdio.h>
 
 // This is so that we can access private fields for
 // checking their values in tests.
@@ -166,6 +166,14 @@ MAIN
 		TEST(strFoo * 3 == "xxx");
 
 		TEST(strPrintF("Hello %d %d", x, y) == "Hello 5 10");
+
+#ifndef SCRATCH_NO_UTF8
+		/*
+		const char* singleUtf8Character = { '\xf0', '\x90', '\x8d', '\x88', '\0' };
+		String strUtf8 = singleUtf8Character;
+		TEST(strUtf8.Length() == 1);
+		*/
+#endif
 	}
 
 	TESTS("Filename")
