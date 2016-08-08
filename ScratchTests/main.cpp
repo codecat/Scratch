@@ -181,7 +181,7 @@ MAIN
 
 		fnmFoo.FromHome(".zshrc");
 		TEST_WINDOWS(fnmFoo.StartsWith("C:\\Users\\"));
-		TEST_UNIX(fnmFoo.StartsWith("/home/");
+		TEST_UNIX(fnmFoo.StartsWith("/home/"));
 	}
 
 	TESTS("StackArray")
