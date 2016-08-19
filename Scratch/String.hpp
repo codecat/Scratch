@@ -606,7 +606,7 @@ String String::InternalTrim(bool bLeft, bool bRight, s_char c) const
 		char lc = *szOffset;
 		while (lc == c && lc != '\0') {
 			// This way, we'll trim all the spaces on the left
-			szOffset++;
+			lc = *(++szOffset);
 		}
 #else
 		// Find the space
@@ -808,7 +808,7 @@ String String::SubString(int iStart, int iLen) const
 
 	// Then set the null terminator at the length the user wants
 #ifdef SCRATCH_NO_UTF8
-	strRet[iLen] = '\0';
+	strRet.str_szBuffer[iLen] = '\0';
 #else
 	void* sz = strRet.str_szBuffer;
 	do {
