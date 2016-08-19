@@ -41,7 +41,7 @@
 
 #ifndef SCRATCH_NO_UTF8
 #include "utf8.h"
-typedef long s_char;
+typedef int s_char;
 #else
 typedef char s_char;
 #endif
@@ -610,7 +610,7 @@ String String::InternalTrim(bool bLeft, bool bRight, s_char c) const
 		}
 #else
 		// Find the space
-		long codepoint;
+		int codepoint;
 		void* v = utf8codepoint(szOffset, &codepoint);
 		while (codepoint == c && codepoint != '\0') {
 			szOffset = (char*)v;
@@ -633,7 +633,7 @@ String String::InternalTrim(bool bLeft, bool bRight, s_char c) const
 			}
 		}
 #else
-		long codepoint;
+		int codepoint;
 		char* lastValid = szOffset;
 		for (void* v = utf8codepoint(szOffset, &codepoint); ; v = utf8codepoint(v, &codepoint)) {
 			if (codepoint == '\0') {
