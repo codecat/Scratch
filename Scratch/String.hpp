@@ -272,7 +272,12 @@ void String::AppendToBuffer(const s_char cSrc)
 #endif
 
 	// Get ourselves a new buffer
-	this->str_szBuffer = new char[iBufBytes + sizeof(s_char) + 1];
+#ifdef SCRATCH_NO_UTF8
+	this->str_szBuffer = new char[iBufBytes + 2];
+#else
+	int charSize = utf8codepointsize(cSrc);
+	this->str_szBuffer = new char[iBufBytes + charSize + 1];
+#endif
 
 	// Copy the buffer
 	int iOffset = 0;
@@ -285,7 +290,8 @@ void String::AppendToBuffer(const s_char cSrc)
 #ifdef SCRATCH_NO_UTF8
 	this->str_szBuffer[iOffset++] = cSrc;
 #else
-	//TODO!!!
+	utf8catcodepoint(this->str_szBuffer + iOffset, cSrc, charSize);
+	iOffset += charSize;
 #endif
 
 	// Always end with a null terminator.
@@ -818,26 +824,18 @@ String String::SubString(int iStart, int iLen) const
 #if !WINDOWS
 void strlwr(char* sz)
 {
-#ifdef SCRATCH_NO_UTF8
 	int len = strlen(sz);
 	for (int i = 0; i < len; i++) {
 		sz[i] = tolower(sz[i]);
 	}
-#else
-	//TODO
-#endif
 }
 
 void strupr(char* sz)
 {
-#ifdef SCRATCH_NO_UTF8
 	int len = strlen(sz);
 	for (int i = 0; i < len; i++) {
 		sz[i] = toupper(sz[i]);
 	}
-#else
-	//TODO
-#endif
 }
 #endif
 
@@ -846,12 +844,17 @@ String String::ToLower() const
 #ifndef SCRATCH_NO_THREADSAFE
 	MutexWait wait(str_mutex);
 #endif
+
 	String strRet(this->str_szBuffer);
+#ifdef SCRATCH_NO_UTF8
 #if WINDOWS
 	int len = strlen(this->str_szBuffer);
 	_strlwr_s(strRet.str_szBuffer, len + 1);
 #else
 	strlwr(strRet.str_szBuffer);
+#endif
+#else
+	utf8lwr(strRet.str_szBuffer);
 #endif
 	return strRet;
 }
@@ -861,12 +864,17 @@ String String::ToUpper() const
 #ifndef SCRATCH_NO_THREADSAFE
 	MutexWait wait(str_mutex);
 #endif
+
 	String strRet(this->str_szBuffer);
+#ifdef SCRATCH_NO_UTF8
 #if WINDOWS
 	int len = strlen(this->str_szBuffer);
 	_strupr_s(strRet.str_szBuffer, len + 1);
 #else
 	strupr(strRet.str_szBuffer);
+#endif
+#else
+	utf8upr(strRet.str_szBuffer);
 #endif
 	return strRet;
 }
@@ -1011,8 +1019,20 @@ void String::Fill(s_char c, int ct)
 	memset(szBuffer, c, ct);
 	szBuffer[ct] = '\0';
 	CopyToBuffer(szBuffer);
+	delete[] szBuffer;
 #else
-	//TODO!!!
+	size_t charSize = utf8codepointsize(c);
+	char* szChar = new char[charSize];
+	utf8catcodepoint(szChar, c, charSize);
+	int size = ct * charSize;
+	char* szBuffer = new char[size + 1];
+	for (int i = 0; i < ct; i++) {
+		memcpy(szBuffer + i * charSize, szChar, charSize);
+	}
+	delete[] szChar;
+	szBuffer[size] = '\0';
+	CopyToBuffer(szBuffer);
+	delete[] szBuffer;
 #endif
 }
 

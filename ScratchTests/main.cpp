@@ -168,11 +168,9 @@ MAIN
 		TEST(strPrintF("Hello %d %d", x, y) == "Hello 5 10");
 
 #ifndef SCRATCH_NO_UTF8
-		/*
-		const char* singleUtf8Character = { '\xf0', '\x90', '\x8d', '\x88', '\0' };
-		String strUtf8 = singleUtf8Character;
+		String strUtf8;
+		strUtf8 += 0x888d90f0;
 		TEST(strUtf8.Length() == 1);
-		*/
 #endif
 	}
 
@@ -185,11 +183,11 @@ MAIN
 		fnmFoo = "/var/www/test.html";
 		TEST(fnmFoo.Extension() == "html");
 		TEST(fnmFoo.Path() == "/var/www");
-				TEST(fnmFoo.Name() == "test.html");
+		TEST(fnmFoo.Name() == "test.html");
 
 		fnmFoo.FromHome(".zshrc");
-		TEST_WINDOWS(fnmFoo.StartsWith("C:\\Users\\"));
-		TEST_UNIX(fnmFoo == "~/.zshrc");
+		TEST_WINDOWS(fnmFoo.StartsWith("C:\\Users"));
+		//TEST_UNIX(fnmFoo.StartsWith("/home/")); // This test isn't very accurate
 	}
 
 	TESTS("StackArray")

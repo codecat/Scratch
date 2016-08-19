@@ -149,8 +149,28 @@ utf8_nonnull utf8_pure utf8_weak void *utf8valid(const void *str);
 
 // Sets out_codepoint to the next utf8 codepoint in str, and returns the address
 // of the utf8 codepoint after the current one in str.
-utf8_nonnull utf8_weak void *utf8codepoint(const void *utf8_restrict str,
-                                           long *utf8_restrict out_codepoint);
+utf8_weak void *utf8codepoint(const void *utf8_restrict str,
+                              long *utf8_restrict out_codepoint);
+
+// Returns the size of the given codepoint in bytes.
+utf8_weak size_t utf8codepointsize(int chr);
+
+// Write a codepoint to the given string, and return the address to the next place
+// after the written codepoint. Pass how many bytes left in the buffer to n. If there
+// is not enough space for the codepoint, this function returns null.
+utf8_nonnull utf8_weak void *utf8catcodepoint(void *utf8_restrict str, int chr, size_t n);
+
+// Returns 1 if the given character is lowercase, or 0 if it is not.
+utf8_weak int utf8islower(int chr);
+
+// Returns 1 if the given character is uppercase, or 0 if it is not.
+utf8_weak int utf8isupper(int chr);
+
+// Transform the given string into all lowercase codepoints.
+utf8_nonnull utf8_weak void utf8lwr(void *utf8_restrict str);
+
+// Transform the given string into all uppercase codepoints.
+utf8_nonnull utf8_weak void utf8upr(void *utf8_restrict str);
 
 #undef utf8_weak
 #undef utf8_pure
@@ -830,32 +850,144 @@ void *utf8codepoint(const void *utf8_restrict str,
 
   if (0xf0 == (0xf8 & s[0])) {
     // 4 byte utf8 codepoint
-    if (out_codepoint != nullptr) {
+    if (out_codepoint) {
       *out_codepoint = ((0x07 & s[0]) << 18) | ((0x3f & s[1]) << 12) |
                        ((0x3f & s[2]) << 6) | (0x3f & s[3]);
     }
     s += 4;
   } else if (0xe0 == (0xf0 & s[0])) {
     // 3 byte utf8 codepoint
-    if (out_codepoint != nullptr) {
-      *out_codepoint = ((0x0f & s[0]) << 12) | ((0x3f & s[1]) << 6) | (0x3f & s[2]);
+    if (out_codepoint) {
+      *out_codepoint =
+          ((0x0f & s[0]) << 12) | ((0x3f & s[1]) << 6) | (0x3f & s[2]);
     }
     s += 3;
   } else if (0xc0 == (0xe0 & s[0])) {
     // 2 byte utf8 codepoint
-    if (out_codepoint != nullptr) {
+    if (out_codepoint) {
       *out_codepoint = ((0x1f & s[0]) << 6) | (0x3f & s[1]);
     }
     s += 2;
   } else {
     // 1 byte utf8 codepoint otherwise
-    if (out_codepoint != nullptr) {
+    if (out_codepoint) {
       *out_codepoint = s[0];
     }
     s += 1;
   }
 
   return (void *)s;
+}
+
+size_t utf8codepointsize(int chr) {
+  if (0 == ((int)0xffffff80 & chr)) {
+    return 1;
+  } else if (0 == ((int)0xfffff800 & chr)) {
+    return 2;
+  } else if (0 == ((int)0xffff0000 & chr)) {
+    return 3;
+  } else { // if (0 == ((int)0xffe00000 & chr)) {
+    return 4;
+  }
+}
+
+void *utf8catcodepoint(void *utf8_restrict str, int chr, size_t n) {
+  char *s = (char *)str;
+
+  if (0 == ((int)0xffffff80 & chr)) {
+    // 1-byte/7-bit ascii
+    // (0b0xxxxxxx)
+    if (n < 1) {
+      return 0;
+    }
+    s[0] = (char)chr;
+    s += 1;
+  } else if (0 == ((int)0xfffff800 & chr)) {
+    // 2-byte/11-bit utf8 code point
+    // (0b110xxxxx 0b10xxxxxx)
+    if (n < 2) {
+      return 0;
+    }
+    s[0] = 0xc0 | (char)(chr >> 6);
+    s[1] = 0x80 | (char)(chr & 0x3f);
+    s += 2;
+  } else if (0 == ((int)0xffff0000 & chr)) {
+    // 3-byte/16-bit utf8 code point
+    // (0b1110xxxx 0b10xxxxxx 0b10xxxxxx)
+    if (n < 3) {
+      return 0;
+    }
+    s[0] = 0xe0 | (char)(chr >> 12);
+    s[1] = 0x80 | (char)((chr >> 6) & 0x3f);
+    s[2] = 0x80 | (char)(chr & 0x3f);
+    s += 3;
+  } else { // if (0 == ((int)0xffe00000 & chr)) {
+    // 4-byte/21-bit utf8 code point
+    // (0b11110xxx 0b10xxxxxx 0b10xxxxxx 0b10xxxxxx)
+    if (n < 4) {
+      return 0;
+    }
+    s[0] = 0xf0 | (char)(chr >> 18);
+    s[1] = 0x80 | (char)((chr >> 12) & 0x3f);
+    s[2] = 0x80 | (char)((chr >> 6) & 0x3f);
+    s[3] = 0x80 | (char)(chr & 0x3f);
+    s += 4;
+  }
+
+  return s;
+}
+
+int utf8islower(int chr)
+{
+  if (('A' <= chr) && ('Z' >= chr)) {
+    return 0;
+  }
+  // Because we're not all-inclusive, assume everything else is lowercase
+  return 1;
+}
+
+int utf8isupper(int chr)
+{
+  if (('A' <= chr) && ('Z' >= chr)) {
+    return 1;
+  }
+  return 0;
+}
+
+void utf8lwr(void *utf8_restrict str)
+{
+  void *p, *pn;
+  long cp;
+
+  p = (char *)str;
+  pn = utf8codepoint(p, &cp);
+
+  while (cp != 0) {
+    if (('A' <= cp) && ('Z' >= cp)) {
+      cp |= 0x20;
+      utf8catcodepoint(p, cp, 1);
+    }
+    p = pn;
+    pn = utf8codepoint(p, &cp);
+  }
+}
+
+void utf8upr(void *utf8_restrict str)
+{
+  void *p, *pn;
+  long cp;
+
+  p = (char *)str;
+  pn = utf8codepoint(p, &cp);
+
+  while (cp != 0) {
+    if (('a' <= cp) && ('z' >= cp)) {
+      cp &= ~0x20;
+      utf8catcodepoint(p, cp, 1);
+    }
+    p = pn;
+    pn = utf8codepoint(p, &cp);
+  }
 }
 
 #undef utf8_restrict
