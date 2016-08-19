@@ -143,7 +143,6 @@ String operator*(int ctRepeat, const String &strRHS);
 
 String strPrintF(const char* szFormat, ...);
 
-#define SCRATCH_IMPL
 #ifdef SCRATCH_IMPL
 
 int String::str_iInstances = 0;
