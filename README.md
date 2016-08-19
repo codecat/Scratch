@@ -37,11 +37,22 @@ int main()
 }
 ```
 
+If you want to rename the Scratch namespace, you can do that by defining `SCRATCH_NAMESPACE` before including Scratch.hpp:
+
+```C++
+#define SCRATCH_IMPL
+#define SCRATCH_NAMESPACE s
+#include <Scratch.hpp>
+```
+
+Note that if you choose to rename the namespace, you have to define `SCRATCH_NAMESPACE` for both the implementation and everywhere else you're including Scratch.
+
 *Note:* At the moment of writing, on Linux, you will be required to link your application against pthreads.
 
 ## Options
 There are a few specific precompiler definitions you can use during implementation compilation (SCRATCH_IMPL) that modify the behavior of the library.
 
+* `SCRATCH_NO_UTF8`: Disable utf8 support.
 * `SCRATCH_NO_THREADSAFE`: Don't enable mutex locking in classes.
 * `SCRATCH_NO_EXCEPTIONS`: Don't throw any exceptions, silently fail instead.
 * `SCRATCH_NO_ASSERT`: Don't define a custom ASSERT().
