@@ -525,12 +525,13 @@ void String::CommandLineSplit(StackArray<String> &astrResult) const
 	bool bInString = false;
 	String strBuffer;
 
+	s_char c;
 	do {
 #ifdef SCRATCH_NO_UTF8
-		s_char c = *sz;
+		c = *sz;
 		s_char cn = *(sz + 1);
 #else
-		s_char c, cn;
+		s_char cn;
 		sz = (char*)utf8codepoint(sz, &c);
 		utf8codepoint(sz, &cn);
 #endif
@@ -567,7 +568,8 @@ void String::CommandLineSplit(StackArray<String> &astrResult) const
 #ifdef SCRATCH_NO_UTF8
 	while (*(++sz) != '\0');
 #else
-	while (*(sz = (char*)utf8codepoint(sz, nullptr)) != '\0');
+	//while (*(sz = (char*)utf8codepoint(sz, nullptr)) != '\0');
+	while (c != 0);
 #endif
 
 	if (strBuffer.Length() != 0) {

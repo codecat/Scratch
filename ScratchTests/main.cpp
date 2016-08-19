@@ -117,6 +117,11 @@ MAIN
 		TEST(aParse.Count() == 3);
 		TEST(aParse[0] == "5" && aParse[1] == "10" && aParse[2] == "5");
 
+		StackArray<String> aParseCmd;
+		strFoo = "test \"foo bar\" abc xyz";
+		strFoo.CommandLineSplit(aParseCmd);
+		TEST(aParseCmd[0] == "test" && aParseCmd[1] == "foo bar" && aParseCmd[2] == "abc" && aParseCmd[3] == "xyz");
+
 		strFoo = "      Foo  ";
 		TEST(strFoo.Trim() == "Foo");
 		TEST(strFoo.TrimLeft() == "Foo  ");
