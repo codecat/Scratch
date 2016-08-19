@@ -434,7 +434,7 @@ void String::AppendF(const char* szFormat, ...)
 
 void String::Split(const String &strNeedle, StackArray<String> &astrResult) const
 {
-	Split(strNeedle, astrResult, FALSE);
+	Split(strNeedle, astrResult, false);
 }
 
 void String::Split(const String &strNeedle, StackArray<String> &astrResult, bool bTrimAll) const

@@ -48,11 +48,12 @@
 	#define MACOSX 0
 #endif
 
-#define SCRATCH_NAMESPACE_BEGIN namespace Scratch {
-#define SCRATCH_NAMESPACE_END }
+#ifndef SCRATCH_NAMESPACE
+	#define SCRATCH_NAMESPACE Scratch
+#endif
 
-#define TRUE 1
-#define FALSE 0
+#define SCRATCH_NAMESPACE_BEGIN namespace SCRATCH_NAMESPACE {
+#define SCRATCH_NAMESPACE_END }
 
 #ifndef SCRATCH_NO_GLOBFUNC
 template<class T> inline T Max(const T &v1, const T &v2) { return v1 >= v2 ? v1 : v2; }

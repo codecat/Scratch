@@ -34,7 +34,7 @@
 #pragma comment(lib, "wsock32.lib")
 #endif
 
-static bool _bWinsockInitialized = FALSE;
+static bool _bWinsockInitialized = false;
 #endif
 
 #if !WINDOWS
@@ -87,7 +87,7 @@ NetworkStream::NetworkStream()
 	ns_socket = 0;
 	ns_psin = new sockaddr_in;
 
-	ns_bEOF = FALSE;
+	ns_bEOF = false;
 
 #if WINDOWS
 	if (!_bWinsockInitialized) {

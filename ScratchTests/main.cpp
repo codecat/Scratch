@@ -356,8 +356,8 @@ MAIN
 		Mutex mutex;
 
 		{
-			TEST(mutex.TryLock() == TRUE);
-			TEST(mutex.TryLock() == FALSE);
+			TEST(mutex.TryLock() == true);
+			TEST(mutex.TryLock() == false);
 			mutex.Unlock();
 		}
 
