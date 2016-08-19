@@ -39,6 +39,13 @@
 #include "Mutex.hpp"
 #endif
 
+#ifndef SCRATCH_NO_UTF8
+#include "utf8.h"
+typedef long s_char;
+#else
+typedef char s_char;
+#endif
+
 #ifndef STRING_FORMAT_BUFFER_SIZE
 #define STRING_FORMAT_BUFFER_SIZE 1024
 #endif
@@ -56,8 +63,8 @@ protected:
 
 	void CopyToBuffer(const char* szSrc);
 	void AppendToBuffer(const char* szSrc);
-	void AppendToBuffer(const char* szSrc, int iCount);
-	void AppendToBuffer(const char cSrc);
+	void AppendToBuffer(const char* szSrc, int iCountBytes);
+	void AppendToBuffer(const s_char cSrc);
 
 public:
 	static char* str_szEmpty;
@@ -65,11 +72,12 @@ public:
 
 	String();
 	String(const char* szValue);
-	String(const char* szValue, int iStart, int iLength);
+	String(const char* szValue, int iStartBytes, int iBytes);
 	String(const String &strCopy);
 	virtual ~String();
 
-	int Length() const;
+	int Length() const; // Returns the length of the string in characters.
+	int Size() const; // Returns the length of the string in bytes.
 
 	void SetF(const char* szFormat, ...);
 	void AppendF(const char* szFormat, ...);
@@ -78,30 +86,32 @@ public:
 	void Split(const String &strNeedle, StackArray<String> &astrResult, bool bTrimAll) const;
 	void CommandLineSplit(StackArray<String> &astrResult) const;
 private:
-	String InternalTrim(bool bLeft, bool bRight, char c = ' ') const;
+	String InternalTrim(bool bLeft, bool bRight, s_char c = ' ') const;
 public:
 	String Trim() const;
-	String Trim(char c) const;
+	String Trim(s_char c) const;
 	String TrimLeft() const;
-	String TrimLeft(char c) const;
+	String TrimLeft(s_char c) const;
 	String TrimRight() const;
-	String TrimRight(char c) const;
+	String TrimRight(s_char c) const;
 	String Replace(const String &strNeedle, const String &strReplace) const;
 	String SubString(int iStart) const;
 	String SubString(int iStart, int iLen) const;
 	String ToLower() const;
 	String ToUpper() const;
 
-	int IndexOf(char c) const;
+	int IndexOf(s_char c) const;
 	int IndexOf(const String &strNeedle) const;
 
-	int IndexOfLast(char c) const;
+	int IndexOfLast(s_char c) const;
+#ifdef SCRATCH_NO_UTF8 //TODO: Implement utf8 for this!
 	int IndexOfLast(const String &strNeedle) const;
+#endif
 
-	void Fill(char c, int ct);
+	void Fill(s_char c, int ct);
 
 	bool Contains(const String &strNeedle) const;
-	bool Contains(char c) const;
+	bool Contains(s_char c) const;
 	bool StartsWith(const String &strNeedle) const;
 	bool EndsWith(const String &strNeedle) const;
 
@@ -113,7 +123,7 @@ public:
 	String& operator=(const String &strSrc);
 
 	String& operator+=(const char* szSrc);
-	String& operator+=(const char cSrc);
+	String& operator+=(const s_char cSrc);
 	String& operator+=(const String &strSrc);
 
 	String& operator*=(int ctRepeat);
@@ -121,14 +131,14 @@ public:
 	bool operator==(const char* szSrc) const;
 	bool operator!=(const char* szSrc) const;
 
-	char& operator[](int iIndex);
+	const s_char operator[](int iIndex);
 };
 
 String operator+(const String &strLHS, const char* szRHS);
-String operator+(const String &strLHS, const char cRHS);
+String operator+(const String &strLHS, const s_char cRHS);
 
 String operator+(const char* szLHS, String &strRHS);
-String operator+(const char cLHS, String &strRHS);
+String operator+(const s_char cLHS, String &strRHS);
 
 String operator*(const String &strLHS, int ctRepeat);
 String operator*(int ctRepeat, const String &strRHS);
@@ -147,7 +157,11 @@ void String::CopyToBuffer(const char* szSrc)
 		return;
 	}
 
+#ifdef SCRATCH_NO_UTF8
 	int iLen = strlen(szSrc);
+#else
+	int iLen = utf8len(szSrc);
+#endif
 	if (iLen == 0) {
 		// Clean up
 		if (this->str_szBuffer != String::str_szEmpty) {
@@ -160,7 +174,11 @@ void String::CopyToBuffer(const char* szSrc)
 	}
 
 	// Find the current size and the required size for the string.
+#ifdef SCRATCH_NO_UTF8
 	int iBufLen = strlen(this->str_szBuffer) + 1;
+#else
+	int iBufLen = utf8len(this->str_szBuffer) + 1;
+#endif
 	int iReqLen = iLen + 1;
 
 	// Check if we need to make more room.
@@ -184,17 +202,22 @@ void String::CopyToBuffer(const char* szSrc)
 
 void String::AppendToBuffer(const char* szSrc)
 {
-	this->AppendToBuffer(szSrc, strlen(szSrc));
+#ifdef SCRATCH_NO_UTF8
+	int len = strlen(szSrc);
+#else
+	int len = utf8size(szSrc) - 1;
+#endif
+	this->AppendToBuffer(szSrc, len);
 }
 
-void String::AppendToBuffer(const char* szSrc, int iCount)
+void String::AppendToBuffer(const char* szSrc, int iCountBytes)
 {
 	// Validate source string
 	if (szSrc == nullptr) {
 		return;
 	}
 
-	if (iCount <= 0) {
+	if (iCountBytes <= 0) {
 		return;
 	}
 
@@ -202,19 +225,23 @@ void String::AppendToBuffer(const char* szSrc, int iCount)
 	char* szOldBuffer = this->str_szBuffer;
 
 	// Find the current size and the required size for the string.
-	int iBufLen = strlen(this->str_szBuffer);
+#ifdef SCRATCH_NO_UTF8
+	int iBufBytes = strlen(this->str_szBuffer);
+#else
+	int iBufBytes = utf8size(this->str_szBuffer) - 1;
+#endif
 
 	// Get ourselves a new buffer
-	this->str_szBuffer = new char[iBufLen + iCount + 1];
+	this->str_szBuffer = new char[iBufBytes + iCountBytes + 1];
 
 	// Copy the buffers
 	int iOffset = 0;
 
-	for (int i = 0; i < iBufLen; i++) {
+	for (int i = 0; i < iBufBytes; i++) {
 		this->str_szBuffer[iOffset++] = szOldBuffer[i];
 	}
 
-	for (int i = 0; i < iCount; i++) {
+	for (int i = 0; i < iCountBytes; i++) {
 		this->str_szBuffer[iOffset++] = szSrc[i];
 	}
 
@@ -227,7 +254,7 @@ void String::AppendToBuffer(const char* szSrc, int iCount)
 	}
 }
 
-void String::AppendToBuffer(const char cSrc)
+void String::AppendToBuffer(const s_char cSrc)
 {
 	// Validate source string
 	if (cSrc == 0) {
@@ -238,20 +265,34 @@ void String::AppendToBuffer(const char cSrc)
 	char* szOldBuffer = this->str_szBuffer;
 
 	// Find the current size and the required size for the string.
-	int iBufLen = strlen(this->str_szBuffer);
+#ifdef SCRATCH_NO_UTF8
+	int iBufBytes = strlen(this->str_szBuffer);
+#else
+	int iBufBytes = utf8size(this->str_szBuffer) - 1;
+#endif
 
 	// Get ourselves a new buffer
-	this->str_szBuffer = new char[iBufLen + 2];
+#ifdef SCRATCH_NO_UTF8
+	this->str_szBuffer = new char[iBufBytes + 2];
+#else
+	int charSize = utf8codepointsize(cSrc);
+	this->str_szBuffer = new char[iBufBytes + charSize + 1];
+#endif
 
 	// Copy the buffer
 	int iOffset = 0;
 
-	for (int i = 0; i < iBufLen; i++) {
+	for (int i = 0; i < iBufBytes; i++) {
 		this->str_szBuffer[iOffset++] = szOldBuffer[i];
 	}
 
 	// Append the new character
+#ifdef SCRATCH_NO_UTF8
 	this->str_szBuffer[iOffset++] = cSrc;
+#else
+	utf8catcodepoint(this->str_szBuffer + iOffset, cSrc, charSize);
+	iOffset += charSize;
+#endif
 
 	// Always end with a null terminator.
 	this->str_szBuffer[iOffset] = '\0';
@@ -277,12 +318,12 @@ String::String(const char* szStr)
 	this->CopyToBuffer(szStr);
 }
 
-String::String(const char* szValue, int iStart, int iLength)
+String::String(const char* szValue, int iStartBytes, int iBytes)
 {
 	str_iInstances++;
 	// Create a new buffer and copy data into it.
 	this->str_szBuffer = String::str_szEmpty;
-	this->AppendToBuffer(szValue + iStart, iLength);
+	this->AppendToBuffer(szValue + iStartBytes, iBytes);
 }
 
 String::String(const String &copy)
@@ -310,7 +351,25 @@ int String::Length() const
 #ifndef SCRATCH_NO_THREADSAFE
 	MutexWait wait(str_mutex);
 #endif
+
+#ifdef SCRATCH_NO_UTF8
 	return strlen(this->str_szBuffer);
+#else
+	return utf8len(this->str_szBuffer);
+#endif
+}
+
+int String::Size() const
+{
+#ifndef SCRATCH_NO_THREADSAFE
+	MutexWait wait(str_mutex);
+#endif
+
+#ifdef SCRATCH_NO_UTF8
+	return strlen(this->str_szBuffer);
+#else
+	return utf8size(this->str_szBuffer) - 1;
+#endif
 }
 
 void String::SetF(const char* szFormat, ...)
@@ -392,7 +451,11 @@ void String::Split(const String &strNeedle, StackArray<String> &astrResult, bool
 
 	do {
 		// Find the needle from the string in the current offset pointer
+#ifdef SCRATCH_NO_UTF8
 		szOffset = strstr(szOffset, strNeedle);
+#else
+		szOffset = (char*)utf8str(szOffset, strNeedle);
+#endif
 
 		// If the needle is found
 		if (szOffset != nullptr) {
@@ -416,14 +479,22 @@ void String::Split(const String &strNeedle, StackArray<String> &astrResult, bool
 			// Keep a seperate count
 			iCount++;
 
-			// Increase the offset pointer by the needle length
+			// Increase the offset pointer by the needle size
+#ifdef SCRATCH_NO_UTF8
 			szOffset += strlen(strNeedle);
+#else
+			szOffset += utf8size(strNeedle) - 1;
+#endif
 
 			// Keep track of the pointer
 			szOffsetPrev = szOffset;
 		} else {
 			// Get the length for the string
+#ifdef SCRATCH_NO_UTF8
 			int iLen = strlen(szOffsetPrev);
+#else
+			int iLen = utf8size(szOffsetPrev) - 1;
+#endif
 
 			// And get a buffer started
 			char* szPart = new char[iLen + 1];
@@ -457,11 +528,22 @@ void String::CommandLineSplit(StackArray<String> &astrResult) const
 	String strBuffer;
 
 	do {
-		char c = *sz;
-		char cn = *(sz + 1);
+#ifdef SCRATCH_NO_UTF8
+		s_char c = *sz;
+		s_char cn = *(sz + 1);
+#else
+		s_char c, cn;
+		sz = (char*)utf8codepoint(sz, &c);
+		utf8codepoint(sz, &cn);
+#endif
 
 		if (c == '\\') {
-			strBuffer += *(++sz);
+			strBuffer += cn;
+#ifdef SCRATCH_NO_UTF8
+			sz++;
+#else
+			sz = (char*)utf8codepoint(sz, nullptr);
+#endif
 			continue;
 		}
 
@@ -483,37 +565,63 @@ void String::CommandLineSplit(StackArray<String> &astrResult) const
 		}
 
 		strBuffer += c;
-	} while (*(++sz) != '\0');
+	}
+#ifdef SCRATCH_NO_UTF8
+	while (*(++sz) != '\0');
+#else
+	while (*(sz = (char*)utf8codepoint(sz, nullptr)) != '\0');
+#endif
 
 	if (strBuffer.Length() != 0) {
 		astrResult.Push() = strBuffer;
 	}
 }
 
-String String::InternalTrim(bool bLeft, bool bRight, char c) const
+String String::InternalTrim(bool bLeft, bool bRight, s_char c) const
 {
 	// Copy ourselves into a new buffer
-	int len = strlen(this->str_szBuffer);
-	char* szBuffer = new char[len + 1];
+#ifdef SCRATCH_NO_UTF8
+	int bytes = strlen(this->str_szBuffer);
+#else
+	int bytes = utf8size(this->str_szBuffer) - 1;
+#endif
+	char* szBuffer = new char[bytes + 1];
+
+#ifdef SCRATCH_NO_UTF8
 #if WINDOWS
-	strcpy_s(szBuffer, len + 1, this->str_szBuffer);
+	strcpy_s(szBuffer, bytes + 1, this->str_szBuffer);
 #else
 	strcpy(szBuffer, this->str_szBuffer);
+#endif
+#else
+	utf8ncpy(szBuffer, this->str_szBuffer, bytes);
 #endif
 
 	// Keep a pointer to the current offset
 	char* szOffset = szBuffer;
 
 	if (bLeft) {
+#ifdef SCRATCH_NO_UTF8
 		// While there's a space, keep incrementing the offset
-		while (*szOffset == c) {
+		char lc = *szOffset;
+		while (lc == c && lc != '\0') {
 			// This way, we'll trim all the spaces on the left
 			szOffset++;
 		}
+#else
+		// Find the space
+		long codepoint;
+		void* v = utf8codepoint(szOffset, &codepoint);
+		while (codepoint == c && codepoint != '\0') {
+			szOffset = (char*)v;
+			v = utf8codepoint(szOffset, &codepoint);
+		}
+#endif
 	}
 
 	if (bRight) {
 		// Loop from right to left in the string
+#ifdef SCRATCH_NO_UTF8
 		for (int i = strlen(szOffset) - 1; i >= 0; i--) {
 			// When we find something other than a space
 			if (szOffset[i] != c) {
@@ -524,6 +632,19 @@ String String::InternalTrim(bool bLeft, bool bRight, char c) const
 				break;
 			}
 		}
+#else
+		long codepoint;
+		char* lastValid = szOffset;
+		for (void* v = utf8codepoint(szOffset, &codepoint); ; v = utf8codepoint(v, &codepoint)) {
+			if (codepoint == '\0') {
+				break;
+			}
+			if (codepoint != c) {
+				lastValid = (char*)v;
+			}
+		}
+		*(char*)lastValid = '\0';
+#endif
 	}
 
 	// Return
@@ -540,7 +661,7 @@ String String::Trim() const
 	return InternalTrim(true, true);
 }
 
-String String::Trim(char c) const
+String String::Trim(s_char c) const
 {
 #ifndef SCRATCH_NO_THREADSAFE
 	MutexWait wait(str_mutex);
@@ -556,7 +677,7 @@ String String::TrimLeft() const
 	return InternalTrim(true, false);
 }
 
-String String::TrimLeft(char c) const
+String String::TrimLeft(s_char c) const
 {
 #ifndef SCRATCH_NO_THREADSAFE
 	MutexWait wait(str_mutex);
@@ -572,7 +693,7 @@ String String::TrimRight() const
 	return InternalTrim(false, true);
 }
 
-String String::TrimRight(char c) const
+String String::TrimRight(s_char c) const
 {
 #ifndef SCRATCH_NO_THREADSAFE
 	MutexWait wait(str_mutex);
@@ -596,7 +717,11 @@ String String::Replace(const String &strNeedle, const String &strReplace) const
 
 	do {
 		// Find the offset of the needle
+#ifdef SCRATCH_NO_UTF8
 		szOffset = strstr(szOffset, strNeedle);
+#else
+		szOffset = (char*)utf8str(szOffset, strNeedle);
+#endif
 
 		// If it's found
 		if (szOffset != nullptr) {
@@ -606,14 +731,23 @@ String String::Replace(const String &strNeedle, const String &strReplace) const
 			// Append the replace value
 			strRet.AppendToBuffer(strReplace);
 
-			// Increase the offset pointer by the needle length
+			// Increase the offset pointer by the needle size
+#ifdef SCRATCH_NO_UTF8
 			szOffset += strlen(strNeedle);
+#else
+			szOffset += utf8size(strNeedle) - 1;
+#endif
 
 			// Keep track of the pointer
 			szOffsetPrev = szOffset;
 		} else {
 			// Append the remaining part of the source string
-			strRet.AppendToBuffer(szOffsetPrev, strlen(szOffsetPrev));
+#ifdef SCRATCH_NO_UTF8
+			int bytes = strlen(szOffsetPrev);
+#else
+			int bytes = utf8size(szOffsetPrev) - 1;
+#endif
+			strRet.AppendToBuffer(szOffsetPrev, bytes);
 		}
 	} while (szOffset != nullptr);
 
@@ -625,7 +759,17 @@ String String::SubString(int iStart) const
 #ifndef SCRATCH_NO_THREADSAFE
 	MutexWait wait(str_mutex);
 #endif
+
+#ifdef SCRATCH_NO_UTF8
 	return String(this->str_szBuffer + iStart);
+#else
+	void* ret = this->str_szBuffer;
+	s_char codepoint;
+	do {
+		ret = utf8codepoint(ret, &codepoint);
+	} while (--iStart > 0 && codepoint != '\0');
+	return (char*)ret;
+#endif
 }
 
 String String::SubString(int iStart, int iLen) const
@@ -640,15 +784,38 @@ String String::SubString(int iStart, int iLen) const
 	}
 
 	// Get the first offset
+#ifdef SCRATCH_NO_UTF8
 	String strRet(this->str_szBuffer + iStart);
+#else
+	void* subFirst = this->str_szBuffer;
+	s_char codepoint;
+	do {
+		subFirst = utf8codepoint(subFirst, &codepoint);
+	} while (--iStart > 0 && codepoint != '\0');
+	String strRet((const char*)subFirst);
+#endif
 
 	// Check for stupid developers
+#ifdef SCRATCH_NO_UTF8
 	if ((uint32_t)iLen > strlen(strRet)) {
 		return strRet;
 	}
+#else
+	if ((uint32_t)iLen > utf8len(strRet)) {
+		return strRet;
+	}
+#endif
 
 	// Then set the null terminator at the length the user wants
+#ifdef SCRATCH_NO_UTF8
 	strRet[iLen] = '\0';
+#else
+	void* sz = strRet.str_szBuffer;
+	do {
+		sz = utf8codepoint(sz, &codepoint);
+	} while (--iLen > 0 && codepoint != '\0');
+	*(char*)sz = '\0';
+#endif
 
 	// Return
 	return strRet;
@@ -677,12 +844,17 @@ String String::ToLower() const
 #ifndef SCRATCH_NO_THREADSAFE
 	MutexWait wait(str_mutex);
 #endif
+
 	String strRet(this->str_szBuffer);
+#ifdef SCRATCH_NO_UTF8
 #if WINDOWS
 	int len = strlen(this->str_szBuffer);
 	_strlwr_s(strRet.str_szBuffer, len + 1);
 #else
 	strlwr(strRet.str_szBuffer);
+#endif
+#else
+	utf8lwr(strRet.str_szBuffer);
 #endif
 	return strRet;
 }
@@ -692,26 +864,47 @@ String String::ToUpper() const
 #ifndef SCRATCH_NO_THREADSAFE
 	MutexWait wait(str_mutex);
 #endif
+
 	String strRet(this->str_szBuffer);
+#ifdef SCRATCH_NO_UTF8
 #if WINDOWS
 	int len = strlen(this->str_szBuffer);
 	_strupr_s(strRet.str_szBuffer, len + 1);
 #else
 	strupr(strRet.str_szBuffer);
 #endif
+#else
+	utf8upr(strRet.str_szBuffer);
+#endif
 	return strRet;
 }
 
-int String::IndexOf(char c) const
+int String::IndexOf(s_char c) const
 {
 #ifndef SCRATCH_NO_THREADSAFE
 	MutexWait wait(str_mutex);
 #endif
+
+#ifdef SCRATCH_NO_UTF8
 	const char* sz = strchr(this->str_szBuffer, c);
 	if (sz != nullptr) {
 		return sz - this->str_szBuffer;
 	}
 	return -1;
+#else
+	int ret = 0;
+	void* sz = this->str_szBuffer;
+	s_char codepoint;
+	while (true) {
+		sz = utf8codepoint(sz, &codepoint);
+		if (codepoint == '\0') {
+			return -1;
+		} else if (codepoint == c) {
+			return ret;
+		}
+		ret++;
+	}
+#endif
 }
 
 int String::IndexOf(const String &strNeedle) const
@@ -719,25 +912,63 @@ int String::IndexOf(const String &strNeedle) const
 #ifndef SCRATCH_NO_THREADSAFE
 	MutexWait wait(str_mutex);
 #endif
+
+#ifdef SCRATCH_NO_UTF8
 	const char* sz = strstr(this->str_szBuffer, strNeedle);
 	if (sz != nullptr) {
 		return sz - this->str_szBuffer;
 	}
 	return -1;
+#else
+	void* szFound = utf8str(this->str_szBuffer, strNeedle);
+	if (szFound == nullptr) {
+		return -1;
+	}
+	int ret = 0;
+	void* sz = this->str_szBuffer;
+	s_char codepoint;
+	while (sz != szFound) {
+		sz = utf8codepoint(sz, &codepoint);
+		if (codepoint == '\0') {
+			return -1;
+		}
+		ret++;
+	}
+	return ret;
+#endif
 }
 
-int String::IndexOfLast(char c) const
+int String::IndexOfLast(s_char c) const
 {
 #ifndef SCRATCH_NO_THREADSAFE
 	MutexWait wait(str_mutex);
 #endif
+
+#ifdef SCRATCH_NO_UTF8
 	const char* sz = strrchr(this->str_szBuffer, c);
 	if (sz != nullptr) {
 		return sz - this->str_szBuffer;
 	}
 	return -1;
+#else
+	int ct = 0;
+	int ret = -1;
+	void* sz = this->str_szBuffer;
+	s_char codepoint;
+	while (true) {
+		sz = utf8codepoint(sz, &codepoint);
+		if (codepoint == '\0') {
+			return -1;
+		} else if (codepoint == c) {
+			ret = ct;
+		}
+		ct++;
+	}
+	return ret;
+#endif
 }
 
+#ifdef SCRATCH_NO_UTF8
 // strrstr taken from: http://stuff.mit.edu/afs/sipb/user/cordelia/Diplomacy/mapit/strrstr.c
 static char* strrstr(const char* s1, const char* s2)
 {
@@ -773,16 +1004,36 @@ int String::IndexOfLast(const String &strNeedle) const
 	}
 	return -1;
 }
+#else
+//TODO!!!!
+#endif
 
-void String::Fill(char c, int ct)
+void String::Fill(s_char c, int ct)
 {
 #ifndef SCRATCH_NO_THREADSAFE
 	MutexWait wait(str_mutex);
 #endif
+
+#ifdef SCRATCH_NO_UTF8
 	char* szBuffer = new char[ct + 1];
 	memset(szBuffer, c, ct);
 	szBuffer[ct] = '\0';
 	CopyToBuffer(szBuffer);
+	delete[] szBuffer;
+#else
+	size_t charSize = utf8codepointsize(c);
+	char* szChar = new char[charSize];
+	utf8catcodepoint(szChar, c, charSize);
+	int size = ct * charSize;
+	char* szBuffer = new char[size + 1];
+	for (int i = 0; i < ct; i++) {
+		memcpy(szBuffer + i * charSize, szChar, charSize);
+	}
+	delete[] szChar;
+	szBuffer[size] = '\0';
+	CopyToBuffer(szBuffer);
+	delete[] szBuffer;
+#endif
 }
 
 bool String::Contains(const String &strNeedle) const
@@ -791,14 +1042,21 @@ bool String::Contains(const String &strNeedle) const
 	MutexWait wait(str_mutex);
 	MutexWait wait2(strNeedle.str_mutex);
 #endif
+
+#ifdef SCRATCH_NO_UTF8
 	return strstr(this->str_szBuffer, strNeedle) != nullptr;
+#else
+	return utf8str(this->str_szBuffer, strNeedle) != nullptr;
+#endif
 }
 
-bool String::Contains(char c) const
+bool String::Contains(s_char c) const
 {
 #ifndef SCRATCH_NO_THREADSAFE
 	MutexWait wait(str_mutex);
 #endif
+
+#ifdef SCRATCH_NO_UTF8
 	int iLen = strlen(str_szBuffer);
 	for (int i = 0; i < iLen; i++) {
 		if (str_szBuffer[i] == c) {
@@ -806,6 +1064,9 @@ bool String::Contains(char c) const
 		}
 	}
 	return false;
+#else
+	return utf8chr(str_szBuffer, c) != nullptr;
+#endif
 }
 
 bool String::StartsWith(const String &strNeedle) const
@@ -814,7 +1075,12 @@ bool String::StartsWith(const String &strNeedle) const
 	MutexWait wait(str_mutex);
 	MutexWait wait2(strNeedle.str_mutex);
 #endif
+
+#ifdef SCRATCH_NO_UTF8
 	return strstr(this->str_szBuffer, strNeedle) == this->str_szBuffer;
+#else
+	return utf8str(this->str_szBuffer, strNeedle) == this->str_szBuffer;
+#endif
 }
 
 bool String::EndsWith(const String &strNeedle) const
@@ -825,7 +1091,11 @@ bool String::EndsWith(const String &strNeedle) const
 #endif
 
 	// Get the offset
+#ifdef SCRATCH_NO_UTF8
 	const char* szTemp = this->str_szBuffer + strlen(this->str_szBuffer) - strlen(strNeedle);
+#else
+	const char* szTemp = this->str_szBuffer + (utf8size(this->str_szBuffer) - 1) - (utf8size(strNeedle) - 1);
+#endif
 
 	// Make sure the needle is found
 	if (szTemp == nullptr) {
@@ -833,7 +1103,11 @@ bool String::EndsWith(const String &strNeedle) const
 	}
 
 	// Then compare the offset with our needle
+#ifdef SCRATCH_NO_UTF8
 	return !strcmp(strNeedle, szTemp);
+#else
+	return !utf8cmp(strNeedle, szTemp);
+#endif
 }
 
 String::operator const char *()
@@ -890,7 +1164,7 @@ String& String::operator+=(const char* szSrc)
 	return *this;
 }
 
-String& String::operator+=(const char cSrc)
+String& String::operator+=(const s_char cSrc)
 {
 #ifndef SCRATCH_NO_THREADSAFE
 	MutexWait wait(str_mutex);
@@ -928,7 +1202,12 @@ bool String::operator==(const char* szSrc) const
 #ifndef SCRATCH_NO_THREADSAFE
 	MutexWait wait(str_mutex);
 #endif
+
+#ifdef SCRATCH_NO_UTF8
 	return !strcmp(this->str_szBuffer, szSrc);
+#else
+	return !utf8cmp(this->str_szBuffer, szSrc);
+#endif
 }
 
 bool String::operator!=(const char* szSrc) const
@@ -936,15 +1215,31 @@ bool String::operator!=(const char* szSrc) const
 #ifndef SCRATCH_NO_THREADSAFE
 	MutexWait wait(str_mutex);
 #endif
+
+#ifdef SCRATCH_NO_UTF8
 	return strcmp(this->str_szBuffer, szSrc) != 0;
+#else
+	return utf8cmp(this->str_szBuffer, szSrc) != 0;
+#endif
 }
 
-char& String::operator[](int iIndex)
+const s_char String::operator[](int iIndex)
 {
 #ifndef SCRATCH_NO_THREADSAFE
 	MutexWait wait(str_mutex);
 #endif
+
+#ifdef SCRATCH_NO_UTF8
 	return this->str_szBuffer[iIndex];
+#else
+	void* sz = this->str_szBuffer;
+	s_char codepoint;
+	do {
+		sz = utf8codepoint(sz, &codepoint);
+		ASSERT(codepoint != '\0');
+	} while (--iIndex > 0);
+	return codepoint;
+#endif
 }
 
 String operator+(const String &strLHS, const char* szRHS)
@@ -952,7 +1247,7 @@ String operator+(const String &strLHS, const char* szRHS)
 	return String(strLHS) += szRHS;
 }
 
-String operator+(const String &strLHS, const char cRHS)
+String operator+(const String &strLHS, const s_char cRHS)
 {
 	return String(strLHS) += cRHS;
 }
@@ -962,7 +1257,7 @@ String operator+(const char* szLHS, String &strRHS)
 	return String(szLHS) += strRHS;
 }
 
-String operator+(const char cLHS, String &strRHS)
+String operator+(const s_char cLHS, String &strRHS)
 {
 	return String(strRHS) += cLHS;
 }
