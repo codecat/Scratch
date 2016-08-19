@@ -137,6 +137,12 @@ MAIN
 		strFoo = "A A B B A";
 		TEST(strFoo.ToLower() == "a a b b a");
 
+		strFoo = "AbcXyzAbcXyz!!";
+		TEST(strFoo.IndexOf('X') == 3);
+		TEST(strFoo.IndexOf("Xyz") == 3);
+		TEST(strFoo.IndexOfLast('X') == 9);
+		TEST(strFoo.IndexOfLast("Xyz") == 9);
+
 		strFoo.Fill('x', 5);
 		TEST(strFoo == "xxxxx");
 

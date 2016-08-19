@@ -104,9 +104,7 @@ public:
 	int IndexOf(const String &strNeedle) const;
 
 	int IndexOfLast(s_char c) const;
-#ifdef SCRATCH_NO_UTF8 //TODO: Implement utf8 for this!
 	int IndexOfLast(const String &strNeedle) const;
-#endif
 
 	void Fill(s_char c, int ct);
 
@@ -145,6 +143,7 @@ String operator*(int ctRepeat, const String &strRHS);
 
 String strPrintF(const char* szFormat, ...);
 
+#define SCRATCH_IMPL
 #ifdef SCRATCH_IMPL
 
 int String::str_iInstances = 0;
@@ -954,12 +953,12 @@ int String::IndexOfLast(s_char c) const
 	int ct = 0;
 	int ret = -1;
 	void* sz = this->str_szBuffer;
-	s_char codepoint;
+	int cp;
 	while (true) {
-		sz = utf8codepoint(sz, &codepoint);
-		if (codepoint == '\0') {
-			return -1;
-		} else if (codepoint == c) {
+		sz = utf8codepoint(sz, &cp);
+		if (cp == 0) {
+			break;
+		} else if (cp == c) {
 			ret = ct;
 		}
 		ct++;
@@ -992,21 +991,55 @@ static char* strrstr(const char* s1, const char* s2)
 	}
 	return nullptr;
 }
+#endif
 
 int String::IndexOfLast(const String &strNeedle) const
 {
 #ifndef SCRATCH_NO_THREADSAFE
 	MutexWait wait(str_mutex);
 #endif
+
+#ifdef SCRATCH_NO_UTF8
 	const char* sz = strrstr(this->str_szBuffer, strNeedle);
 	if (sz != nullptr) {
 		return sz - this->str_szBuffer;
 	}
 	return -1;
-}
 #else
-//TODO!!!!
+	if (strNeedle.Length() == 0) {
+		return -1;
+	}
+
+	int len = strNeedle.Length();
+	int ret = -1;
+	int index = 0;
+	int findStart = -1;
+	int findIndex = 0;
+
+	int cp;
+	void* p = this->str_szBuffer;
+
+	while (true) {
+		p = utf8codepoint(p, &cp);
+		if (cp == 0) {
+			break;
+		}
+		if (strNeedle[findIndex] == cp) {
+			if (findIndex == 0) {
+				findStart = index;
+			}
+			findIndex++;
+			if (findIndex == len) {
+				ret = findStart;
+				findIndex = 0;
+			}
+		}
+		index++;
+	}
+
+	return ret;
 #endif
+}
 
 void String::Fill(s_char c, int ct)
 {
