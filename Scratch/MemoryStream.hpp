@@ -105,7 +105,7 @@ void MemoryStream::Seek(uint32_t ulPos, int32_t iOrigin)
 
 bool MemoryStream::AtEOF()
 {
-	return Size() - Location() > 0;
+	return Location() >= Size();
 }
 
 void MemoryStream::Write(const void* p, uint32_t iLen)
