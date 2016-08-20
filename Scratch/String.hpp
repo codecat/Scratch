@@ -27,9 +27,9 @@
 #pragma once
 
 #ifdef SCRATCH_IMPL
-#include <cstdio> // for vsprintf
-#include <cstdarg> // for va_list
-#include <cstring> // for strlen and strcmp
+#include <stdio.h> // for vsprintf
+#include <stdarg.h> // for va_list
+#include <string.h> // for strlen and strcmp
 #include <ctype.h>
 #endif
 

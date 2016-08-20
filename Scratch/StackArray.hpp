@@ -26,8 +26,8 @@
 
 #pragma once
 
-#include <cstdlib>
-#include <cstring>
+#include <stdlib.h>
+#include <string.h>
 
 #ifndef SCRATCH_NO_THREADSAFE
 #include "Mutex.hpp"

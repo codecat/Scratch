@@ -26,10 +26,10 @@
 
 #pragma once
 
-#include <cstdio>
-#include <cmath>
-#include <cassert>
-#include <cstdint>
+#include <stdio.h>
+#include <math.h>
+#include <assert.h>
+#include <stdint.h>
 
 #ifdef _MSC_VER
 	#include <WinSock2.h>

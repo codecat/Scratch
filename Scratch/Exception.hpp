@@ -30,8 +30,8 @@
 
 #ifdef SCRATCH_IMPL
 
-#include <cstdio> // for vsprintf
-#include <cstdarg> // for va_list
+#include <stdio.h> // for vsprintf
+#include <stdarg.h> // for va_list
 
 #endif
 
