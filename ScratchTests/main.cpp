@@ -132,6 +132,9 @@ MAIN
 		TEST(strFoo.TrimLeft('.') == "Foo!!");
 		TEST(strFoo.TrimRight('!') == "..Foo");
 
+		strFoo = "/";
+		TEST(strFoo.TrimRight('/') == "");
+
 		strFoo = "a a b b a";
 		TEST(strFoo.Replace("b", "a") == "a a a a a");
 
