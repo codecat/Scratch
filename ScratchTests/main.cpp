@@ -193,8 +193,15 @@ MAIN
 
 		fnmFoo = "/var/www/test.html";
 		TEST(fnmFoo.Extension() == "html");
-		TEST(fnmFoo.Path() == "/var/www");
+		TEST(fnmFoo.Path() == "/var/www/");
+		TEST(fnmFoo.PathName() == "www");
 		TEST(fnmFoo.Name() == "test.html");
+
+		fnmFoo = "/home";
+		TEST(fnmFoo.Path() == "/");
+
+		fnmFoo = "/";
+		TEST(fnmFoo.Path() == "/");
 
 		fnmFoo.FromHome(".zshrc");
 		TEST_WINDOWS(fnmFoo.StartsWith("C:\\Users"));

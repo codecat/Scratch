@@ -50,6 +50,7 @@ public:
 
 	String Extension() const;
 	String Path() const;
+	String PathName() const;
 	String Name() const;
 
 	void FromHome(const String &strPath);
@@ -95,12 +96,21 @@ String Filename::Extension() const
 
 String Filename::Path() const
 {
-	return String(str_szBuffer, 0, strrchr(str_szBuffer, '/') - str_szBuffer);
+	int index = IndexOfLast('/');
+	return String(str_szBuffer, 0, index + 1);
+}
+
+String Filename::PathName() const
+{
+	String ret = Path().TrimRight('/');
+	int index = ret.IndexOfLast('/');
+	return String(ret.str_szBuffer + index + 1);
 }
 
 String Filename::Name() const
 {
-	return String(strrchr(str_szBuffer, '/') + 1);
+	int index = IndexOfLast('/');
+	return String(str_szBuffer + index + 1);
 }
 
 void Filename::FromHome(const String &strPath)
