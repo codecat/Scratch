@@ -49,7 +49,7 @@ public:
 
 	virtual uint32_t Size() = 0;
 	virtual uint32_t Location() = 0;
-	virtual void Seek(uint32_t ulPos, int32_t iOrigin) = 0;
+	virtual void Seek(int32_t iPos, int32_t iOrigin) = 0;
 	virtual bool AtEOF() = 0;
 
 	virtual void Flush();

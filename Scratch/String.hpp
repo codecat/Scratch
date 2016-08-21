@@ -623,12 +623,12 @@ String String::InternalTrim(bool bLeft, bool bRight, s_char c) const
 		// Loop from right to left in the string
 #ifdef SCRATCH_NO_UTF8
 		for (int i = strlen(szOffset) - 1; i >= 0; i--) {
-			// When we find something other than a space
-			if (szOffset[i] != c) {
-				// Put a null terminator to trim the right part
-				szOffset[i + 1] = '\0';
-
-				// Stop reading
+			// When we find a space
+			if (szOffset[i] == c) {
+				// Put the null terminator here to trim the right part
+				szOffset[i] = '\0';
+			} else {
+				// Something other than a space, we can stop now
 				break;
 			}
 		}

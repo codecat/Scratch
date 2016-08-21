@@ -44,7 +44,7 @@ public:
 
 	uint32_t Size();
 	uint32_t Location();
-	void Seek(uint32_t ulPos, int32_t iOrigin);
+	void Seek(int32_t iPos, int32_t iOrigin);
 	bool AtEOF();
 
 	bool Open(const char* szFileName, const char* szMode, bool sharedHandle = false);
@@ -91,9 +91,9 @@ uint32_t FileStream::Location()
 	return ftell(fs_pfh);
 }
 
-void FileStream::Seek(uint32_t ulPos, int32_t iOrigin)
+void FileStream::Seek(int32_t iPos, int32_t iOrigin)
 {
-	fseek(fs_pfh, ulPos, iOrigin);
+	fseek(fs_pfh, iPos, iOrigin);
 }
 
 bool FileStream::AtEOF()

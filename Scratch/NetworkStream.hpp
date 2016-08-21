@@ -64,7 +64,7 @@ public:
 
 	uint32_t Size();
 	uint32_t Location();
-	void Seek(uint32_t ulPos, int32_t iOrigin);
+	void Seek(int32_t iPos, int32_t iOrigin);
 	bool AtEOF();
 
 	bool Connect(const char* szAddress, uint16_t iPort);
@@ -137,7 +137,7 @@ uint32_t NetworkStream::Location()
 #endif
 }
 
-void NetworkStream::Seek(uint32_t ulPos, int32_t iOrigin)
+void NetworkStream::Seek(int32_t iPos, int32_t iOrigin)
 {
 #ifndef SCRATCH_NO_EXCEPTIONS
 	throw "Function not supported in Network Stream";

@@ -46,7 +46,7 @@ public:
 
 	uint32_t Size();
 	uint32_t Location();
-	void Seek(uint32_t ulPos, int32_t iOrigin);
+	void Seek(int32_t iPos, int32_t iOrigin);
 	bool AtEOF();
 
 	void Write(const void* p, uint32_t iLen);
@@ -94,12 +94,12 @@ uint32_t MemoryStream::Location()
 	return strm_ulPosition;
 }
 
-void MemoryStream::Seek(uint32_t ulPos, int32_t iOrigin)
+void MemoryStream::Seek(int32_t iPos, int32_t iOrigin)
 {
 	switch (iOrigin) {
-	case SEEK_CUR: strm_ulPosition += ulPos; break;
-	case SEEK_END: strm_ulPosition = Size() + ulPos; break;
-	case SEEK_SET: strm_ulPosition = ulPos; break;
+	case SEEK_CUR: strm_ulPosition += iPos; break;
+	case SEEK_END: strm_ulPosition = Size() + iPos; break;
+	case SEEK_SET: strm_ulPosition = iPos; break;
 	}
 }
 
