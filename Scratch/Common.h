@@ -66,3 +66,43 @@ template<class T> inline T Abs(const T &v) { return v < 0 ? -v : v; }
 #ifndef ASSERT
 #define ASSERT assert
 #endif
+
+#ifndef SCRATCH_NO_TERMCOL
+	#if !WINDOWS
+		#define TERMCOL_RESET   "\033[0m"
+		#define TERMCOL_BLACK   "\033[30m"
+		#define TERMCOL_RED     "\033[31m"
+		#define TERMCOL_GREEN   "\033[32m"
+		#define TERMCOL_YELLOW  "\033[33m"
+		#define TERMCOL_BLUE    "\033[34m"
+		#define TERMCOL_MAGENTA "\033[35m"
+		#define TERMCOL_CYAN    "\033[36m"
+		#define TERMCOL_WHITE   "\033[37m"
+		#define TERMCOL_BOLDBLACK   "\033[1m\033[30m"
+		#define TERMCOL_BOLDRED     "\033[1m\033[31m"
+		#define TERMCOL_BOLDGREEN   "\033[1m\033[32m"
+		#define TERMCOL_BOLDYELLOW  "\033[1m\033[33m"
+		#define TERMCOL_BOLDBLUE    "\033[1m\033[34m"
+		#define TERMCOL_BOLDMAGENTA "\033[1m\033[35m"
+		#define TERMCOL_BOLDCYAN    "\033[1m\033[36m"
+		#define TERMCOL_BOLDWHITE   "\033[1m\033[37m"
+	#else
+		#define TERMCOL_RESET
+		#define TERMCOL_BLACK
+		#define TERMCOL_RED
+		#define TERMCOL_GREEN
+		#define TERMCOL_YELLOW
+		#define TERMCOL_BLUE
+		#define TERMCOL_MAGENTA
+		#define TERMCOL_CYAN
+		#define TERMCOL_WHITE
+		#define TERMCOL_BOLDBLACK
+		#define TERMCOL_BOLDRED
+		#define TERMCOL_BOLDGREEN
+		#define TERMCOL_BOLDYELLOW
+		#define TERMCOL_BOLDBLUE
+		#define TERMCOL_BOLDMAGENTA
+		#define TERMCOL_BOLDCYAN
+		#define TERMCOL_BOLDWHITE
+	#endif
+#endif

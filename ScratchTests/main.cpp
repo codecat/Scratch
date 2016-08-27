@@ -32,17 +32,15 @@ static int g_iTestFailed = 0;
 #endif
 
 #define TESTS(id) \
-	aTests.Push() = id; \
-	if(strArg == id || strArg == "All")
+	if(!strcmp(strArg, id) || !strcmp(strArg, "All"))
 
 #define TEST(expr) { \
-	printf("TEST %d: (%s) - ", g_iTestNumber, #expr); \
 	if(!(expr)) { \
-		printf("FAILED!!!\n"); \
+		puts(TERMCOL_RED "\u2717 [FAIL] " TERMCOL_RESET #expr); \
 		g_iTestFailed++; \
 		TEST_BREAK(); \
 	} else { \
-		printf("OK\n"); \
+		puts(TERMCOL_GREEN "\u2713 [ OK ] " TERMCOL_RESET #expr); \
 		g_iTestOK++; \
 	} \
 	g_iTestNumber++; \
@@ -66,8 +64,7 @@ static int FunctionTest(int x)
 
 MAIN
 {
-	StackArray<String> aTests;
-	String strArg;
+	const char* strArg = nullptr;
 
 	char buffer[1024];
 	if(argc > 1) {
@@ -83,14 +80,9 @@ MAIN
 		strArg = argv[1];
 #endif
 	} else {
-		printf("No test name given! Existing tests:\n\n");
-		for (int i = 0; i<aTests.Count(); i++) {
-			printf(" * %s\n", (const char*)aTests[i]);
-		}
-		printf("\nOr pass \"All\" to run all tests.\nEnter a test to run: ");
-
-		scanf("%[^\n]", buffer);
-		strArg = buffer;
+		printf("No test name given!\n");
+		printf("Pass \"All\" to run all tests.\n");
+		return 1;
 	}
 
 	TESTS("String")
@@ -180,6 +172,10 @@ MAIN
 		TEST(strFoo * 3 == "xxx");
 
 		TEST(strPrintF("Hello %d %d", x, y) == "Hello 5 10");
+
+		for (int i = 1; i <= 6; i++) {
+			TEST(strPrintF("F%d", i).Length() == 2);
+		}
 
 #ifndef SCRATCH_NO_UTF8
 		String strUtf8;
