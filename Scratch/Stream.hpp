@@ -206,7 +206,7 @@ char Stream::ReadUntil(String &strOut, const String &strCharacters)
 void Stream::WriteText(const String &str)
 {
 	// write text
-	Write((const char*)str, strlen(str));
+	Write((const char*)str, str.Size());
 }
 
 void Stream::WriteLine(const String &str)
