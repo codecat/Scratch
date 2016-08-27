@@ -147,12 +147,12 @@ public:
 		return *this;
 	}
 
-	bool operator==(decltype(nullptr))
+	bool operator==(decltype(nullptr)) const
 	{
 		return m_func == nullptr;
 	}
 
-	bool operator!=(decltype(nullptr))
+	bool operator!=(decltype(nullptr)) const
 	{
 		return m_func != nullptr;
 	}
