@@ -62,6 +62,11 @@ static int FunctionTest(int x)
 	return x * x * x;
 }
 
+static int FunctionTest2(const Function<int(int)> &f, int x)
+{
+	return f(x);
+}
+
 MAIN
 {
 	const char* strArg = nullptr;
@@ -425,6 +430,14 @@ MAIN
 
 		Function<void()> fn = nullptr;
 		TEST(fn == nullptr);
+
+		Function<int(int)> &fpr = fp;
+		TEST(fpr(10) == 1000);
+
+		Function<int(int)>* fdp = &fd;
+		TEST((*fdp)(10) == 100);
+
+		TEST(FunctionTest2(fd, 10) == 100);
 	}
 
 	printf("\n");
