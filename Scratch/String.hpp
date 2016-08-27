@@ -158,7 +158,7 @@ void String::CopyToBuffer(const char* szSrc)
 #ifdef SCRATCH_NO_UTF8
 	int iLen = strlen(szSrc);
 #else
-	int iLen = utf8len(szSrc);
+	int iLen = utf8size(szSrc) - 1;
 #endif
 	if (iLen == 0) {
 		// Clean up
@@ -175,7 +175,7 @@ void String::CopyToBuffer(const char* szSrc)
 #ifdef SCRATCH_NO_UTF8
 	int iBufLen = strlen(this->str_szBuffer) + 1;
 #else
-	int iBufLen = utf8len(this->str_szBuffer) + 1;
+	int iBufLen = utf8size(this->str_szBuffer);
 #endif
 	int iReqLen = iLen + 1;
 
@@ -189,13 +189,10 @@ void String::CopyToBuffer(const char* szSrc)
 	}
 
 	// Copy data to the buffer.
-	int i = 0;
-	for (; i < iLen; i++) {
-		this->str_szBuffer[i] = szSrc[i];
-	}
+	memcpy(this->str_szBuffer, szSrc, iLen);
 
 	// Always end with a null terminator.
-	this->str_szBuffer[i] = '\0';
+	this->str_szBuffer[iLen] = '\0';
 }
 
 void String::AppendToBuffer(const char* szSrc)
