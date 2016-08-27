@@ -437,7 +437,14 @@ MAIN
 		Function<int(int)>* fdp = &fd;
 		TEST((*fdp)(10) == 100);
 
-		TEST(FunctionTest2(fd, 10) == 100);
+		TEST(FunctionTest2([](int x) { return x * 2; }, 10) == 20);
+
+		Function<int()> f1 = []() { return 10; };
+		Function<int()> f2 = [f1]() { return f1(); };
+		Function<void()> f3 = [f2]() {
+			TEST(f2() == 10);
+		};
+		f3();
 	}
 
 	printf("\n");
