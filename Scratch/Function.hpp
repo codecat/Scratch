@@ -105,6 +105,11 @@ public:
 		}
 	}
 
+	Function(decltype(nullptr))
+	{
+		m_func = nullptr;
+	}
+
 	~Function()
 	{
 		if (m_func != nullptr) {
@@ -125,6 +130,12 @@ public:
 		return *this;
 	}
 
+	Function &operator=(decltype(nullptr))
+	{
+		m_func = nullptr;
+		return *this;
+	}
+
 	template<typename Func>
 	Function &operator=(const Func &x)
 	{
@@ -136,7 +147,17 @@ public:
 		return *this;
 	}
 
-	Result operator()(Args... args)
+	bool operator==(decltype(nullptr))
+	{
+		return m_func == nullptr;
+	}
+
+	bool operator!=(decltype(nullptr))
+	{
+		return m_func != nullptr;
+	}
+
+	Result operator()(Args... args) const
 	{
 		if (m_func == nullptr) {
 			return Result();

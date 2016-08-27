@@ -127,6 +127,9 @@ MAIN
 		strFoo = "/";
 		TEST(strFoo.TrimRight('/') == "");
 
+		strFoo = "foo";
+		TEST(strFoo.Replace("foo", "bar") == "bar");
+
 		strFoo = "a a b b a";
 		TEST(strFoo.Replace("b", "a") == "a a a a a");
 
@@ -413,10 +416,15 @@ MAIN
 		Function<void()> fs = [&b]() { b = true; };
 		fs();
 		TEST(b == true);
+		TEST(fs != nullptr);
 
 		Function<int(int)> fp = &FunctionTest;
 		TEST(fp(10) == 1000);
 		TEST(fp(50) == 125000);
+		TEST(fp != nullptr);
+
+		Function<void()> fn = nullptr;
+		TEST(fn == nullptr);
 	}
 
 	printf("\n");
