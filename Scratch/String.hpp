@@ -324,9 +324,7 @@ String::String(const char* szValue, int iStartBytes, int iBytes)
 String::String(const String &copy)
 {
 	str_iInstances++;
-#ifndef SCRATCH_NO_THREADSAFE
-	MutexWait wait(copy.str_mutex);
-#endif
+	MUTEX_LOCK(copy.str_mutex);
 	// Create a new buffer and copy data into it.
 	this->str_szBuffer = String::str_szEmpty;
 	this->CopyToBuffer(copy);
@@ -343,9 +341,7 @@ String::~String()
 
 int String::Length() const
 {
-#ifndef SCRATCH_NO_THREADSAFE
-	MutexWait wait(str_mutex);
-#endif
+	MUTEX_LOCK(str_mutex);
 
 #ifdef SCRATCH_NO_UTF8
 	return strlen(this->str_szBuffer);
@@ -356,9 +352,7 @@ int String::Length() const
 
 int String::Size() const
 {
-#ifndef SCRATCH_NO_THREADSAFE
-	MutexWait wait(str_mutex);
-#endif
+	MUTEX_LOCK(str_mutex);
 
 #ifdef SCRATCH_NO_UTF8
 	return strlen(this->str_szBuffer);
@@ -369,9 +363,7 @@ int String::Size() const
 
 void String::SetF(const char* szFormat, ...)
 {
-#ifndef SCRATCH_NO_THREADSAFE
-	MutexWait wait(str_mutex);
-#endif
+	MUTEX_LOCK(str_mutex);
 
 	int iSize = STRING_FORMAT_BUFFER_SIZE;
 	char* szBuffer = new char[iSize];
@@ -399,9 +391,7 @@ void String::SetF(const char* szFormat, ...)
 
 void String::AppendF(const char* szFormat, ...)
 {
-#ifndef SCRATCH_NO_THREADSAFE
-	MutexWait wait(str_mutex);
-#endif
+	MUTEX_LOCK(str_mutex);
 
 	int iSize = STRING_FORMAT_BUFFER_SIZE;
 	char* szBuffer = new char[iSize];
@@ -434,10 +424,8 @@ void String::Split(const String &strNeedle, StackArray<String> &astrResult) cons
 
 void String::Split(const String &strNeedle, StackArray<String> &astrResult, bool bTrimAll) const
 {
-#ifndef SCRATCH_NO_THREADSAFE
-	MutexWait wait(str_mutex);
-	MutexWait wait2(strNeedle.str_mutex);
-#endif
+	MUTEX_LOCK(str_mutex);
+	MUTEX_LOCK_NAMED(wait2, strNeedle.str_mutex);
 
 	// Keep a pointer to the current offset and a "previous offset"
 	char* szOffset = str_szBuffer;
@@ -514,9 +502,7 @@ void String::Split(const String &strNeedle, StackArray<String> &astrResult, bool
 
 void String::CommandLineSplit(StackArray<String> &astrResult) const
 {
-#ifndef SCRATCH_NO_THREADSAFE
-	MutexWait wait(str_mutex);
-#endif
+	MUTEX_LOCK(str_mutex);
 
 	char* sz = str_szBuffer;
 	bool bInString = false;
@@ -652,59 +638,45 @@ String String::InternalTrim(bool bLeft, bool bRight, s_char c) const
 
 String String::Trim() const
 {
-#ifndef SCRATCH_NO_THREADSAFE
-	MutexWait wait(str_mutex);
-#endif
+	MUTEX_LOCK(str_mutex);
 	return InternalTrim(true, true);
 }
 
 String String::Trim(s_char c) const
 {
-#ifndef SCRATCH_NO_THREADSAFE
-	MutexWait wait(str_mutex);
-#endif
+	MUTEX_LOCK(str_mutex);
 	return InternalTrim(true, true, c);
 }
 
 String String::TrimLeft() const
 {
-#ifndef SCRATCH_NO_THREADSAFE
-	MutexWait wait(str_mutex);
-#endif
+	MUTEX_LOCK(str_mutex);
 	return InternalTrim(true, false);
 }
 
 String String::TrimLeft(s_char c) const
 {
-#ifndef SCRATCH_NO_THREADSAFE
-	MutexWait wait(str_mutex);
-#endif
+	MUTEX_LOCK(str_mutex);
 	return InternalTrim(true, false, c);
 }
 
 String String::TrimRight() const
 {
-#ifndef SCRATCH_NO_THREADSAFE
-	MutexWait wait(str_mutex);
-#endif
+	MUTEX_LOCK(str_mutex);
 	return InternalTrim(false, true);
 }
 
 String String::TrimRight(s_char c) const
 {
-#ifndef SCRATCH_NO_THREADSAFE
-	MutexWait wait(str_mutex);
-#endif
+	MUTEX_LOCK(str_mutex);
 	return InternalTrim(false, true, c);
 }
 
 String String::Replace(const String &strNeedle, const String &strReplace) const
 {
-#ifndef SCRATCH_NO_THREADSAFE
-	MutexWait wait(str_mutex);
-	MutexWait wait2(strNeedle.str_mutex);
-	MutexWait wait3(strReplace.str_mutex);
-#endif
+	MUTEX_LOCK(str_mutex);
+	MUTEX_LOCK_NAMED(wait2, strNeedle.str_mutex);
+	MUTEX_LOCK_NAMED(wait3, strReplace.str_mutex);
 
 	String strRet("");
 
@@ -753,9 +725,7 @@ String String::Replace(const String &strNeedle, const String &strReplace) const
 
 String String::SubString(int iStart) const
 {
-#ifndef SCRATCH_NO_THREADSAFE
-	MutexWait wait(str_mutex);
-#endif
+	MUTEX_LOCK(str_mutex);
 
 #ifdef SCRATCH_NO_UTF8
 	return String(this->str_szBuffer + iStart);
@@ -771,9 +741,7 @@ String String::SubString(int iStart) const
 
 String String::SubString(int iStart, int iLen) const
 {
-#ifndef SCRATCH_NO_THREADSAFE
-	MutexWait wait(str_mutex);
-#endif
+	MUTEX_LOCK(str_mutex);
 
 	// Empty strings
 	if (iStart < 0 || iLen <= 0) {
@@ -838,9 +806,7 @@ void strupr(char* sz)
 
 String String::ToLower() const
 {
-#ifndef SCRATCH_NO_THREADSAFE
-	MutexWait wait(str_mutex);
-#endif
+	MUTEX_LOCK(str_mutex);
 
 	String strRet(this->str_szBuffer);
 #ifdef SCRATCH_NO_UTF8
@@ -858,9 +824,7 @@ String String::ToLower() const
 
 String String::ToUpper() const
 {
-#ifndef SCRATCH_NO_THREADSAFE
-	MutexWait wait(str_mutex);
-#endif
+	MUTEX_LOCK(str_mutex);
 
 	String strRet(this->str_szBuffer);
 #ifdef SCRATCH_NO_UTF8
@@ -878,9 +842,7 @@ String String::ToUpper() const
 
 int String::IndexOf(s_char c) const
 {
-#ifndef SCRATCH_NO_THREADSAFE
-	MutexWait wait(str_mutex);
-#endif
+	MUTEX_LOCK(str_mutex);
 
 #ifdef SCRATCH_NO_UTF8
 	const char* sz = strchr(this->str_szBuffer, c);
@@ -906,9 +868,7 @@ int String::IndexOf(s_char c) const
 
 int String::IndexOf(const String &strNeedle) const
 {
-#ifndef SCRATCH_NO_THREADSAFE
-	MutexWait wait(str_mutex);
-#endif
+	MUTEX_LOCK(str_mutex);
 
 #ifdef SCRATCH_NO_UTF8
 	const char* sz = strstr(this->str_szBuffer, strNeedle);
@@ -937,9 +897,7 @@ int String::IndexOf(const String &strNeedle) const
 
 int String::IndexOfLast(s_char c) const
 {
-#ifndef SCRATCH_NO_THREADSAFE
-	MutexWait wait(str_mutex);
-#endif
+	MUTEX_LOCK(str_mutex);
 
 #ifdef SCRATCH_NO_UTF8
 	const char* sz = strrchr(this->str_szBuffer, c);
@@ -993,9 +951,7 @@ static char* strrstr(const char* s1, const char* s2)
 
 int String::IndexOfLast(const String &strNeedle) const
 {
-#ifndef SCRATCH_NO_THREADSAFE
-	MutexWait wait(str_mutex);
-#endif
+	MUTEX_LOCK(str_mutex);
 
 #ifdef SCRATCH_NO_UTF8
 	const char* sz = strrstr(this->str_szBuffer, strNeedle);
@@ -1041,9 +997,7 @@ int String::IndexOfLast(const String &strNeedle) const
 
 void String::Fill(s_char c, int ct)
 {
-#ifndef SCRATCH_NO_THREADSAFE
-	MutexWait wait(str_mutex);
-#endif
+	MUTEX_LOCK(str_mutex);
 
 #ifdef SCRATCH_NO_UTF8
 	char* szBuffer = new char[ct + 1];
@@ -1069,10 +1023,8 @@ void String::Fill(s_char c, int ct)
 
 bool String::Contains(const String &strNeedle) const
 {
-#ifndef SCRATCH_NO_THREADSAFE
-	MutexWait wait(str_mutex);
-	MutexWait wait2(strNeedle.str_mutex);
-#endif
+	MUTEX_LOCK(str_mutex);
+	MUTEX_LOCK_NAMED(wait2, strNeedle.str_mutex);
 
 #ifdef SCRATCH_NO_UTF8
 	return strstr(this->str_szBuffer, strNeedle) != nullptr;
@@ -1083,9 +1035,7 @@ bool String::Contains(const String &strNeedle) const
 
 bool String::Contains(s_char c) const
 {
-#ifndef SCRATCH_NO_THREADSAFE
-	MutexWait wait(str_mutex);
-#endif
+	MUTEX_LOCK(str_mutex);
 
 #ifdef SCRATCH_NO_UTF8
 	int iLen = strlen(str_szBuffer);
@@ -1102,10 +1052,8 @@ bool String::Contains(s_char c) const
 
 bool String::StartsWith(const String &strNeedle) const
 {
-#ifndef SCRATCH_NO_THREADSAFE
-	MutexWait wait(str_mutex);
-	MutexWait wait2(strNeedle.str_mutex);
-#endif
+	MUTEX_LOCK(str_mutex);
+	MUTEX_LOCK_NAMED(wait2, strNeedle.str_mutex);
 
 #ifdef SCRATCH_NO_UTF8
 	return strstr(this->str_szBuffer, strNeedle) == this->str_szBuffer;
@@ -1116,10 +1064,8 @@ bool String::StartsWith(const String &strNeedle) const
 
 bool String::EndsWith(const String &strNeedle) const
 {
-#ifndef SCRATCH_NO_THREADSAFE
-	MutexWait wait(str_mutex);
-	MutexWait wait2(strNeedle.str_mutex);
-#endif
+	MUTEX_LOCK(str_mutex);
+	MUTEX_LOCK_NAMED(wait2, strNeedle.str_mutex);
 
 	// Get the offset
 #ifdef SCRATCH_NO_UTF8
@@ -1153,9 +1099,7 @@ String::operator const char *() const
 
 String& String::operator=(char* src)
 {
-#ifndef SCRATCH_NO_THREADSAFE
-	MutexWait wait(str_mutex);
-#endif
+	MUTEX_LOCK(str_mutex);
 	// Copy the right hand side to the buffer.
 	this->CopyToBuffer(src);
 	return *this;
@@ -1163,9 +1107,7 @@ String& String::operator=(char* src)
 
 String& String::operator=(const char* src)
 {
-#ifndef SCRATCH_NO_THREADSAFE
-	MutexWait wait(str_mutex);
-#endif
+	MUTEX_LOCK(str_mutex);
 	// Copy the right hand side to the buffer.
 	this->CopyToBuffer(src);
 	return *this;
@@ -1173,10 +1115,8 @@ String& String::operator=(const char* src)
 
 String& String::operator=(const String &strSrc)
 {
-#ifndef SCRATCH_NO_THREADSAFE
-	MutexWait wait(str_mutex);
-	MutexWait wait2(strSrc.str_mutex);
-#endif
+	MUTEX_LOCK(str_mutex);
+	MUTEX_LOCK_NAMED(wait2, strSrc.str_mutex);
 	// If the right hand side is not the left hand side...
 	if (this != &strSrc) {
 		// Copy the right hand side to the buffer.
@@ -1187,9 +1127,7 @@ String& String::operator=(const String &strSrc)
 
 String& String::operator+=(const char* szSrc)
 {
-#ifndef SCRATCH_NO_THREADSAFE
-	MutexWait wait(str_mutex);
-#endif
+	MUTEX_LOCK(str_mutex);
 	// Append the right hand side to the buffer.
 	this->AppendToBuffer(szSrc);
 	return *this;
@@ -1197,9 +1135,7 @@ String& String::operator+=(const char* szSrc)
 
 String& String::operator+=(const s_char cSrc)
 {
-#ifndef SCRATCH_NO_THREADSAFE
-	MutexWait wait(str_mutex);
-#endif
+	MUTEX_LOCK(str_mutex);
 	// Append the right hand side to the buffer.
 	this->AppendToBuffer(cSrc);
 	return *this;
@@ -1207,10 +1143,8 @@ String& String::operator+=(const s_char cSrc)
 
 String& String::operator+=(const String &strSrc)
 {
-#ifndef SCRATCH_NO_THREADSAFE
-	MutexWait wait(str_mutex);
-	MutexWait wait2(strSrc.str_mutex);
-#endif
+	MUTEX_LOCK(str_mutex);
+	MUTEX_LOCK_NAMED(wait2, strSrc.str_mutex);
 	// Append the right hand side to the buffer.
 	this->AppendToBuffer(strSrc.str_szBuffer);
 	return *this;
@@ -1219,9 +1153,7 @@ String& String::operator+=(const String &strSrc)
 String& String::operator*=(int ctRepeat)
 {
 	String strOriginal = *this;
-#ifndef SCRATCH_NO_THREADSAFE
-	MutexWait wait(str_mutex);
-#endif
+	MUTEX_LOCK(str_mutex);
 	for (int i = 1; i < ctRepeat; i++) {
 		this->AppendToBuffer(strOriginal);
 	}
@@ -1230,9 +1162,7 @@ String& String::operator*=(int ctRepeat)
 
 bool String::operator==(const char* szSrc) const
 {
-#ifndef SCRATCH_NO_THREADSAFE
-	MutexWait wait(str_mutex);
-#endif
+	MUTEX_LOCK(str_mutex);
 
 #ifdef SCRATCH_NO_UTF8
 	return !strcmp(this->str_szBuffer, szSrc);
@@ -1243,9 +1173,7 @@ bool String::operator==(const char* szSrc) const
 
 bool String::operator!=(const char* szSrc) const
 {
-#ifndef SCRATCH_NO_THREADSAFE
-	MutexWait wait(str_mutex);
-#endif
+	MUTEX_LOCK(str_mutex);
 
 #ifdef SCRATCH_NO_UTF8
 	return strcmp(this->str_szBuffer, szSrc) != 0;
@@ -1256,9 +1184,7 @@ bool String::operator!=(const char* szSrc) const
 
 const s_char String::operator[](int iIndex)
 {
-#ifndef SCRATCH_NO_THREADSAFE
-	MutexWait wait(str_mutex);
-#endif
+	MUTEX_LOCK(str_mutex);
 
 #ifdef SCRATCH_NO_UTF8
 	return this->str_szBuffer[iIndex];

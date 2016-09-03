@@ -137,9 +137,15 @@
  *	 mutex.Lock();
  *	 // do some work
  *	 mutex.Unlock();
+ *
  * Or:
  *	 Mutex mutex;
  *	 MutexWait(mutex);
+ *	 // do some work
+ *
+ * Or: (define SCRATCH_DEBUG_MUTEX for additional debugging)
+ *	 Mutex mutex;
+ *	 MUTEX_LOCK(mutex);
  *	 // do some work
  */
 #include "Mutex.hpp"

@@ -110,6 +110,10 @@ Mutex::~Mutex()
 
 void Mutex::Lock()
 {
+#ifdef SCRATCH_DEBUG_MUTEX
+	printf(TERMCOL_BOLDRED "[MUTEX]" TERMCOL_RESET " Lock: %p\n", m_pMutex);
+#endif
+
 #ifndef _MSC_VER
 	pthread_mutex_lock((pthread_mutex_t*)m_pMutex);
 #else
@@ -132,6 +136,13 @@ bool Mutex::TryLock()
 
 	if (worked) {
 		m_bIsLocked = true;
+#ifdef SCRATCH_DEBUG_MUTEX
+	printf(TERMCOL_BOLDRED "[MUTEX]" TERMCOL_RESET " TryLock: %p\n", m_pMutex);
+#endif
+	} else {
+#ifdef SCRATCH_DEBUG_MUTEX
+	printf(TERMCOL_BOLDRED "[MUTEX]" TERMCOL_RESET " TryLock failed: %p\n", m_pMutex);
+#endif
 	}
 
 	return worked;
@@ -145,6 +156,10 @@ void Mutex::Unlock()
 	pthread_mutex_unlock((pthread_mutex_t*)m_pMutex);
 #else
 	ReleaseMutex(m_pMutex);
+#endif
+
+#ifdef SCRATCH_DEBUG_MUTEX
+	printf(TERMCOL_BOLDRED "[MUTEX]" TERMCOL_RESET " Unlock: %p\n", m_pMutex);
 #endif
 
 	m_bIsLocked = false;

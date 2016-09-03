@@ -210,9 +210,7 @@ void StackArray<Type>::AllocateSlots(int32_t ctSlots)
 template<class Type>
 Type& StackArray<Type>::PushBegin()
 {
-#ifndef SCRATCH_NO_THREADSAFE
-	MutexWait wait(sa_mutex);
-#endif
+	MUTEX_LOCK(sa_mutex);
 
 	// PushBegin() in combination with sa_bOnlyPop will cause memory leaking if not manually Clear()'d
 	ASSERT(!sa_bOnlyPop);
@@ -245,9 +243,7 @@ Type& StackArray<Type>::PushBegin()
 template<class Type>
 Type& StackArray<Type>::Push()
 {
-#ifndef SCRATCH_NO_THREADSAFE
-	MutexWait wait(sa_mutex);
-#endif
+	MUTEX_LOCK(sa_mutex);
 
 	// Push() in combination with sa_bOnlyPop will cause memory leaking if not manually Clear()'d
 	ASSERT(!sa_bOnlyPop);
@@ -275,9 +271,7 @@ Type& StackArray<Type>::Push()
 template<class Type>
 void StackArray<Type>::Push(Type* pObj)
 {
-#ifndef SCRATCH_NO_THREADSAFE
-	MutexWait wait(sa_mutex);
-#endif
+	MUTEX_LOCK(sa_mutex);
 
 	// if we need more slots
 	if (sa_ctUsed >= sa_ctSlots) {
@@ -296,9 +290,7 @@ void StackArray<Type>::Push(Type* pObj)
 template<class Type>
 Type* StackArray<Type>::Pop()
 {
-#ifndef SCRATCH_NO_THREADSAFE
-	MutexWait wait(sa_mutex);
-#endif
+	MUTEX_LOCK(sa_mutex);
 
 	ASSERT(sa_ctUsed > 0);
 
@@ -319,9 +311,7 @@ Type* StackArray<Type>::Pop()
 template<class Type>
 Type* StackArray<Type>::PopAt(int32_t iIndex)
 {
-#ifndef SCRATCH_NO_THREADSAFE
-	MutexWait wait(sa_mutex);
-#endif
+	MUTEX_LOCK(sa_mutex);
 
 	ASSERT(iIndex < sa_ctUsed);
 
@@ -348,9 +338,7 @@ Type* StackArray<Type>::PopAt(int32_t iIndex)
 template<class Type>
 void StackArray<Type>::PopAll()
 {
-#ifndef SCRATCH_NO_THREADSAFE
-	MutexWait wait(sa_mutex);
-#endif
+	MUTEX_LOCK(sa_mutex);
 
 	// for every object
 	for (int32_t i = 0; i < sa_ctUsed; i++) {
@@ -366,9 +354,7 @@ void StackArray<Type>::PopAll()
 template<class Type>
 void StackArray<Type>::Clear()
 {
-#ifndef SCRATCH_NO_THREADSAFE
-	MutexWait wait(sa_mutex);
-#endif
+	MUTEX_LOCK(sa_mutex);
 
 	// for every object
 	for (int32_t i = 0; i < sa_ctUsed; i++) {
@@ -386,9 +372,7 @@ void StackArray<Type>::Clear()
 template<class Type>
 int32_t StackArray<Type>::Count()
 {
-#ifndef SCRATCH_NO_THREADSAFE
-	MutexWait wait(sa_mutex);
-#endif
+	MUTEX_LOCK(sa_mutex);
 	return sa_ctUsed;
 }
 
@@ -396,9 +380,7 @@ int32_t StackArray<Type>::Count()
 template<class Type>
 int32_t StackArray<Type>::Find(const Type &obj)
 {
-#ifndef SCRATCH_NO_THREADSAFE
-	MutexWait wait(sa_mutex);
-#endif
+	MUTEX_LOCK(sa_mutex);
 
 	// for every object
 	for (int32_t i = 0; i < sa_ctUsed; i++) {
@@ -415,9 +397,7 @@ int32_t StackArray<Type>::Find(const Type &obj)
 template<class Type>
 int32_t StackArray<Type>::FindPointer(const Type* pObj)
 {
-#ifndef SCRATCH_NO_THREADSAFE
-	MutexWait wait(sa_mutex);
-#endif
+	MUTEX_LOCK(sa_mutex);
 
 	// for every object
 	for (int32_t i = 0; i < sa_ctUsed; i++) {
@@ -435,9 +415,7 @@ template<class Type>
 template<typename Func>
 int32_t StackArray<Type>::FindAny(Func f)
 {
-#ifndef SCRATCH_NO_THREADSAFE
-	MutexWait wait(sa_mutex);
-#endif
+	MUTEX_LOCK(sa_mutex);
 
 	// for every object
 	for (int32_t i = 0; i < sa_ctUsed; i++) {
@@ -474,9 +452,7 @@ bool StackArray<Type>::ContainsAny(Func f)
 template<class Type>
 Type& StackArray<Type>::operator[](int32_t iIndex)
 {
-#ifndef SCRATCH_NO_THREADSAFE
-	MutexWait wait(sa_mutex);
-#endif
+	MUTEX_LOCK(sa_mutex);
 	ASSERT(iIndex >= 0 && iIndex < sa_ctUsed);
 	return *sa_pItems[iIndex];
 }

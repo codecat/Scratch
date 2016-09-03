@@ -67,6 +67,20 @@ template<class T> inline T Abs(const T &v) { return v < 0 ? -v : v; }
 #define ASSERT assert
 #endif
 
+#ifdef SCRATCH_DEBUG_MUTEX
+#define MUTEX_DEBUG_LOCK(name) printf(TERMCOL_BOLDRED "[MUTEX]" TERMCOL_RESET " Lock '%s' from: %s (@ %s:%d)\n", name, __PRETTY_FUNCTION__, __FILE__, __LINE__);
+#else
+#define MUTEX_DEBUG_LOCK(name)
+#endif
+
+#ifdef SCRATCH_NO_THREADSAFE
+#define MUTEX_LOCK(mutex)
+#define MUTEX_LOCK_NAMED(name, mutex)
+#else
+#define MUTEX_LOCK(mutex) MUTEX_DEBUG_LOCK("wait"); MutexWait wait(mutex);
+#define MUTEX_LOCK_NAMED(name, mutex) MUTEX_DEBUG_LOCK(#name); MutexWait name(mutex);
+#endif
+
 #ifndef SCRATCH_NO_TERMCOL
 	#if !WINDOWS
 		#define TERMCOL_RESET   "\033[0m"
