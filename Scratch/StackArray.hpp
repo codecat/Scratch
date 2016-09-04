@@ -126,6 +126,9 @@ public:
 	void SortAscending();
 	/// Sort the array descending using operator >
 	void SortDescending();
+	/// Sort the array using a functor
+	template<typename Func>
+	void Sort(Func f);
 
 	Type& operator[](int32_t iIndex);
 
@@ -486,6 +489,41 @@ template<class Type>
 void StackArray<Type>::SortDescending()
 {
 	qsort(sa_pItems, sa_ctUsed, sizeof(Type*), StackArray_cmpd<Type>);
+}
+
+template<typename T>
+inline void scratch_swap(T** base, int x, int y)
+{
+	T* tmp = base[y];
+	base[y] = base[x];
+	base[x] = tmp;
+}
+
+template<typename T, typename Func>
+static void scratch_qsort(T** base, int left, int right, Func &f)
+{
+	if (left >= right) {
+		return;
+	}
+
+	scratch_swap(base, left, (left + right) / 2);
+	int last = left;
+	for (int i = left + 1; i <= right; i++) {
+		if (f(*base[i], *base[left]) < 0) {
+			scratch_swap(base, ++last, i);
+		}
+	}
+	scratch_swap(base, left, last);
+	scratch_qsort(base, left, last - 1, f);
+	scratch_qsort(base, last + 1, right, f);
+}
+
+/// Sort the array using a functor
+template<class Type>
+template<typename Func>
+void StackArray<Type>::Sort(Func f)
+{
+	scratch_qsort<Type, Func>(sa_pItems, 0, sa_ctUsed - 1, f);
 }
 
 template<class Type>

@@ -313,6 +313,20 @@ MAIN
 
 		sortStrings.SortDescending();
 		TEST(sortStrings[0] == "Baaa" && sortStrings[1] == "Abbb");
+
+		StackArray<int> sortFunctor;
+		sortFunctor.Push() = 10;
+		sortFunctor.Push() = 30;
+		sortFunctor.Push() = 50;
+		sortFunctor.Push() = 40;
+		sortFunctor.Push() = 20;
+
+		sortFunctor.Sort([](int &a, int &b) -> int {
+			if (a > b) return -1;
+			if (b > a) return 1;
+			return 0;
+		});
+		TEST(sortFunctor[0] == 50 && sortFunctor[4] == 10);
 	}
 
 	TESTS("Dictionary")
