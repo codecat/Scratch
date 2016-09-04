@@ -129,7 +129,8 @@ public:
 	bool operator==(const char* szSrc) const;
 	bool operator!=(const char* szSrc) const;
 
-	bool CaseCompare(int n, const char* szSrc);
+	bool CaseCompare(int n, const char* szSrc) const;
+	int CaseCompare(const char* szSrc) const;
 
 	bool operator>(const char* szSrc) const;
 	bool operator>=(const char* szSrc) const;
@@ -1178,7 +1179,7 @@ bool String::operator==(const char* szSrc) const
 #endif
 }
 
-bool String::CaseCompare(int n, const char* szSrc)
+bool String::CaseCompare(int n, const char* szSrc) const
 {
 	MUTEX_LOCK(str_mutex);
 
@@ -1189,6 +1190,17 @@ bool String::CaseCompare(int n, const char* szSrc)
 #endif
 
 	return (n == i) || (n < 0 && i < 0) || (n > 0 && i > 0);
+}
+
+int String::CaseCompare(const char* szSrc) const
+{
+	MUTEX_LOCK(str_mutex);
+
+#ifdef SCRATCH_NO_UTF8
+	return strcasecmp(str_szBuffer, szSrc);
+#else
+	return utf8casecmp(str_szBuffer, szSrc);
+#endif
 }
 
 bool String::operator>(const char* szSrc) const

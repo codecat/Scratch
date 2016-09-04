@@ -191,6 +191,7 @@ MAIN
 
 		TEST(strA.CaseCompare(0, strC));
 		TEST(strA.CaseCompare(-1, strB));
+		TEST(strA.CaseCompare(strC) == 0);
 
 		TEST(strA < strB);
 		TEST(strB > strA);
