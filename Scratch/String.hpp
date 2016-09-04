@@ -129,6 +129,11 @@ public:
 	bool operator==(const char* szSrc) const;
 	bool operator!=(const char* szSrc) const;
 
+	bool operator>(const char* szSrc) const;
+	bool operator>=(const char* szSrc) const;
+	bool operator<(const char* szSrc) const;
+	bool operator<=(const char* szSrc) const;
+
 	const s_char operator[](int iIndex);
 };
 
@@ -1168,6 +1173,50 @@ bool String::operator==(const char* szSrc) const
 	return !strcmp(this->str_szBuffer, szSrc);
 #else
 	return !utf8cmp(this->str_szBuffer, szSrc);
+#endif
+}
+
+bool String::operator>(const char* szSrc) const
+{
+	MUTEX_LOCK(str_mutex);
+
+#ifdef SCRATCH_NO_UTF8
+	return strcmp(str_szBuffer, szSrc) > 0;
+#else
+	return utf8cmp(str_szBuffer, szSrc) > 0;
+#endif
+}
+
+bool String::operator>=(const char* szSrc) const
+{
+	MUTEX_LOCK(str_mutex);
+
+#ifdef SCRATCH_NO_UTF8
+	return strcmp(str_szBuffer, szSrc) >= 0;
+#else
+	return utf8cmp(str_szBuffer, szSrc) >= 0;
+#endif
+}
+
+bool String::operator<(const char* szSrc) const
+{
+	MUTEX_LOCK(str_mutex);
+
+#ifdef SCRATCH_NO_UTF8
+	return strcmp(str_szBuffer, szSrc) < 0;
+#else
+	return utf8cmp(str_szBuffer, szSrc) < 0;
+#endif
+}
+
+bool String::operator<=(const char* szSrc) const
+{
+	MUTEX_LOCK(str_mutex);
+
+#ifdef SCRATCH_NO_UTF8
+	return strcmp(str_szBuffer, szSrc) <= 0;
+#else
+	return utf8cmp(str_szBuffer, szSrc) <= 0;
 #endif
 }
 

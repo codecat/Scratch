@@ -185,6 +185,13 @@ MAIN
 			TEST(strPrintF("F%d", i).Length() == 2);
 		}
 
+		String strA = "Aaaa";
+		String strB = "Bbbb";
+		TEST(strA < strB);
+		TEST(strB > strA);
+		TEST(strA <= strA);
+		TEST(strB >= strB);
+
 #ifndef SCRATCH_NO_UTF8
 		String strUtf8;
 		strUtf8 += 0x888d90f0;
