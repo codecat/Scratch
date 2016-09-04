@@ -91,7 +91,11 @@ Filename::Filename(const String &str)
 
 String Filename::Extension() const
 {
-	return String(strrchr(str_szBuffer, '.') + 1);
+	char* sz = strrchr(str_szBuffer, '.');
+	if (sz == nullptr) {
+		return "";
+	}
+	return String(sz + 1);
 }
 
 String Filename::Path() const

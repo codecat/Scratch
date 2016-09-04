@@ -219,6 +219,7 @@ MAIN
 
 		fnmFoo = "/home";
 		TEST(fnmFoo.Path() == "/");
+		TEST(fnmFoo.Extension() == "");
 
 		fnmFoo = "/";
 		TEST(fnmFoo.Path() == "/");
