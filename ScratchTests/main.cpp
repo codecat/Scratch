@@ -288,6 +288,31 @@ MAIN
 		}
 		TEST(iCount == 3);
 		TEST(iSum == 30);
+
+		StackArray<int> sortMe;
+		sortMe.Push() = 5;
+		sortMe.Push() = 3;
+		sortMe.Push() = 1;
+		sortMe.Push() = 10;
+
+		sortMe.SortAscending();
+		TEST(sortMe[0] == 1 && sortMe[1] == 3);
+
+		sortMe.SortDescending();
+		TEST(sortMe[0] == 10 && sortMe[1] == 5);
+
+		StackArray<String> sortStrings;
+		sortStrings.Push() = "Aaab";
+		sortStrings.Push() = "Baaa";
+		sortStrings.Push() = "Abbb";
+		sortStrings.Push() = "Aaaa";
+		sortStrings.Push() = "Aaax";
+
+		sortStrings.SortAscending();
+		TEST(sortStrings[0] == "Aaaa" && sortStrings[1] == "Aaab");
+
+		sortStrings.SortDescending();
+		TEST(sortStrings[0] == "Baaa" && sortStrings[1] == "Abbb");
 	}
 
 	TESTS("Dictionary")

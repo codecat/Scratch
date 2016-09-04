@@ -122,6 +122,11 @@ public:
 	template<typename Func>
 	bool ContainsAny(Func f);
 
+	/// Sort the array ascending using operator >
+	void SortAscending();
+	/// Sort the array descending using operator >
+	void SortDescending();
+
 	Type& operator[](int32_t iIndex);
 
 	StackArrayIterator<Type> begin();
@@ -447,6 +452,40 @@ template<typename Func>
 bool StackArray<Type>::ContainsAny(Func f)
 {
 	return FindAny(f) != -1;
+}
+
+template<typename T>
+static int StackArray_cmpa(const void* a, const void* b)
+{
+	T &oa = **(T**)a;
+	T &ob = **(T**)b;
+	if (oa > ob) return 1;
+	if (oa < ob) return -1;
+	return 0;
+}
+
+template<typename T>
+static int StackArray_cmpd(const void* a, const void* b)
+{
+	T &oa = **(T**)a;
+	T &ob = **(T**)b;
+	if (oa > ob) return -1;
+	if (oa < ob) return 1;
+	return 0;
+}
+
+/// Sort the array ascending using operator >
+template<class Type>
+void StackArray<Type>::SortAscending()
+{
+	qsort(sa_pItems, sa_ctUsed, sizeof(Type*), StackArray_cmpa<Type>);
+}
+
+/// Sort the array descending using operator >
+template<class Type>
+void StackArray<Type>::SortDescending()
+{
+	qsort(sa_pItems, sa_ctUsed, sizeof(Type*), StackArray_cmpd<Type>);
 }
 
 template<class Type>
