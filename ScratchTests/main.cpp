@@ -187,6 +187,11 @@ MAIN
 
 		String strA = "Aaaa";
 		String strB = "Bbbb";
+		String strC = "aaaa";
+
+		TEST(strA.CaseCompare(0, strC));
+		TEST(strA.CaseCompare(-1, strB));
+
 		TEST(strA < strB);
 		TEST(strB > strA);
 		TEST(strA <= strA);

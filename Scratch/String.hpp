@@ -129,6 +129,8 @@ public:
 	bool operator==(const char* szSrc) const;
 	bool operator!=(const char* szSrc) const;
 
+	bool CaseCompare(int n, const char* szSrc);
+
 	bool operator>(const char* szSrc) const;
 	bool operator>=(const char* szSrc) const;
 	bool operator<(const char* szSrc) const;
@@ -1174,6 +1176,19 @@ bool String::operator==(const char* szSrc) const
 #else
 	return !utf8cmp(this->str_szBuffer, szSrc);
 #endif
+}
+
+bool String::CaseCompare(int n, const char* szSrc)
+{
+	MUTEX_LOCK(str_mutex);
+
+#ifdef SCRATCH_NO_UTF8
+	int i = strcasecmp(str_szBuffer, szSrc);
+#else
+	int i = utf8casecmp(str_szBuffer, szSrc);
+#endif
+
+	return (n == i) || (n < 0 && i < 0) || (n > 0 && i > 0);
 }
 
 bool String::operator>(const char* szSrc) const
