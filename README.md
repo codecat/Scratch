@@ -6,6 +6,7 @@ Scratch, a header-only core library. Thread-safe by default. Currently includes 
   * `String`
   * `Filename`
 * Containers:
+	* `Array` (a much faster alternative than StackArray)
   * `StackArray`
   * `Dictionary`
 * Streams:
