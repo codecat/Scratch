@@ -63,6 +63,10 @@ add_test(Filename ScratchTests Filename)
 add_test(Filename_NTS ScratchTests_No_ThreadSafe Filename)
 add_test(Filename_ASCII ScratchTests_No_UTF8 Filename)
 
+add_test(Array ScratchTests Array)
+add_test(Array_NTS ScratchTests_No_ThreadSafe Array)
+add_test(Array_ASCII ScratchTests_No_UTF8 Array)
+
 add_test(StackArray ScratchTests StackArray)
 add_test(StackArray_NTS ScratchTests_No_ThreadSafe StackArray)
 add_test(StackArray_ASCII ScratchTests_No_UTF8 StackArray)

@@ -44,7 +44,7 @@ public:
 		m_allocated = 0;
 	}
 
-	Array(const s::Array<T> &copy)
+	Array(const Array<T> &copy)
 	{
 		int size = sizeof(T) * copy.m_used;
 
@@ -97,9 +97,8 @@ public:
 	{
 		ASSERT(index < m_used);
 
-		m_used--;
-
 		if (index == m_used - 1) {
+			m_used--;
 			return;
 		}
 
@@ -107,6 +106,7 @@ public:
 		for (int i = index; i < m_used; i++) {
 			m_buffer[i] = m_buffer[i + 1];
 		}
+		m_used--;
 	}
 
 	inline int Find(const T &obj)

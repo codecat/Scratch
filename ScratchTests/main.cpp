@@ -229,6 +229,34 @@ MAIN
 		//TEST_UNIX(fnmFoo.StartsWith("/home/")); // This test isn't very accurate
 	}
 
+	TESTS("Array")
+	{
+		Array<int> arr;
+		TEST(arr.Count() == 0);
+
+		arr.Add(1);
+		arr.Add(2);
+		arr.Add() = 3;
+
+		TEST(arr.Count() == 3);
+		TEST(arr[0] == 1);
+		TEST(arr[2] == 3);
+
+		arr.Clear();
+		TEST(arr.Count() == 0);
+
+		arr.Add(1);
+		arr.Add(2);
+		arr.Add() = 3;
+
+		arr.RemoveAt(1);
+		TEST(arr.Count() == 2);
+		TEST(arr[1] == 3);
+
+		TEST(arr.Find(3) == 1);
+		TEST(arr.Find(4) == -1);
+	}
+
 	TESTS("StackArray")
 	{
 		StackArray<int> sa;
