@@ -72,6 +72,20 @@
  */
 #include "Filename.hpp"
 
+/* Array: high level simple array management
+ * -----------------------------------------
+ * Basic usage:
+ *   Array<int> aiTest;
+ *   aiTest.Add(5);
+ *   aiTest.Add(10);
+ *   aiTest.Add(123);
+ *   ASSERT(aiTest[0] == 5);
+ *   aiTest.RemoveAt(1);
+ *   ASSERT(aiTest[1] == 123);
+ *   ASSERT(aiTest.Count() == 2);
+ */
+#include "Array.hpp"
+
 /* StackArray: high level array management
  * ---------------------------------------
  * Basic usage:

@@ -32,7 +32,9 @@
 #include <stdint.h>
 
 #ifdef _MSC_VER
-	#include <WinSock2.h>
+	#ifndef AF_IPX
+		#include <WinSock2.h>
+	#endif
 	#ifndef WIN32_LEAN_AND_MEAN
 		#define WIN32_LEAN_AND_MEAN
 	#endif
