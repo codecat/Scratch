@@ -56,6 +56,18 @@ static int g_iTestFailed = 0;
 #define MAIN int main(int argc, char* argv[])
 #endif
 
+// Used in testing LinkedList<>
+static int g_numFoo = 0;
+
+class Foo : public LinkedListNode<Foo>
+{
+public:
+	int m_num = 0;
+
+	Foo() { g_numFoo++; }
+	virtual ~Foo() { g_numFoo--; }
+};
+
 // Used in testing Function<>
 static int FunctionTest(int x)
 {
@@ -362,6 +374,50 @@ MAIN
 			return 0;
 		});
 		TEST(sortFunctor[0] == 50 && sortFunctor[4] == 10);
+	}
+
+	TESTS("LinkedList")
+	{
+		{
+			LinkedList<Foo> list;
+
+			for (int i = 0; i < 50; i++) {
+				Foo &newFoo = list.Add();
+				newFoo.m_num = i;
+			}
+
+			TEST(g_numFoo == 50);
+
+			TEST(list.Head() != nullptr);
+			TEST(list.Head()->m_num == 0);
+
+			TEST(list.Tail() != nullptr);
+			TEST(list.Tail()->m_num == 49);
+
+			list.Unlink(*list.Head());
+			TEST(g_numFoo == 49);
+			TEST(list.Head() != nullptr);
+			TEST(list.Head()->m_num == 1);
+			TEST(list.Head()->ListPrev() == nullptr);
+			TEST(list.Head()->ListNext() != nullptr);
+			TEST(list.Head()->ListNext()->ListPrev() == list.Head());
+
+			list.Unlink(*list.Tail());
+			TEST(g_numFoo == 48);
+			TEST(list.Tail() != nullptr);
+			TEST(list.Tail()->m_num == 48);
+			TEST(list.Tail()->ListNext() == nullptr);
+			TEST(list.Tail()->ListPrev() != nullptr);
+			TEST(list.Tail()->ListPrev()->ListNext() == list.Tail());
+
+			list.Unlink(*list.Head()->ListNext());
+			TEST(g_numFoo == 47);
+			TEST(list.Head()->ListNext() != nullptr);
+			TEST(list.Head()->ListNext()->ListPrev() != nullptr);
+			TEST(list.Head()->ListNext()->m_num == 3);
+		}
+
+		TEST(g_numFoo == 0);
 	}
 
 	TESTS("Dictionary")

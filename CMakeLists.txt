@@ -71,6 +71,10 @@ add_test(StackArray ScratchTests StackArray)
 add_test(StackArray_NTS ScratchTests_No_ThreadSafe StackArray)
 add_test(StackArray_ASCII ScratchTests_No_UTF8 StackArray)
 
+add_test(LinkedList ScratchTests LinkedList)
+add_test(LinkedList_NTS ScratchTests_No_ThreadSafe LinkedList)
+add_test(LinkedList_ASCII ScratchTests_No_UTF8 LinkedList)
+
 add_test(Dictionary ScratchTests Dictionary)
 add_test(Dictionary_NTS ScratchTests_No_ThreadSafe Dictionary)
 add_test(Dictionary_ASCII ScratchTests_No_UTF8 Dictionary)
