@@ -1,4 +1,4 @@
-/*  libscratch - Multipurpose objective C++ library.
+/*  libscratch - Multipurpose C++ core library.
     
     Copyright (c) 2015 Angelo Geels <spansjh@gmail.com>
     
