@@ -37,6 +37,7 @@
  *	 implementation compilation (SCRATCH_IMPL) that modify the behavior of
  *	 the library.
  *
+ *   - SCRATCH_NO_UTF8: Disable utf8 support.
  *	 - SCRATCH_NO_THREADSAFE: Don't enable mutex locking in classes.
  *	 - SCRATCH_NO_EXCEPTIONS: Don't throw any exceptions, silently fail instead.
  *	 - SCRATCH_NO_ASSERT: Don't define a custom ASSERT().
@@ -47,28 +48,28 @@
 /* String: high level string management
  * ------------------------------------
  * Basic usage:
- *	 String strFoo = "Scratch"; // Scratch
- *	 String strBar = "lib" + strFoo.ToLower(); // libscratch
- *	 String strTest = strBar.Replace("libs", "S") + "!"; // Scratch!
+ *   String strFoo = "Scratch"; // Scratch
+ *   String strBar = "lib" + strFoo.ToLower(); // libscratch
+ *   String strTest = strBar.Replace("libs", "S") + "!"; // Scratch!
  *
- *	 StackArray<String> astrParse = strTest.Split("c");
- *	 ASSERT(astrParse.Count() == 3);
- *	 ASSERT(astrParse[0] == "S");
- *	 ASSERT(astrParse[1] == "rat");
- *	 ASSERT(astrParse[2] == "h");
+ *   StackArray<String> astrParse = strTest.Split("c");
+ *   ASSERT(astrParse.Count() == 3);
+ *   ASSERT(astrParse[0] == "S");
+ *   ASSERT(astrParse[1] == "rat");
+ *   ASSERT(astrParse[2] == "h");
  */
 #include "String.hpp"
 
 /* Filename: high level string management with filename functions
  * --------------------------------------------------------------
  * Basic usage:
- *	 Filename fnmFoo = "foo/bar/test.c";
- *	 String strExtension = fnmFoo.Extension();
- *	 String strPath = fnmFoo.Path();
- *	 String strFilename = fnmFoo.Filename();
- *	 ASSERT(strExtension == "c");
- *	 ASSERT(strPath == "foo/bar/");
- *	 ASSERT(strFilename == "test.c");
+ *   Filename fnmFoo = "foo/bar/test.c";
+ *   String strExtension = fnmFoo.Extension();
+ *   String strPath = fnmFoo.Path();
+ *   String strFilename = fnmFoo.Filename();
+ *   ASSERT(strExtension == "c");
+ *   ASSERT(strPath == "foo/bar/");
+ *   ASSERT(strFilename == "test.c");
  */
 #include "Filename.hpp"
 
@@ -87,91 +88,107 @@
 #include "Array.hpp"
 
 /* StackArray: high level array management
+ * NOTE: Slow, soon to be deprecated by Array<T>
  * ---------------------------------------
  * Basic usage:
- *	 StackArray<int> aiTest;
- *	 aiTest.Push() = 5;
- *	 aiTest.Push() = 10;
- *	 aiTest.Push() = 123;
- *	 ASSERT(aiTest[0] == 5);
- *	 ASSERT(aiTest.Pop() == 123);
- *	 ASSERT(aiTest.Count() == 2);
+ *   StackArray<int> aiTest;
+ *   aiTest.Push() = 5;
+ *   aiTest.Push() = 10;
+ *   aiTest.Push() = 123;
+ *   ASSERT(aiTest[0] == 5);
+ *   ASSERT(aiTest.Pop() == 123);
+ *   ASSERT(aiTest.Count() == 2);
  */
 #include "StackArray.hpp"
+
+/* LinkedList: high level linked list management
+ * ---------------------------------------------
+ * Basic usage:
+ *   class Foo : public LinkedListNode<Foo> {};
+ *
+ *   LinkedList<Foo> list;
+ *   Foo &a = list.Add();
+ *   Foo &b = list.Add();
+ *   Foo &c = list.Add();
+ *   ASSERT(a.ListNext() == &b);
+ *   ASSERT(c.ListNext() == nullptr);
+ *   ASSERT(list.Head() == &a);
+ */
+#include "LinkedList.hpp"
 
 /* Dictionary: high level table management
  * ---------------------------------------
  * Basic usage:
- *	 Dictionary<String, String> dstrTest;
- *	 dstrTest.Add("Name", "libscratch");
- *	 dstrTest["Author"] = "Angelo Geels";
+ *   Dictionary<String, String> dstrTest;
+ *   dstrTest.Add("Name", "libscratch");
+ *   dstrTest["Author"] = "Angelo Geels";
  */
 #include "Dictionary.hpp"
 
 /* FileStream: high level file stream management
  * ---------------------------------------------
  * Basic usage:
- *	 FileStream fs;
- *	 fs.Open("test.bin", "r+");
- *	 int32_t iTest;
- *	 fs >> iTest;
- *	 fs << iTest * 2;
- *	 fs.Close();
+ *   FileStream fs;
+ *   fs.Open("test.bin", "r+");
+ *   int32_t iTest;
+ *   fs >> iTest;
+ *   fs << iTest * 2;
+ *   fs.Close();
  */
 #include "FileStream.hpp"
 
 /* MemoryStream: high level memory stream management
  * -------------------------------------------------
  * Basic usage:
- *	 MemoryStream ms;
- *	 ms << int32_t(5);
- *	 FileStream fs;
- *	 fs.Open("test.bin", "w");
- *	 fs << ms.Size();
- *	 fs << ms;
+ *   MemoryStream ms;
+ *   ms << int32_t(5);
+ *   FileStream fs;
+ *   fs.Open("test.bin", "w");
+ *   fs << ms.Size();
+ *   fs << ms;
  */
 #include "MemoryStream.hpp"
 
 /* NetworkStream: high level network connections management
  * ---------------------------------------------------------
  * Basic usage:
- *	 NetworkStream ns;
- *	 ns.Connect("127.0.0.1", 1234);
- *	 ns << int32_t(5);
- *	 int32_t iResult;
- *	 ns >> iResult;
- *	 ns.Close();
+ *   NetworkStream ns;
+ *   ns.Connect("127.0.0.1", 1234);
+ *   ns << int32_t(5);
+ *   int32_t iResult;
+ *   ns >> iResult;
+ *   ns.Close();
  */
 #include "NetworkStream.hpp"
 
 /* Mutex: high level mutex management
  * ----------------------------------
  * Basic usage:
- *	 Mutex mutex;
- *	 mutex.Lock();
- *	 // do some work
- *	 mutex.Unlock();
+ *   Mutex mutex;
+ *   mutex.Lock();
+ *   // do some work
+ *   mutex.Unlock();
  *
  * Or:
- *	 Mutex mutex;
- *	 MutexWait(mutex);
- *	 // do some work
+ *   Mutex mutex;
+ *   MutexWait(mutex);
+ *   // do some work
  *
  * Or: (define SCRATCH_DEBUG_MUTEX for additional debugging)
- *	 Mutex mutex;
- *	 MUTEX_LOCK(mutex);
- *	 // do some work
+ *   Mutex mutex;
+ *   MUTEX_LOCK(mutex);
+ *   // do some work
  */
 #include "Mutex.hpp"
 
 /* Exception: high level exception management
  * ------------------------------------------
  * Basic usage:
- *	 try {
- *		 throw Exception("Found %d items", 20);
- *	 } catch(Exception &ex) {
- *		 // do something with ex.Message
- *	 }
+ *   try {
+ *     throw Exception("Found %d items", 20);
+ *   } catch(Exception &ex) {
+ *     // do something with ex.Message
+ *   }
  */
 #include "Exception.hpp"
 
@@ -189,7 +206,7 @@
 /* Assert: nicer assertions
  * ------------------------
  * Basic usage:
- *	 ASSERT(iNumber == 10);
+ *   ASSERT(iNumber == 10);
  */
 #ifndef SCRATCH_NO_ASSERT
 #include "Assert.hpp"
