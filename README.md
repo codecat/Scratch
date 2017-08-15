@@ -1,5 +1,7 @@
 # Scratch [![Build Status](https://travis-ci.org/angelog/Scratch.svg?branch=master)](https://travis-ci.org/angelog/Scratch)
 
+**NOTE:** This library is being replaced by its successor: [scratch2](https://github.com/codecat/scratch2).
+
 Scratch, a header-only core library. Thread-safe by default. Currently includes the following classes:
 
 * Strings:
